@@ -27,14 +27,14 @@ import static io.ballerina.plugins.idea.psi.BallerinaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.ballerina.plugins.idea.psi.*;
 
-public class BallerinaCallableUnitSignatureImpl extends ASTWrapperPsiElement implements BallerinaCallableUnitSignature {
+public class BallerinaTypeDescReferenceTypeNameImpl extends ASTWrapperPsiElement implements BallerinaTypeDescReferenceTypeName {
 
-  public BallerinaCallableUnitSignatureImpl(@NotNull ASTNode node) {
+  public BallerinaTypeDescReferenceTypeNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull BallerinaVisitor visitor) {
-    visitor.visitCallableUnitSignature(this);
+    visitor.visitTypeDescReferenceTypeName(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -43,33 +43,27 @@ public class BallerinaCallableUnitSignatureImpl extends ASTWrapperPsiElement imp
   }
 
   @Override
+  @Nullable
+  public BallerinaTypeName getTypeName() {
+    return findChildByClass(BallerinaTypeName.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getGt() {
+    return findChildByType(GT);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getLt() {
+    return findChildByType(LT);
+  }
+
+  @Override
   @NotNull
-  public BallerinaAnyIdentifierName getAnyIdentifierName() {
-    return findNotNullChildByClass(BallerinaAnyIdentifierName.class);
-  }
-
-  @Override
-  @Nullable
-  public BallerinaFormalParameterList getFormalParameterList() {
-    return findChildByClass(BallerinaFormalParameterList.class);
-  }
-
-  @Override
-  @Nullable
-  public BallerinaReturnParameter getReturnParameter() {
-    return findChildByClass(BallerinaReturnParameter.class);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getLeftParenthesis() {
-    return findNotNullChildByType(LEFT_PARENTHESIS);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getRightParenthesis() {
-    return findChildByType(RIGHT_PARENTHESIS);
+  public PsiElement getTypedesc() {
+    return findNotNullChildByType(TYPEDESC);
   }
 
 }
