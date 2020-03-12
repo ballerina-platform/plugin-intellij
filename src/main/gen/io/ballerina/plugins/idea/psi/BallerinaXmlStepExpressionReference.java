@@ -21,15 +21,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface BallerinaStreamConstructorBody extends PsiElement {
+public interface BallerinaXmlStepExpressionReference extends BallerinaVariableReference {
 
   @NotNull
-  List<BallerinaStatement> getStatementList();
+  BallerinaVariableReference getVariableReference();
 
   @NotNull
-  PsiElement getLeftBrace();
-
-  @NotNull
-  PsiElement getRightBrace();
+  BallerinaXmlStepExpression getXmlStepExpression();
 
 }

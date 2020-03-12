@@ -21,9 +21,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface BallerinaStreamConstructorExpression extends BallerinaExpression {
+public interface BallerinaXmlElementNames extends PsiElement {
 
   @NotNull
-  BallerinaStreamConstructorExpr getStreamConstructorExpr();
+  List<BallerinaXmlElementAccessFilter> getXmlElementAccessFilterList();
+
+  @NotNull
+  PsiElement getGt();
+
+  @NotNull
+  PsiElement getLt();
 
 }

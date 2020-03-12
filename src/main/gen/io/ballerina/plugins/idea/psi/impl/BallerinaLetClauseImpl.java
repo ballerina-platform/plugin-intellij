@@ -27,14 +27,14 @@ import static io.ballerina.plugins.idea.psi.BallerinaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.ballerina.plugins.idea.psi.*;
 
-public class BallerinaStreamConstructorBodyImpl extends ASTWrapperPsiElement implements BallerinaStreamConstructorBody {
+public class BallerinaLetClauseImpl extends ASTWrapperPsiElement implements BallerinaLetClause {
 
-  public BallerinaStreamConstructorBodyImpl(@NotNull ASTNode node) {
+  public BallerinaLetClauseImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull BallerinaVisitor visitor) {
-    visitor.visitStreamConstructorBody(this);
+    visitor.visitLetClause(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -44,20 +44,14 @@ public class BallerinaStreamConstructorBodyImpl extends ASTWrapperPsiElement imp
 
   @Override
   @NotNull
-  public List<BallerinaStatement> getStatementList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, BallerinaStatement.class);
+  public List<BallerinaLetVarDecl> getLetVarDeclList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, BallerinaLetVarDecl.class);
   }
 
   @Override
   @NotNull
-  public PsiElement getLeftBrace() {
-    return findNotNullChildByType(LEFT_BRACE);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getRightBrace() {
-    return findNotNullChildByType(RIGHT_BRACE);
+  public PsiElement getLet() {
+    return findNotNullChildByType(LET);
   }
 
 }

@@ -27,14 +27,14 @@ import static io.ballerina.plugins.idea.psi.BallerinaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.ballerina.plugins.idea.psi.*;
 
-public class BallerinaRestParameterTypeNameImpl extends ASTWrapperPsiElement implements BallerinaRestParameterTypeName {
+public class BallerinaXmlStepExpressionImpl extends ASTWrapperPsiElement implements BallerinaXmlStepExpression {
 
-  public BallerinaRestParameterTypeNameImpl(@NotNull ASTNode node) {
+  public BallerinaXmlStepExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull BallerinaVisitor visitor) {
-    visitor.visitRestParameterTypeName(this);
+    visitor.visitXmlStepExpression(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -43,15 +43,21 @@ public class BallerinaRestParameterTypeNameImpl extends ASTWrapperPsiElement imp
   }
 
   @Override
-  @NotNull
-  public BallerinaTypeName getTypeName() {
-    return findNotNullChildByClass(BallerinaTypeName.class);
+  @Nullable
+  public BallerinaIndex getIndex() {
+    return findChildByClass(BallerinaIndex.class);
   }
 
   @Override
-  @NotNull
-  public PsiElement getEllipsis() {
-    return findNotNullChildByType(ELLIPSIS);
+  @Nullable
+  public BallerinaXmlElementNames getXmlElementNames() {
+    return findChildByClass(BallerinaXmlElementNames.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getMul() {
+    return findChildByType(MUL);
   }
 
 }

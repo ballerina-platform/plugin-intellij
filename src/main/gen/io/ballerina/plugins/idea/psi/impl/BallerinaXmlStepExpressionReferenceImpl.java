@@ -24,17 +24,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static io.ballerina.plugins.idea.psi.BallerinaTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import io.ballerina.plugins.idea.psi.*;
 
-public class BallerinaStreamConstructorExprImpl extends ASTWrapperPsiElement implements BallerinaStreamConstructorExpr {
+public class BallerinaXmlStepExpressionReferenceImpl extends BallerinaVariableReferenceImpl implements BallerinaXmlStepExpressionReference {
 
-  public BallerinaStreamConstructorExprImpl(@NotNull ASTNode node) {
+  public BallerinaXmlStepExpressionReferenceImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull BallerinaVisitor visitor) {
-    visitor.visitStreamConstructorExpr(this);
+    visitor.visitXmlStepExpressionReference(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -43,15 +42,15 @@ public class BallerinaStreamConstructorExprImpl extends ASTWrapperPsiElement imp
   }
 
   @Override
-  @Nullable
-  public BallerinaStreamConstructorBody getStreamConstructorBody() {
-    return findChildByClass(BallerinaStreamConstructorBody.class);
+  @NotNull
+  public BallerinaVariableReference getVariableReference() {
+    return findNotNullChildByClass(BallerinaVariableReference.class);
   }
 
   @Override
   @NotNull
-  public PsiElement getStream() {
-    return findNotNullChildByType(STREAM);
+  public BallerinaXmlStepExpression getXmlStepExpression() {
+    return findNotNullChildByClass(BallerinaXmlStepExpression.class);
   }
 
 }
