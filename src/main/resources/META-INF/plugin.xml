@@ -27,11 +27,12 @@
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="java-deps.xml">com.intellij.modules.java</depends>
 
-    <extensionPoints>
-        <extensionPoint
-                interface="io.ballerina.plugins.idea.webview.diagram.preview.HtmlPanelProvider"
-                name="html.panel.provider"/>
-    </extensionPoints>
+    <!--    Todo - Enable after restoring ballerina diagram view-->
+    <!--    <extensionPoints>-->
+    <!--        <extensionPoint-->
+    <!--                interface="io.ballerina.plugins.idea.webview.diagram.preview.HtmlPanelProvider"-->
+    <!--                name="html.panel.provider"/>-->
+    <!--    </extensionPoints>-->
 
     <module-components>
         <component>
@@ -74,8 +75,9 @@
         <lang.syntaxHighlighterFactory language="Ballerina"
                                        implementationClass="io.ballerina.plugins.idea.highlighting.syntax.BallerinaSyntaxHighlighterFactory"/>
 
-        <fileEditorProvider
-                implementation="io.ballerina.plugins.idea.webview.diagram.preview.BallerinaSplitEditorProvider"/>
+        <!--    Todo - Enable after restoring ballerina diagram view-->
+        <!--        <fileEditorProvider-->
+        <!--                implementation="io.ballerina.plugins.idea.webview.diagram.preview.BallerinaSplitEditorProvider"/>-->
 
         <indexPatternBuilder implementation="io.ballerina.plugins.idea.BallerinaIndexPatternBuilder"/>
 
@@ -178,8 +180,9 @@
         <!--project-->
         <applicationService
                 serviceImplementation="io.ballerina.plugins.idea.project.BallerinaApplicationLibrariesService"/>
-        <applicationService
-                serviceImplementation="io.ballerina.plugins.idea.webview.diagram.settings.DiagramApplicationSettings"/>
+        <!--Todo - Enable after restoring the renaming support-->
+        <!--        <applicationService-->
+        <!--                serviceImplementation="io.ballerina.plugins.idea.webview.diagram.settings.DiagramApplicationSettings"/>-->
         <projectService
                 serviceImplementation="io.ballerina.plugins.idea.project.BallerinaProjectLibrariesService"/>
 
@@ -203,35 +206,36 @@
                 implementation="io.ballerina.plugins.idea.preloading.BallerinaPreloadingActivity"
                 id="io.ballerina.plugins.idea.preloading.BallerinaPreloadingActivity"/>
     </extensions>
-
-    <extensions defaultExtensionNs="io.ballerina">
-        <html.panel.provider
-                implementation="io.ballerina.plugins.idea.webview.diagram.preview.javafx.JavaFxHtmlPanelProvider"/>
-    </extensions>
+    <!--Todo - Enable after restoring the renaming support-->
+    <!--    <extensions defaultExtensionNs="io.ballerina">-->
+    <!--        <html.panel.provider-->
+    <!--                implementation="io.ballerina.plugins.idea.webview.diagram.preview.javafx.JavaFxHtmlPanelProvider"/>-->
+    <!--    </extensions>-->
 
     <actions>
+        <!--Todo - Enable after restoring the renaming support-->
         <!--Ballerina Diagram Support -->
-        <group id="Diagram.Toolbar.Right" class="com.intellij.openapi.actionSystem.DefaultActionGroup"
-               text="Ballerina Editor Layout Actions">
-            <action class="io.ballerina.plugins.idea.webview.diagram.actions.EditorOnlyLayoutChangeAction"
-                    id="io.ballerina.plugins.idea.webview.diagram.actions.EditorOnlyLayoutChangeAction"
-                    text="Show Editor Only"
-                    description="Sets ballerina editor layout to show editor only"
-                    icon="BallerinaIcons.Layout.EDITOR_ONLY">
-            </action>
-            <action class="io.ballerina.plugins.idea.webview.diagram.actions.EditorAndPreviewLayoutChangeAction"
-                    id="io.ballerina.plugins.idea.webview.diagram.actions.EditorAndPreviewLayoutChangeAction"
-                    text="Show Editor and Preview"
-                    description="Sets ballerina editor layout to show editor and preview in split"
-                    icon="BallerinaIcons.Layout.EDITOR_PREVIEW">
-            </action>
-            <action class="io.ballerina.plugins.idea.webview.diagram.actions.PreviewOnlyLayoutChangeAction"
-                    id="io.ballerina.plugins.idea.webview.diagram.actions.PreviewOnlyLayoutChangeAction"
-                    text="Show Preview Only"
-                    description="Sets ballerina editor layout to show preview only"
-                    icon="BallerinaIcons.Layout.PREVIEW_ONLY">
-            </action>
-        </group>
+        <!--        <group id="Diagram.Toolbar.Right" class="com.intellij.openapi.actionSystem.DefaultActionGroup"-->
+        <!--               text="Ballerina Editor Layout Actions">-->
+        <!--            <action class="io.ballerina.plugins.idea.webview.diagram.actions.EditorOnlyLayoutChangeAction"-->
+        <!--                    id="io.ballerina.plugins.idea.webview.diagram.actions.EditorOnlyLayoutChangeAction"-->
+        <!--                    text="Show Editor Only"-->
+        <!--                    description="Sets ballerina editor layout to show editor only"-->
+        <!--                    icon="BallerinaIcons.Layout.EDITOR_ONLY">-->
+        <!--            </action>-->
+        <!--            <action class="io.ballerina.plugins.idea.webview.diagram.actions.EditorAndPreviewLayoutChangeAction"-->
+        <!--                    id="io.ballerina.plugins.idea.webview.diagram.actions.EditorAndPreviewLayoutChangeAction"-->
+        <!--                    text="Show Editor and Preview"-->
+        <!--                    description="Sets ballerina editor layout to show editor and preview in split"-->
+        <!--                    icon="BallerinaIcons.Layout.EDITOR_PREVIEW">-->
+        <!--            </action>-->
+        <!--            <action class="io.ballerina.plugins.idea.webview.diagram.actions.PreviewOnlyLayoutChangeAction"-->
+        <!--                    id="io.ballerina.plugins.idea.webview.diagram.actions.PreviewOnlyLayoutChangeAction"-->
+        <!--                    text="Show Preview Only"-->
+        <!--                    description="Sets ballerina editor layout to show preview only"-->
+        <!--                    icon="BallerinaIcons.Layout.PREVIEW_ONLY">-->
+        <!--            </action>-->
+        <!--        </group>-->
         <action id="NewBallerinaFile" class="io.ballerina.plugins.idea.actions.BallerinaCreateFileAction"
                 text="Ballerina File" description="Create new Ballerina file">
             <add-to-group group-id="NewGroup" anchor="first"/>
