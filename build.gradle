@@ -71,7 +71,7 @@ task downloadPsiViewerPlugin(type: Download) {
 
 apply plugin: "jacoco"
 jacoco {
-    toolVersion = "0.8.1"
+    toolVersion = "0.8.2"
     reportsDir = file("$buildDir/customJacocoReportDir")
 }
 
