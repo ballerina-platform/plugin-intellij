@@ -76,7 +76,7 @@ public class BallerinaConstants {
     public static final String BALLERINA_EXEC_PATH = "bin" + File.separator + BALLERINA_EXECUTABLE_NAME;
 
     // CLI constants
-    public static final String BALLERINA_CMD = "ballerina";
+    public static final String BALLERINA_CMD = "bal";
     public static final String BALLERINA_HOME_CMD = "home";
     public static final String BALLERINA_LS_CMD = "start-language-server";
 
