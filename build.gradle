@@ -25,7 +25,6 @@ version = ballerinaPluginVersion
 
 repositories {
     mavenCentral()
-    maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
     maven { url 'https://jitpack.io' }
 }
 
