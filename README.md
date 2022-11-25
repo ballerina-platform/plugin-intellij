@@ -49,4 +49,4 @@ Swan Lake | IntelliJ IDEA 2019.2+
 
 ## Useful Links
 * Use the ballerina-dev@googlegroups.com mailing list to discuss code changes to the Ballerina project.
-* Chat live with us on our [Slack channel](https://ballerina.io/open-source/slack/).
+* Chat live with us on our [Discord server](https://discord.gg/ballerinalang).
