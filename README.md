@@ -4,13 +4,13 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/9520-ballerina.svg)](https://plugins.jetbrains.com/plugin/9520-ballerina)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/9520-ballerina.svg)](https://plugins.jetbrains.com/plugin/9520-ballerina)
 
-## Deprecation Notice
-The Ballerina IntelliJ IDEA plugin is no longer being maintained or supported. We recommend that users of the plugin switch to using the official [Ballerina Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=WSO2.ballerina), which is actively maintained and offers the same functionality.
+## Deprecation notice
+The Ballerina IntelliJ IDEA plugin is no longer being maintained or supported. It is recommended that the plugin users switch to the official [Ballerina Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=WSO2.ballerina), which is actively maintained and offers the same functionality.
 
  
 ---
 
-The IntelliJ Ballerina plugin provides the Ballerina development capabilities in IntelliJ IDEA. Click on the below links for instructions on how to download, install, and use the features of the IntelliJ plugin.
+The IntelliJ Ballerina plugin provides the Ballerina development capabilities in IntelliJ IDEA. Click the links below for instructions on how to download, install, and use the features of the IntelliJ plugin.
 
 - [**Prerequisites**](https://ballerina.io/learn/tools-ides/intellij-plugin/#prerequisites)
 - [**Installing the plugin**](https://ballerina.io/learn/tools-ides/intellij-plugin/#installing-the-plugin)
@@ -52,6 +52,6 @@ Below you can see the plugin versions that correspond to the versions of the Int
 0.991.1 - 1.2.1 | IntelliJ IDEA 2018.3 - 2019.3
 1.2.2 - 1.2.x | IntelliJ IDEA 2018.3 - 2020.2
 
-## Useful Links
+## Useful links
 * Use the ballerina-dev@googlegroups.com mailing list to discuss code changes to the Ballerina project.
 * Chat live with us on our [Discord server](https://discord.gg/ballerinalang).
