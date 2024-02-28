@@ -1,0 +1,17 @@
+Ballerina File(0,24)
+  BallerinaModulePartImpl(MODULE_PART)(0,24)
+    BallerinaOtherDeclImpl(OTHER_DECL)(0,24)
+      BallerinaModuleTypeDefnImpl(MODULE_TYPE_DEFN)(0,24)
+        BallerinaMetadataImpl(METADATA)(0,0)
+          <empty list>
+        PsiElement(BallerinaTokenType.TYPE_KEYWORD)('type')(0,4)
+        PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('Student')(5,12)
+        BallerinaMappingTypeDescriptorImpl(MAPPING_TYPE_DESCRIPTOR)(13,23)
+          BallerinaRecordTypeDescriptorImpl(RECORD_TYPE_DESCRIPTOR)(13,23)
+            BallerinaInclusiveRecordTypeDescriptorImpl(INCLUSIVE_RECORD_TYPE_DESCRIPTOR)(13,23)
+              PsiElement(BallerinaTokenType.RECORD_KEYWORD)('record')(13,19)
+              PsiElement(BallerinaTokenType.OPEN_BRACE_TOKEN)('{')(20,21)
+              BallerinaTokensImpl(TOKENS)(22,22)
+                <empty list>
+              PsiElement(BallerinaTokenType.CLOSE_BRACE_TOKEN)('}')(22,23)
+        PsiElement(BallerinaTokenType.SEMICOLON_TOKEN)(';')(23,24)
