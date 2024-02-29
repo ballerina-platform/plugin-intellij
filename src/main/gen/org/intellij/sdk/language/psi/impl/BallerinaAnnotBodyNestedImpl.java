@@ -11,14 +11,14 @@ import static org.intellij.sdk.language.psi.BallerinaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.intellij.sdk.language.psi.*;
 
-public class BallerinaAnnotValueImpl extends ASTWrapperPsiElement implements BallerinaAnnotValue {
+public class BallerinaAnnotBodyNestedImpl extends ASTWrapperPsiElement implements BallerinaAnnotBodyNested {
 
-  public BallerinaAnnotValueImpl(@NotNull ASTNode node) {
+  public BallerinaAnnotBodyNestedImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull BallerinaVisitor visitor) {
-    visitor.visitAnnotValue(this);
+    visitor.visitAnnotBodyNested(this);
   }
 
   @Override
@@ -28,21 +28,9 @@ public class BallerinaAnnotValueImpl extends ASTWrapperPsiElement implements Bal
   }
 
   @Override
-  @Nullable
-  public BallerinaAnnotBodyNested getAnnotBodyNested() {
-    return findChildByClass(BallerinaAnnotBodyNested.class);
-  }
-
-  @Override
-  @Nullable
-  public BallerinaAnnotBodyOpen getAnnotBodyOpen() {
-    return findChildByClass(BallerinaAnnotBodyOpen.class);
-  }
-
-  @Override
-  @Nullable
-  public BallerinaMappingConstructorExpr getMappingConstructorExpr() {
-    return findChildByClass(BallerinaMappingConstructorExpr.class);
+  @NotNull
+  public BallerinaTokensIgnore getTokensIgnore() {
+    return findNotNullChildByClass(BallerinaTokensIgnore.class);
   }
 
 }

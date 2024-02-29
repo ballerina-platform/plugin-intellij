@@ -19,6 +19,8 @@ public interface BallerinaTypes {
   IElementType ANNOT_ACCESS_EXPR = new BallerinaElementType("ANNOT_ACCESS_EXPR");
   IElementType ANNOT_ATTACH_POINT = new BallerinaElementType("ANNOT_ATTACH_POINT");
   IElementType ANNOT_ATTACH_POINTS = new BallerinaElementType("ANNOT_ATTACH_POINTS");
+  IElementType ANNOT_BODY_NESTED = new BallerinaElementType("ANNOT_BODY_NESTED");
+  IElementType ANNOT_BODY_OPEN = new BallerinaElementType("ANNOT_BODY_OPEN");
   IElementType ANNOT_TAG = new BallerinaElementType("ANNOT_TAG");
   IElementType ANNOT_VALUE = new BallerinaElementType("ANNOT_VALUE");
   IElementType ANONYMOUS_FUNCTION_EXPR = new BallerinaElementType("ANONYMOUS_FUNCTION_EXPR");
@@ -607,6 +609,12 @@ public interface BallerinaTypes {
       }
       else if (type == ANNOT_ATTACH_POINTS) {
         return new BallerinaAnnotAttachPointsImpl(node);
+      }
+      else if (type == ANNOT_BODY_NESTED) {
+        return new BallerinaAnnotBodyNestedImpl(node);
+      }
+      else if (type == ANNOT_BODY_OPEN) {
+        return new BallerinaAnnotBodyOpenImpl(node);
       }
       else if (type == ANNOT_TAG) {
         return new BallerinaAnnotTagImpl(node);

@@ -372,6 +372,34 @@ public class BallerinaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // OPEN_NESTED_BRACE_TOKEN TokensIgnore CLOSE_NESTED_BRACE_TOKEN
+  public static boolean annot_body_nested(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "annot_body_nested")) return false;
+    if (!nextTokenIs(b, OPEN_NESTED_BRACE_TOKEN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, OPEN_NESTED_BRACE_TOKEN);
+    r = r && TokensIgnore(b, l + 1);
+    r = r && consumeToken(b, CLOSE_NESTED_BRACE_TOKEN);
+    exit_section_(b, m, ANNOT_BODY_NESTED, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // OPEN_BRACE_TOKEN Tokens CLOSE_BRACE_TOKEN
+  public static boolean annot_body_open(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "annot_body_open")) return false;
+    if (!nextTokenIs(b, OPEN_BRACE_TOKEN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, OPEN_BRACE_TOKEN);
+    r = r && Tokens(b, l + 1);
+    r = r && consumeToken(b, CLOSE_BRACE_TOKEN);
+    exit_section_(b, m, ANNOT_BODY_OPEN, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // identifier
   public static boolean annot_tag(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "annot_tag")) return false;
@@ -394,13 +422,23 @@ public class BallerinaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [mapping_constructor_expr]
+  // [annot_body_open | annot_body_nested | mapping_constructor_expr]
   public static boolean annot_value(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "annot_value")) return false;
     Marker m = enter_section_(b, l, _NONE_, ANNOT_VALUE, "<annot value>");
-    mapping_constructor_expr(b, l + 1);
+    annot_value_0(b, l + 1);
     exit_section_(b, l, m, true, false, null);
     return true;
+  }
+
+  // annot_body_open | annot_body_nested | mapping_constructor_expr
+  private static boolean annot_value_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "annot_value_0")) return false;
+    boolean r;
+    r = annot_body_open(b, l + 1);
+    if (!r) r = annot_body_nested(b, l + 1);
+    if (!r) r = mapping_constructor_expr(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
@@ -3659,10 +3697,9 @@ public class BallerinaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (OPEN_NESTED_BRACE_TOKEN | OPEN_BRACE_TOKEN) [field (COMMA_TOKEN field)*] (CLOSE_NESTED_BRACE_TOKEN | CLOSE_BRACE_TOKEN)
+  // (IGNORED_OPEN_BRACE_TOKEN | OPEN_NESTED_BRACE_TOKEN | OPEN_BRACE_TOKEN) [field (COMMA_TOKEN field)*] (IGNORED_CLOSE_BRACE_TOKEN | CLOSE_NESTED_BRACE_TOKEN | CLOSE_BRACE_TOKEN)
   public static boolean mapping_constructor_expr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "mapping_constructor_expr")) return false;
-    if (!nextTokenIs(b, "<mapping constructor expr>", OPEN_BRACE_TOKEN, OPEN_NESTED_BRACE_TOKEN)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MAPPING_CONSTRUCTOR_EXPR, "<mapping constructor expr>");
     r = mapping_constructor_expr_0(b, l + 1);
@@ -3672,11 +3709,12 @@ public class BallerinaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // OPEN_NESTED_BRACE_TOKEN | OPEN_BRACE_TOKEN
+  // IGNORED_OPEN_BRACE_TOKEN | OPEN_NESTED_BRACE_TOKEN | OPEN_BRACE_TOKEN
   private static boolean mapping_constructor_expr_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "mapping_constructor_expr_0")) return false;
     boolean r;
-    r = consumeToken(b, OPEN_NESTED_BRACE_TOKEN);
+    r = consumeToken(b, IGNORED_OPEN_BRACE_TOKEN);
+    if (!r) r = consumeToken(b, OPEN_NESTED_BRACE_TOKEN);
     if (!r) r = consumeToken(b, OPEN_BRACE_TOKEN);
     return r;
   }
@@ -3721,11 +3759,12 @@ public class BallerinaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // CLOSE_NESTED_BRACE_TOKEN | CLOSE_BRACE_TOKEN
+  // IGNORED_CLOSE_BRACE_TOKEN | CLOSE_NESTED_BRACE_TOKEN | CLOSE_BRACE_TOKEN
   private static boolean mapping_constructor_expr_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "mapping_constructor_expr_2")) return false;
     boolean r;
-    r = consumeToken(b, CLOSE_NESTED_BRACE_TOKEN);
+    r = consumeToken(b, IGNORED_CLOSE_BRACE_TOKEN);
+    if (!r) r = consumeToken(b, CLOSE_NESTED_BRACE_TOKEN);
     if (!r) r = consumeToken(b, CLOSE_BRACE_TOKEN);
     return r;
   }
@@ -6310,7 +6349,6 @@ public class BallerinaParser implements PsiParser, LightPsiParser {
   // mapping_constructor_expr (COMMA_TOKEN mapping_constructor_expr)*
   public static boolean row_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "row_list")) return false;
-    if (!nextTokenIs(b, "<row list>", OPEN_BRACE_TOKEN, OPEN_NESTED_BRACE_TOKEN)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ROW_LIST, "<row list>");
     r = mapping_constructor_expr(b, l + 1);

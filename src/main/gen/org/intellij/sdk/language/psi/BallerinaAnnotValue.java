@@ -8,6 +8,12 @@ import com.intellij.psi.PsiElement;
 public interface BallerinaAnnotValue extends PsiElement {
 
   @Nullable
+  BallerinaAnnotBodyNested getAnnotBodyNested();
+
+  @Nullable
+  BallerinaAnnotBodyOpen getAnnotBodyOpen();
+
+  @Nullable
   BallerinaMappingConstructorExpr getMappingConstructorExpr();
 
 }

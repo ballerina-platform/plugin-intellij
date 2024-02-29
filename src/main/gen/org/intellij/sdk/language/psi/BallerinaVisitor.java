@@ -47,6 +47,14 @@ public class BallerinaVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAnnotBodyNested(@NotNull BallerinaAnnotBodyNested o) {
+    visitPsiElement(o);
+  }
+
+  public void visitAnnotBodyOpen(@NotNull BallerinaAnnotBodyOpen o) {
+    visitPsiElement(o);
+  }
+
   public void visitAnnotTag(@NotNull BallerinaAnnotTag o) {
     visitPsiElement(o);
   }

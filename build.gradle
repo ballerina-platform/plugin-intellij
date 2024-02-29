@@ -36,6 +36,12 @@ intellij {
     plugins = []
 }
 
+tasks.withType(JavaCompile) {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+
 patchPluginXml {
     sinceBuild = '222'
     untilBuild = '241.*'

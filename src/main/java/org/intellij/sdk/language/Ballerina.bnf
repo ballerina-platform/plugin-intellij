@@ -397,7 +397,7 @@ single_list_member ::= expression
 spread_list_member ::= spread | aggregated_variable_reference
 spread ::= ELLIPSIS_TOKEN expression
 
-mapping_constructor_expr ::= (OPEN_NESTED_BRACE_TOKEN | OPEN_BRACE_TOKEN) [field (COMMA_TOKEN field)*] (CLOSE_NESTED_BRACE_TOKEN | CLOSE_BRACE_TOKEN)
+mapping_constructor_expr ::= (IGNORED_OPEN_BRACE_TOKEN | OPEN_NESTED_BRACE_TOKEN | OPEN_BRACE_TOKEN) [field (COMMA_TOKEN field)*] (IGNORED_CLOSE_BRACE_TOKEN | CLOSE_NESTED_BRACE_TOKEN | CLOSE_BRACE_TOKEN)
 field ::=
   specific_field
   | computed_name_field
@@ -834,7 +834,10 @@ annotation_decl ::=
 annot_tag ::= identifier
 
 private annot_tag_reference ::= qualified_identifier | identifier
-annot_value ::= [mapping_constructor_expr]
+annot_value ::= [annot_body_open | annot_body_nested | mapping_constructor_expr]
+
+annot_body_open ::= OPEN_BRACE_TOKEN Tokens CLOSE_BRACE_TOKEN
+annot_body_nested ::= OPEN_NESTED_BRACE_TOKEN TokensIgnore CLOSE_NESTED_BRACE_TOKEN
 
 annot_attach_points ::= annot_attach_point (COMMA_TOKEN annot_attach_point)*
 annot_attach_point ::=
