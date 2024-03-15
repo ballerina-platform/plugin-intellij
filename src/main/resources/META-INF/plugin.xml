@@ -1,29 +1,29 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>org.example.plugin_ballerina</id>
+    <id>io.ballerina</id>
+    <name>Ballerina Swan Lake</name>
+    <version>2.0.0-SNAPSHOT</version>
+    <vendor email="ballerinalang@wso2.com" url="https://ballerina.io/">BallerinaLang</vendor>
 
-    <!-- Public plugin name should be written in Title Case.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Ballerina</name>
-
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
-
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+      The Ballerina Swan Lake IntelliJ plugin provides the <a href="https://ballerina.io/">Ballerina Swan Lake</a> development capabilities
+      in IntelliJ IDEA.
+      <br><br>For instructions on how to download, install, and use the features of the plugin, refer the
+      <a href="https://v1-0.ballerina.io/learn/tools-ides/intellij-plugin/">Ballerina IntelliJ plugin Guide</a>.
+    ]]></description>
 
-    <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-    <depends>com.intellij.modules.platform</depends>
+    <change-notes><![CDATA[
+      <ul>
+        <li> Introduced syntax highlighting support for Ballerina Swan Lake. </li>
+      </ul>
+    ]]>
+    </change-notes>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="222"/>
 
-    <!-- Extension points defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="Ballerina File"
@@ -37,23 +37,22 @@
 
         <lang.syntaxHighlighterFactory
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.BallerinaSyntaxHighlighterFactory"/>
+                implementationClass="org.intellij.sdk.language.highlighting.BallerinaSyntaxHighlighterFactory"/>
         <annotator
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.BallerinaAnnotator"/>
+                implementationClass="org.intellij.sdk.language.highlighting.BallerinaAnnotator"/>
         <lang.braceMatcher language="Ballerina"
-                           implementationClass="org.intellij.sdk.language.BallerinaPairedBraceMatcher"/>
+                           implementationClass="org.intellij.sdk.language.editor.BallerinaPairedBraceMatcher"/>
 
         <lang.commenter
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.BallerinaCommenter"/>
+                implementationClass="org.intellij.sdk.language.editor.BallerinaCommenter"/>
 
-        <typedHandler implementation="org.intellij.sdk.language.BallerinaTypedHandler"/>
+        <typedHandler implementation="org.intellij.sdk.language.editor.BallerinaTypedHandler"/>
 
 
-        <highlightErrorFilter implementation="org.intellij.sdk.language.BallerinaHighlightErrorFilter"
+        <highlightErrorFilter implementation="org.intellij.sdk.language.editor.BallerinaHighlightErrorFilter"
                               id="BallerinaHighlightErrorFilter"/>
-
 
     </extensions>
 
