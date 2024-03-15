@@ -21,5 +21,5 @@ hs_err_pid*
 /Ballerina-Intellij-plugin.iml
 /plugin-intellij.iws
 !/gradle/wrapper/gradle-wrapper.jar
-BallerinaParsingTest.log
-todo.txt
+/BallerinaParsingTest.log
+/todo.txt
