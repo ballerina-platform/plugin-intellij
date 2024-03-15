@@ -27,31 +27,31 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="Ballerina File"
-                implementationClass="org.intellij.sdk.language.BallerinaFileType"
+                implementationClass="io.ballerina.plugins.idea.BallerinaFileType"
                 fieldName="INSTANCE"
                 language="Ballerina"
                 extensions="bal"/>
         <lang.parserDefinition
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.BallerinaParserDefinition"/>
+                implementationClass="io.ballerina.plugins.idea.BallerinaParserDefinition"/>
 
         <lang.syntaxHighlighterFactory
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.highlighting.BallerinaSyntaxHighlighterFactory"/>
+                implementationClass="io.ballerina.plugins.idea.highlighting.BallerinaSyntaxHighlighterFactory"/>
         <annotator
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.highlighting.BallerinaAnnotator"/>
+                implementationClass="io.ballerina.plugins.idea.highlighting.BallerinaAnnotator"/>
         <lang.braceMatcher language="Ballerina"
-                           implementationClass="org.intellij.sdk.language.editor.BallerinaPairedBraceMatcher"/>
+                           implementationClass="io.ballerina.plugins.idea.editor.BallerinaPairedBraceMatcher"/>
 
         <lang.commenter
                 language="Ballerina"
-                implementationClass="org.intellij.sdk.language.editor.BallerinaCommenter"/>
+                implementationClass="editor.io.ballerina.plugins.idea.BallerinaCommenter"/>
 
-        <typedHandler implementation="org.intellij.sdk.language.editor.BallerinaTypedHandler"/>
+        <typedHandler implementation="io.ballerina.plugins.idea.editor.BallerinaTypedHandler"/>
 
 
-        <highlightErrorFilter implementation="org.intellij.sdk.language.editor.BallerinaHighlightErrorFilter"
+        <highlightErrorFilter implementation="io.ballerina.plugins.idea.editor.BallerinaHighlightErrorFilter"
                               id="BallerinaHighlightErrorFilter"/>
 
     </extensions>
