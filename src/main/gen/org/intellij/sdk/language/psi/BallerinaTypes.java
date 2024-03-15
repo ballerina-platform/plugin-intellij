@@ -5,8 +5,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiElement;
 import com.intellij.lang.ASTNode;
 import org.intellij.sdk.language.psi.impl.*;
-import psi.BallerinaElementType;
-import psi.BallerinaTokenType;
 
 public interface BallerinaTypes {
 

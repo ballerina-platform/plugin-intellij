@@ -15,24 +15,25 @@
  *
  */
 
-package org.intellij.sdk.language;
+package org.intellij.sdk.language.highlighting;
 
-import com.intellij.lang.Language;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Provides Ballerina language support in IntelliJ-based IDEs.
- * This singleton class integrates Ballerina into the IntelliJ Platform, enabling language-specific features like
- * syntax highlighting and code completion.
+ * Factory class to produce syntax highlighters for Ballerina files.
  *
  * @since 2.0.0
  */
-public class BallerinaLanguage extends Language {
+public class BallerinaSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
 
-    public static final BallerinaLanguage INSTANCE = new BallerinaLanguage();
+    @NotNull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
 
-    private BallerinaLanguage() {
-
-        super("Ballerina");
+        return new BallerinaSyntaxHighlighter();
     }
-
 }

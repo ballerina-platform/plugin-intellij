@@ -15,24 +15,29 @@
  *
  */
 
-package org.intellij.sdk.language;
+package org.intellij.sdk.language.psi;
 
-import com.intellij.lang.Language;
+import com.intellij.psi.tree.IElementType;
+import org.intellij.sdk.language.BallerinaLanguage;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Provides Ballerina language support in IntelliJ-based IDEs.
- * This singleton class integrates Ballerina into the IntelliJ Platform, enabling language-specific features like
- * syntax highlighting and code completion.
+ * Defines a token type for the Ballerina language in the IntelliJ PSI structure, used for lexing Ballerina code.
  *
  * @since 2.0.0
  */
-public class BallerinaLanguage extends Language {
+public class BallerinaTokenType extends IElementType {
 
-    public static final BallerinaLanguage INSTANCE = new BallerinaLanguage();
+    public BallerinaTokenType(@NotNull @NonNls String debugName) {
 
-    private BallerinaLanguage() {
+        super(debugName, BallerinaLanguage.INSTANCE);
+    }
 
-        super("Ballerina");
+    @Override
+    public String toString() {
+
+        return "BallerinaTokenType." + super.toString();
     }
 
 }

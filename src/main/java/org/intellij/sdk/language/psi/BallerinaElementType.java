@@ -15,4 +15,23 @@
  *
  */
 
-rootProject.name = 'ballerina-intellij-idea-plugin'
+package org.intellij.sdk.language.psi;
+
+import com.intellij.psi.tree.IElementType;
+import org.intellij.sdk.language.BallerinaLanguage;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Represents a Ballerina-specific element type within the PSI tree, providing a foundation for language constructs
+ * in Ballerina files.
+ *
+ * @since 2.0.0
+ */
+public class BallerinaElementType extends IElementType {
+
+    public BallerinaElementType(@NotNull @NonNls String debugName) {
+
+        super(debugName, BallerinaLanguage.INSTANCE);
+    }
+}

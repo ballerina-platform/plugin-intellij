@@ -1,9 +1,31 @@
-package psi;
+/*
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.intellij.sdk.language.psi;
 
 import com.intellij.psi.tree.TokenSet;
-import org.intellij.sdk.language.psi.BallerinaTypes;
 
+/**
+ * Defines sets of token types used in Ballerina language parsing within the IntelliJ plugin.
+ *
+ * @since 2.0.0
+ */
 public interface BallerinaTokenSets {
+
     TokenSet KEYWORDS = TokenSet.create(
             BallerinaTypes.PUBLIC_KEYWORD,
             BallerinaTypes.PRIVATE_KEYWORD,
@@ -84,7 +106,7 @@ public interface BallerinaTokenSets {
             BallerinaTypes.DESCENDING_KEYWORD,
             BallerinaTypes.UNDERSCORE_KEYWORD,
             BallerinaTypes.NOT_IS_KEYWORD
-    );
+                                       );
 
     TokenSet TYPES = TokenSet.create(
             BallerinaTypes.INT_KEYWORD,
@@ -108,10 +130,10 @@ public interface BallerinaTokenSets {
             BallerinaTypes.READONLY_KEYWORD,
             BallerinaTypes.DISTINCT_KEYWORD,
             BallerinaTypes.FAIL_KEYWORD
-    );
+                                    );
 
-
-    TokenSet CONTEXTUALS = TokenSet.create(BallerinaTypes.RE_KEYWORD,BallerinaTypes.GROUP_KEYWORD,BallerinaTypes.COLLECT_KEYWORD);
+    TokenSet CONTEXTUALS =
+            TokenSet.create(BallerinaTypes.RE_KEYWORD, BallerinaTypes.GROUP_KEYWORD, BallerinaTypes.COLLECT_KEYWORD);
 
     TokenSet SEPARATORS = TokenSet.create(
             BallerinaTypes.OPEN_BRACE_TOKEN,
@@ -139,8 +161,7 @@ public interface BallerinaTokenSets {
             BallerinaTypes.SINGLE_QUOTE_TOKEN,
             BallerinaTypes.DOUBLE_BACKTICK_TOKEN,
             BallerinaTypes.TRIPLE_BACKTICK_TOKEN
-    );
-
+                                         );
 
     TokenSet OPERATORS = TokenSet.create(
             BallerinaTypes.EQUAL_TOKEN,
@@ -190,8 +211,7 @@ public interface BallerinaTokenSets {
             BallerinaTypes.BACK_SLASH_TOKEN,
             BallerinaTypes.DOLLAR_TOKEN,
             BallerinaTypes.ESCAPED_MINUS_TOKEN
-    );
-
+                                        );
 
 //    TokenSet DOC_REFS = TokenSet.create(BallerinaTypes.DOC_REF);
 
@@ -242,6 +262,5 @@ public interface BallerinaTokenSets {
     TokenSet COMMENTS = TokenSet.create(BallerinaTypes.COMMENT_MINUTIAE);
 
     TokenSet OTHERS = TokenSet.create(BallerinaTypes.OTHER);
-
 
 }

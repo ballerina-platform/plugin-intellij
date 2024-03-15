@@ -1,97 +1,19 @@
-//package org.intellij.sdk.language;
-//
-//import com.intellij.testFramework.ParsingTestCase;
-//
-//public class BallerinaParsingTest extends ParsingTestCase {
-//
-//    public BallerinaParsingTest() {
-//        super("", "bal", new BallerinaParserDefinition());
-//    }
-//
-//    public void testParsingTestData() {
-//        doTest(true);
-//    }
-//
-//    /**
-//     * @return path to test data file directory relative to root of this module.
-//     */
-//    @Override
-//    protected String getTestDataPath() {
-//        return "src/test/testData";
-//    }
-//
-//    @Override
-//    protected boolean skipSpaces() {
-//        return true;
-//    }
-//
-//    @Override
-//    protected boolean includeRanges() {
-//        return true;
-//    }
-//
-//}
-//
-//package org.intellij.sdk.language;
-//
-//import com.intellij.testFramework.ParsingTestCase;
-//import org.jetbrains.annotations.NotNull;
-//
-//import java.io.File;
-//
-//public class BallerinaParsingTest extends ParsingTestCase {
-//
-//    public BallerinaParsingTest() {
-//        super("", "bal", new BallerinaParserDefinition());
-//    }
-//
-//    // This test will run for each folder in the testData directory.
-//    public void testParsingTestData() {
-//        String[] testDirectories = new File(getTestDataPath()).list();
-//        if (testDirectories != null) {
-//            for (String directory : testDirectories) {
-//                // Here we set the name of the test to the name of the directory.
-//                String testDirPath = getTestDataPath() + "/" + directory;
-//                File testDir = new File(testDirPath);
-//
-//                // Skip if it's not a directory.
-//                if (!testDir.isDirectory()) continue;
-//
-//                // The name of the test is the name of the directory.
-//                // It assumes that each test case has a single test file that matches the directory name.
-//                myTestName = directory + "/" + directory;
-//                doTest(true);
-//            }
-//        }
-//    }
-//
-//    @Override
-//    protected String getTestDataPath() {
-//        return "src/test/testData";
-//    }
-//
-//    @Override
-//    protected boolean skipSpaces() {
-//        return true;
-//    }
-//
-//    @Override
-//    protected boolean includeRanges() {
-//        return true;
-//    }
-//
-//    // Override getTestName to use the directory name as the test name
-//    @Override
-//    protected @NotNull String getTestName(boolean lowercaseFirstLetter) {
-//        return lowercaseFirstLetter
-//                ? myTestName.toLowerCase()
-//                : myTestName;
-//    }
-//
-//    // This field is used to store the current test name.
-//    private String myTestName = "";
-//}
-//
+/*
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
 package org.intellij.sdk.language;
 
@@ -99,12 +21,18 @@ import com.intellij.testFramework.ParsingTestCase;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Handles the test cases for parser. Running the tests and displaying the results.
+ *
+ * @since 2.0.0
+ */
 public class BallerinaParsingTest extends ParsingTestCase {
+
     private static final Logger LOGGER = Logger.getLogger(BallerinaParsingTest.class.getName());
     private static FileHandler fileHandler;
 
@@ -126,24 +54,30 @@ public class BallerinaParsingTest extends ParsingTestCase {
     }
 
     public BallerinaParsingTest() {
+
         super("", "bal", new BallerinaParserDefinition());
     }
 
     // This test will run for each folder in the testData directory.
     public void testParsingTestData() {
+
         String[] testDirectories1 = new File(getTestDataPath()).list();
         if (testDirectories1 != null) {
             for (String directory1 : testDirectories1) {
                 String[] testDirectories2 = new File(getTestDataPath() + "/" + directory1).list();
                 if (testDirectories2 != null) {
                     for (String directory2 : testDirectories2) {
-                        String[] testDirectories3 = new File(getTestDataPath() + "/" + directory1 + "/" + directory2).list();
+                        String[] testDirectories3 =
+                                new File(getTestDataPath() + "/" + directory1 + "/" + directory2).list();
                         if (testDirectories3 != null) {
                             for (String directory3 : testDirectories3) {
-                                String testDirPath = getTestDataPath() + "/" + directory1 + "/" + directory2 + "/" + directory3;
+                                String testDirPath =
+                                        getTestDataPath() + "/" + directory1 + "/" + directory2 + "/" + directory3;
                                 File testDir = new File(testDirPath);
 
-                                if (!testDir.isDirectory()) continue;
+                                if (!testDir.isDirectory()) {
+                                    continue;
+                                }
 
                                 myTestName = directory1 + "/" + directory2 + "/" + directory3 + "/" + directory3;
                                 try {
@@ -164,22 +98,26 @@ public class BallerinaParsingTest extends ParsingTestCase {
 
     @Override
     protected String getTestDataPath() {
+
         return "src/test/testData/Parsing";
     }
 
     @Override
     protected boolean skipSpaces() {
+
         return true;
     }
 
     @Override
     protected boolean includeRanges() {
+
         return true;
     }
 
     // Override getTestName to use the directory name as the test name
     @Override
     protected @NotNull String getTestName(boolean lowercaseFirstLetter) {
+
         return lowercaseFirstLetter
                 ? myTestName.toLowerCase()
                 : myTestName;
@@ -190,6 +128,7 @@ public class BallerinaParsingTest extends ParsingTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+
         try {
             if (fileHandler != null) {
                 fileHandler.close();
