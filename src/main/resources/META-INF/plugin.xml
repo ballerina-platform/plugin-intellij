@@ -46,7 +46,7 @@
 
         <lang.commenter
                 language="Ballerina"
-                implementationClass="editor.io.ballerina.plugins.idea.BallerinaCommenter"/>
+                implementationClass="io.ballerina.plugins.idea.editor.BallerinaCommenter"/>
 
         <typedHandler implementation="io.ballerina.plugins.idea.editor.BallerinaTypedHandler"/>
 
