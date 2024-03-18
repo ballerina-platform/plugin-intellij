@@ -17,6 +17,7 @@
       </ul>
     ]]>
     </change-notes>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="222"/>
 
@@ -31,6 +32,7 @@
                 fieldName="INSTANCE"
                 language="Ballerina"
                 extensions="bal"/>
+
         <lang.parserDefinition
                 language="Ballerina"
                 implementationClass="io.ballerina.plugins.idea.BallerinaParserDefinition"/>
@@ -38,9 +40,11 @@
         <lang.syntaxHighlighterFactory
                 language="Ballerina"
                 implementationClass="io.ballerina.plugins.idea.highlighting.BallerinaSyntaxHighlighterFactory"/>
+
         <annotator
                 language="Ballerina"
                 implementationClass="io.ballerina.plugins.idea.highlighting.BallerinaAnnotator"/>
+
         <lang.braceMatcher language="Ballerina"
                            implementationClass="io.ballerina.plugins.idea.editor.BallerinaPairedBraceMatcher"/>
 
@@ -50,10 +54,7 @@
 
         <typedHandler implementation="io.ballerina.plugins.idea.editor.BallerinaTypedHandler"/>
 
-
         <highlightErrorFilter implementation="io.ballerina.plugins.idea.editor.BallerinaHighlightErrorFilter"
                               id="BallerinaHighlightErrorFilter"/>
-
     </extensions>
-
 </idea-plugin>
