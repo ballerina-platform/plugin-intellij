@@ -105,8 +105,7 @@ public interface BallerinaTokenSets {
             BallerinaTypes.ASCENDING_KEYWORD,
             BallerinaTypes.DESCENDING_KEYWORD,
             BallerinaTypes.UNDERSCORE_KEYWORD,
-            BallerinaTypes.NOT_IS_KEYWORD
-                                       );
+            BallerinaTypes.NOT_IS_KEYWORD);
 
     TokenSet TYPES = TokenSet.create(
             BallerinaTypes.INT_KEYWORD,
@@ -129,8 +128,7 @@ public interface BallerinaTokenSets {
             BallerinaTypes.STREAM_KEYWORD,
             BallerinaTypes.READONLY_KEYWORD,
             BallerinaTypes.DISTINCT_KEYWORD,
-            BallerinaTypes.FAIL_KEYWORD
-                                    );
+            BallerinaTypes.FAIL_KEYWORD);
 
     TokenSet CONTEXTUALS =
             TokenSet.create(BallerinaTypes.RE_KEYWORD, BallerinaTypes.GROUP_KEYWORD, BallerinaTypes.COLLECT_KEYWORD);
@@ -160,8 +158,7 @@ public interface BallerinaTokenSets {
             BallerinaTypes.DOUBLE_QUOTE_TOKEN,
             BallerinaTypes.SINGLE_QUOTE_TOKEN,
             BallerinaTypes.DOUBLE_BACKTICK_TOKEN,
-            BallerinaTypes.TRIPLE_BACKTICK_TOKEN
-                                         );
+            BallerinaTypes.TRIPLE_BACKTICK_TOKEN);
 
     TokenSet OPERATORS = TokenSet.create(
             BallerinaTypes.EQUAL_TOKEN,
@@ -210,12 +207,9 @@ public interface BallerinaTokenSets {
             BallerinaTypes.XML_CDATA_END_TOKEN,
             BallerinaTypes.BACK_SLASH_TOKEN,
             BallerinaTypes.DOLLAR_TOKEN,
-            BallerinaTypes.ESCAPED_MINUS_TOKEN
-                                        );
+            BallerinaTypes.ESCAPED_MINUS_TOKEN);
 
-//    TokenSet DOC_REFS = TokenSet.create(BallerinaTypes.DOC_REF);
-
-    TokenSet DOCUMENTATIONS = TokenSet.create(BallerinaTypes.MARKDOWN_DOCUMENTATION_LINE_START,
+    TokenSet DOCUMENTATION = TokenSet.create(BallerinaTypes.MARKDOWN_DOCUMENTATION_LINE_START,
             BallerinaTypes.SINGLE_BACKTICK_CONTENT,
             BallerinaTypes.SINGLE_BACKTICK_MARKDOWN_END,
             BallerinaTypes.DOCTYPE,

@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 import static io.ballerina.plugins.idea.psi.BallerinaTokenSets.CONTEXTUALS;
-import static io.ballerina.plugins.idea.psi.BallerinaTokenSets.DOCUMENTATIONS;
+import static io.ballerina.plugins.idea.psi.BallerinaTokenSets.DOCUMENTATION;
 import static io.ballerina.plugins.idea.psi.BallerinaTokenSets.KEYWORDS;
 import static io.ballerina.plugins.idea.psi.BallerinaTokenSets.LITERALS;
 import static io.ballerina.plugins.idea.psi.BallerinaTokenSets.OPERATORS;
@@ -56,7 +56,7 @@ public class BallerinaSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey OPERATOR =
             createTextAttributesKey("BAL_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
 
-    public static final TextAttributesKey DOCUMENTATION =
+    public static final TextAttributesKey DOC =
             createTextAttributesKey("BAL_DOCREF", DefaultLanguageHighlighterColors.DOC_COMMENT);
 
     public static final TextAttributesKey LITERAL =
@@ -79,7 +79,7 @@ public class BallerinaSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final TextAttributesKey[] CONTEXTUAL_KEYS = new TextAttributesKey[]{CONTEXTUAL};
     private static final TextAttributesKey[] SEPARATOR_KEYS = new TextAttributesKey[]{SEPARATOR};
     private static final TextAttributesKey[] OPERATOR_KEYS = new TextAttributesKey[]{OPERATOR};
-    private static final TextAttributesKey[] DOCUMENTATION_KEYS = new TextAttributesKey[]{DOCUMENTATION};
+    private static final TextAttributesKey[] DOCUMENTATION_KEYS = new TextAttributesKey[]{DOC};
     private static final TextAttributesKey[] LITERAL_KEYS = new TextAttributesKey[]{LITERAL};
     private static final TextAttributesKey[] IDENTIFYER_KEYS = new TextAttributesKey[]{IDENTIFYER};
     private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
@@ -101,7 +101,7 @@ public class BallerinaSyntaxHighlighter extends SyntaxHighlighterBase {
             return KEYWORD_KEYS;
         } else if (tokenType.equals(BallerinaTypes.PARAMETER_NAME)) {
             return TYPE_KEYS;
-        } else if (DOCUMENTATIONS.contains(tokenType)) {
+        } else if (DOCUMENTATION.contains(tokenType)) {
             return DOCUMENTATION_KEYS;
         } else if (CONTEXTUALS.contains(tokenType)) {
             return CONTEXTUAL_KEYS;
