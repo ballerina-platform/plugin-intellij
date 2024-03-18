@@ -1,0 +1,8 @@
+Ballerina File(0,11)
+  BallerinaModulePartImpl(MODULE_PART)(0,11)
+    BallerinaImportDeclImpl(IMPORT_DECL)(0,11)
+      PsiElement(BallerinaTokenType.IMPORT_KEYWORD)('import')(0,6)
+      BallerinaModuleNameImpl(MODULE_NAME)(7,10)
+        BallerinaImportIdentifierImpl(IMPORT_IDENTIFIER)(7,10)
+          PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('foo')(7,10)
+      PsiElement(BallerinaTokenType.SEMICOLON_TOKEN)(';')(10,11)

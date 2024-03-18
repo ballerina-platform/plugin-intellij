@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.psi;
@@ -22,7 +23,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents a token type in PSI tree.
+ * Defines a token type for the Ballerina language in the IntelliJ PSI structure, used for lexing Ballerina code.
+ *
+ * @since 2.0.0
  */
 public class BallerinaTokenType extends IElementType {
 
@@ -30,9 +33,9 @@ public class BallerinaTokenType extends IElementType {
         super(debugName, BallerinaLanguage.INSTANCE);
     }
 
-    // Note - You can update the type names shown in error msg here.
     @Override
     public String toString() {
-        return  super.toString();
+        return "BallerinaTokenType." + super.toString();
     }
+
 }

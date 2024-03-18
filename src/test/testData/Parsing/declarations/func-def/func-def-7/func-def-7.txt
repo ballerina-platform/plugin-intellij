@@ -1,0 +1,43 @@
+Ballerina File(0,59)
+  BallerinaModulePartImpl(MODULE_PART)(0,59)
+    BallerinaOtherDeclImpl(OTHER_DECL)(0,29)
+      BallerinaFunctionDefnImpl(FUNCTION_DEFN)(0,29)
+        BallerinaMetadataImpl(METADATA)(0,0)
+          <empty list>
+        BallerinaFunctionQualsImpl(FUNCTION_QUALS)(0,0)
+          <empty list>
+        PsiElement(BallerinaTokenType.FUNCTION_KEYWORD)('function')(0,8)
+        PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('testFunction1')(9,22)
+        BallerinaFunctionSignatureImpl(FUNCTION_SIGNATURE)(22,25)
+          PsiElement(BallerinaTokenType.OPEN_PAREN_TOKEN)('(')(22,23)
+          BallerinaParamListImpl(PARAM_LIST)(23,23)
+            <empty list>
+          PsiElement(BallerinaTokenType.CLOSE_PAREN_TOKEN)(')')(23,24)
+          BallerinaReturnTypeDescriptorImpl(RETURN_TYPE_DESCRIPTOR)(25,25)
+            <empty list>
+        BallerinaFunctionDefnBodyImpl(FUNCTION_DEFN_BODY)(25,29)
+          PsiElement(BallerinaTokenType.OPEN_BRACE_TOKEN)('{')(25,26)
+          BallerinaTokensImpl(TOKENS)(27,27)
+            <empty list>
+          PsiElement(BallerinaTokenType.CLOSE_BRACE_TOKEN)('}')(27,28)
+          PsiElement(BallerinaTokenType.SEMICOLON_TOKEN)(';')(28,29)
+    BallerinaOtherDeclImpl(OTHER_DECL)(31,59)
+      BallerinaFunctionDefnImpl(FUNCTION_DEFN)(31,59)
+        BallerinaMetadataImpl(METADATA)(31,31)
+          <empty list>
+        BallerinaFunctionQualsImpl(FUNCTION_QUALS)(31,31)
+          <empty list>
+        PsiElement(BallerinaTokenType.FUNCTION_KEYWORD)('function')(31,39)
+        PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('testFunction2')(40,53)
+        BallerinaFunctionSignatureImpl(FUNCTION_SIGNATURE)(53,56)
+          PsiElement(BallerinaTokenType.OPEN_PAREN_TOKEN)('(')(53,54)
+          BallerinaParamListImpl(PARAM_LIST)(54,54)
+            <empty list>
+          PsiElement(BallerinaTokenType.CLOSE_PAREN_TOKEN)(')')(54,55)
+          BallerinaReturnTypeDescriptorImpl(RETURN_TYPE_DESCRIPTOR)(56,56)
+            <empty list>
+        BallerinaFunctionDefnBodyImpl(FUNCTION_DEFN_BODY)(56,59)
+          PsiElement(BallerinaTokenType.OPEN_BRACE_TOKEN)('{')(56,57)
+          BallerinaTokensImpl(TOKENS)(58,58)
+            <empty list>
+          PsiElement(BallerinaTokenType.CLOSE_BRACE_TOKEN)('}')(58,59)

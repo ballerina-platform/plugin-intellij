@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea;
@@ -19,7 +20,11 @@ package io.ballerina.plugins.idea;
 import com.intellij.lang.Language;
 
 /**
- * Represents Ballerina language.
+ * Provides Ballerina language support in IntelliJ-based IDEs.
+ * This singleton class integrates Ballerina into the IntelliJ Platform, enabling language-specific features like
+ * syntax highlighting and code completion.
+ *
+ * @since 2.0.0
  */
 public class BallerinaLanguage extends Language {
 
@@ -28,4 +33,5 @@ public class BallerinaLanguage extends Language {
     private BallerinaLanguage() {
         super("Ballerina");
     }
+
 }

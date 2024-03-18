@@ -1,0 +1,18 @@
+Ballerina File(0,33)
+  BallerinaModulePartImpl(MODULE_PART)(0,33)
+    BallerinaOtherDeclImpl(OTHER_DECL)(0,33)
+      BallerinaServiceDeclImpl(SERVICE_DECL)(0,33)
+        BallerinaMetadataImpl(METADATA)(0,0)
+          <empty list>
+        BallerinaIsolatedQualImpl(ISOLATED_QUAL)(0,8)
+          PsiElement(BallerinaTokenType.ISOLATED_KEYWORD)('isolated')(0,8)
+        PsiElement(BallerinaTokenType.SERVICE_KEYWORD)('service')(9,16)
+        PsiElement(BallerinaTokenType.ON_KEYWORD)('on')(17,19)
+        BallerinaExpressionListImpl(EXPRESSION_LIST)(20,28)
+          BallerinaVariableReferenceExprImpl(VARIABLE_REFERENCE_EXPR)(20,28)
+            BallerinaVariableReferenceImpl(VARIABLE_REFERENCE)(20,28)
+              PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('listner1')(20,28)
+        PsiElement(BallerinaTokenType.OPEN_BRACE_TOKEN)('{')(29,30)
+        BallerinaServiceMembersImpl(SERVICE_MEMBERS)(32,32)
+          <empty list>
+        PsiElement(BallerinaTokenType.CLOSE_BRACE_TOKEN)('}')(32,33)
