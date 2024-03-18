@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,6 @@ public class BallerinaAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-
         PsiElement parent = element.getParent();
         if (element instanceof LeafPsiElement) {
             IElementType elementType = ((LeafPsiElement) element).getElementType();
@@ -117,7 +116,6 @@ public class BallerinaAnnotator implements Annotator {
 
     private void annotateKeyword(@NotNull PsiElement element, @NotNull AnnotationHolder holder,
                                  @NotNull TextAttributesKey textAttributesKey, boolean excludeEndChar) {
-
         TextRange textRange = element.getTextRange();
         TextRange newTextRange =
                 new TextRange(textRange.getStartOffset(), textRange.getEndOffset() - (excludeEndChar ? 1 : 0));
@@ -129,7 +127,6 @@ public class BallerinaAnnotator implements Annotator {
 
     private void annotateText(@NotNull PsiElement element, @NotNull AnnotationHolder holder,
                               @NotNull TextAttributesKey textAttributesKey) {
-
         holder.newAnnotation(HighlightSeverity.INFORMATION, "")
                 .range(element.getTextRange())
                 .textAttributes(textAttributesKey)
@@ -137,7 +134,6 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private void annotateInlineCode(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-
         holder.newAnnotation(HighlightSeverity.INFORMATION, "")
                 .range(element.getTextRange())
                 .textAttributes(DefaultLanguageHighlighterColors.DOC_COMMENT_TAG_VALUE)
@@ -145,7 +141,6 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private void annotateDocumentation(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-
         holder.newAnnotation(HighlightSeverity.INFORMATION, "")
                 .range(element.getTextRange())
                 .textAttributes(DefaultLanguageHighlighterColors.DOC_COMMENT)
@@ -153,7 +148,6 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private void annotateIdentifier(@NotNull PsiElement element, @NotNull AnnotationHolder holder, PsiElement parent) {
-
         if (isSpecialParentType(parent)) {
             annotateKeyword(element, holder, DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
         } else {
@@ -165,14 +159,12 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private boolean isSpecialParentType(PsiElement parent) {
-
         return parent instanceof BallerinaModuleTypeDefn || parent instanceof BallerinaResourcePathSegmentName ||
                 parent instanceof BallerinaFunctionDefn;
     }
 
     private void handlePreviousSiblingAnnotations(PsiElement element, AnnotationHolder holder,
                                                   PsiElement previousSibling) {
-
         String previousSiblingText = previousSibling.toString();
         if (isSpecialPreviousSibling(previousSiblingText)) {
             annotateKeyword(element, holder, DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
@@ -184,7 +176,6 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private boolean isSpecialPreviousSibling(String previousSiblingText) {
-
         return previousSiblingText.equals("PsiElement(BallerinaTokenType.FUNCTION_KEYWORD)") ||
                 previousSiblingText.equals("PsiElement(BallerinaTokenType.ENUM_KEYWORD)") ||
                 previousSiblingText.equals("PsiElement(BallerinaTokenType.TYPE_KEYWORD)") ||
@@ -192,7 +183,6 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private boolean isAtTokenWithColon(PsiElement previousSibling) {
-
         PsiElement colonSibling = getPreviousNonWhiteSpaceSibling(previousSibling);
         PsiElement atSibling = colonSibling != null ? getPreviousNonWhiteSpaceSibling(colonSibling) : null;
         return previousSibling.toString().equals("PsiElement(BallerinaTokenType.COLON_TOKEN)") &&
@@ -202,7 +192,6 @@ public class BallerinaAnnotator implements Annotator {
     }
 
     private PsiElement getPreviousNonWhiteSpaceSibling(PsiElement element) {
-
         PsiElement sibling = element.getPrevSibling();
         while (sibling instanceof PsiWhiteSpace) {
             sibling = sibling.getPrevSibling();
@@ -212,7 +201,6 @@ public class BallerinaAnnotator implements Annotator {
 
     private void annotateKeyword(@NotNull PsiElement element, @NotNull AnnotationHolder holder,
                                  TextAttributesKey color) {
-
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
                 .range(element.getTextRange())
                 .textAttributes(color)

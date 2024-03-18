@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ public class BallerinaTypedHandler extends TypedHandlerDelegate {
 
     @Override
     public @NotNull Result charTyped(char c, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
-
         if (c == '`' || c == '"') { // Check if the typed character is a backtick or double quote
             insertCharAndMoveCaret(editor, c);
         }
@@ -42,7 +41,6 @@ public class BallerinaTypedHandler extends TypedHandlerDelegate {
     }
 
     private void insertCharAndMoveCaret(Editor editor, char c) {
-
         Document document = editor.getDocument();
         int offset = editor.getCaretModel().getOffset();
 

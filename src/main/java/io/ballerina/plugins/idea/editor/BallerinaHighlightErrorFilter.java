@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ public class BallerinaHighlightErrorFilter extends HighlightErrorFilter {
 
     @Override
     public boolean shouldHighlightErrorElement(@NotNull PsiErrorElement element) {
-
         try {
             final PsiFile containingFile = element.getContainingFile();
             final String extension = containingFile.getVirtualFile().getExtension();

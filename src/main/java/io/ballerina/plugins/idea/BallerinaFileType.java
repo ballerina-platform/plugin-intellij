@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,35 +35,30 @@ public final class BallerinaFileType extends LanguageFileType {
     public static final BallerinaFileType INSTANCE = new BallerinaFileType();
 
     private BallerinaFileType() {
-
         super(BallerinaLanguage.INSTANCE);
     }
 
     @NotNull
     @Override
     public String getName() {
-
         return "Ballerina File";
     }
 
     @NotNull
     @Override
     public String getDescription() {
-
         return "Ballerina language file";
     }
 
     @NotNull
     @Override
     public String getDefaultExtension() {
-
         return "bal";
     }
 
     @Nullable
     @Override
     public Icon getIcon() {
-
         return BallerinaIcons.FILE;
     }
 

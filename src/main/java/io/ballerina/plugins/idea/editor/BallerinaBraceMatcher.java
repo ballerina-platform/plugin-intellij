@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,20 +51,17 @@ public class BallerinaBraceMatcher implements PairedBraceMatcher {
 
     @Override
     public BracePair @NotNull [] getPairs() {
-
         return pairs;
     }
 
     @Override
     public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType,
                                                    @Nullable final IElementType contextType) {
-
         return true;
     }
 
     @Override
     public int getCodeConstructStart(final PsiFile file, int openingBraceOffset) {
-
         PsiElement element = file.findElementAt(openingBraceOffset);
         if (element == null || element instanceof PsiFile) {
             return openingBraceOffset;

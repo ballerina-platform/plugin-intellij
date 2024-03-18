@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,35 +32,30 @@ final class BallerinaCommenter implements Commenter {
     @Nullable
     @Override
     public String getLineCommentPrefix() {
-
         return "//";
     }
 
     @Nullable
     @Override
     public String getBlockCommentPrefix() {
-
         return "//";
     }
 
     @Nullable
     @Override
     public String getBlockCommentSuffix() {
-
         return null;
     }
 
     @Nullable
     @Override
     public String getCommentedBlockCommentPrefix() {
-
         return null;
     }
 
     @Nullable
     @Override
     public String getCommentedBlockCommentSuffix() {
-
         return null;
     }
 

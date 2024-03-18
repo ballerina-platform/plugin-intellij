@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,54 +46,46 @@ final class BallerinaParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public Lexer createLexer(Project project) {
-
         return new BallerinaLexerAdapter();
     }
 
     @NotNull
     @Override
     public TokenSet getCommentTokens() {
-
         return BallerinaTokenSets.COMMENTS;
     }
 
     public @NotNull TokenSet getWhitespaceTokens() {
-
         return BallerinaTokenSets.WHITESPACES;
     }
 
     @NotNull
     @Override
     public TokenSet getStringLiteralElements() {
-
         return TokenSet.EMPTY;
     }
 
     @NotNull
     @Override
     public PsiParser createParser(final Project project) {
-
         return new BallerinaParser();
     }
 
     @NotNull
     @Override
     public IFileElementType getFileNodeType() {
-
         return FILE;
     }
 
     @NotNull
     @Override
     public PsiFile createFile(@NotNull FileViewProvider viewProvider) {
-
         return new BallerinaFile(viewProvider);
     }
 
     @NotNull
     @Override
     public PsiElement createElement(ASTNode node) {
-
         return BallerinaTypes.Factory.createElement(node);
     }
 

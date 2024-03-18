@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com)
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,13 +54,11 @@ public class BallerinaParsingTest extends ParsingTestCase {
     }
 
     public BallerinaParsingTest() {
-
         super("", "bal", new BallerinaParserDefinition());
     }
 
     // This test will run for each folder in the testData directory.
     public void testParsingTestData() {
-
         String[] testDirectories1 = new File(getTestDataPath()).list();
         if (testDirectories1 != null) {
             for (String directory1 : testDirectories1) {
@@ -98,26 +96,22 @@ public class BallerinaParsingTest extends ParsingTestCase {
 
     @Override
     protected String getTestDataPath() {
-
         return "src/test/testData/Parsing";
     }
 
     @Override
     protected boolean skipSpaces() {
-
         return true;
     }
 
     @Override
     protected boolean includeRanges() {
-
         return true;
     }
 
     // Override getTestName to use the directory name as the test name
     @Override
     protected @NotNull String getTestName(boolean lowercaseFirstLetter) {
-
         return lowercaseFirstLetter
                 ? myTestName.toLowerCase()
                 : myTestName;
@@ -128,7 +122,6 @@ public class BallerinaParsingTest extends ParsingTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-
         try {
             if (fileHandler != null) {
                 fileHandler.close();
