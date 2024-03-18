@@ -36,6 +36,9 @@ public class BallerinaParsingTest extends ParsingTestCase {
     private static final Logger LOGGER = Logger.getLogger(BallerinaParsingTest.class.getName());
     private static FileHandler fileHandler;
 
+    // This field is used to store the current test name.
+    private String myTestName = "";
+
     static {
         try {
             // Delete the log file if it exists
@@ -87,7 +90,6 @@ public class BallerinaParsingTest extends ParsingTestCase {
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -116,9 +118,6 @@ public class BallerinaParsingTest extends ParsingTestCase {
                 ? myTestName.toLowerCase()
                 : myTestName;
     }
-
-    // This field is used to store the current test name.
-    private String myTestName = "";
 
     @Override
     protected void tearDown() throws Exception {
