@@ -114,9 +114,7 @@ public class BallerinaParsingTest extends ParsingTestCase {
     // Override getTestName to use the directory name as the test name
     @Override
     protected @NotNull String getTestName(boolean lowercaseFirstLetter) {
-        return lowercaseFirstLetter
-                ? myTestName.toLowerCase()
-                : myTestName;
+        return lowercaseFirstLetter ? myTestName.toLowerCase() : myTestName;
     }
 
     @Override
