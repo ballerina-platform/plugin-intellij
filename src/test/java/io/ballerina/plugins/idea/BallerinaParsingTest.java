@@ -63,36 +63,52 @@ public class BallerinaParsingTest extends ParsingTestCase {
     // This test will run for each folder in the testData directory.
     public void testParsingTestData() {
         String[] testDirectories1 = new File(getTestDataPath()).list();
-        if (testDirectories1 != null) {
-            for (String directory1 : testDirectories1) {
-                String[] testDirectories2 = new File(getTestDataPath() + "/" + directory1).list();
-                if (testDirectories2 != null) {
-                    for (String directory2 : testDirectories2) {
-                        String[] testDirectories3 =
-                                new File(getTestDataPath() + "/" + directory1 + "/" + directory2).list();
-                        if (testDirectories3 != null) {
-                            for (String directory3 : testDirectories3) {
-                                String testDirPath =
-                                        getTestDataPath() + "/" + directory1 + "/" + directory2 + "/" + directory3;
-                                File testDir = new File(testDirPath);
+        if (testDirectories1 == null) {
+            return;
+        }
 
-                                if (!testDir.isDirectory()) {
-                                    continue;
-                                }
+        for (String directory1 : testDirectories1) {
+            processDirectoryLevel1(directory1);
+        }
+    }
 
-                                myTestName = directory1 + "/" + directory2 + "/" + directory3 + "/" + directory3;
-                                try {
-                                    LOGGER.info("Starting test: " + myTestName);
-                                    doTest(true);
-                                    LOGGER.info("Test passed: " + myTestName);
-                                } catch (Exception e) {
-                                    LOGGER.info("Test failed: " + myTestName);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    private void processDirectoryLevel1(String directory1) {
+        String[] testDirectories2 = new File(getTestDataPath() + "/" + directory1).list();
+        if (testDirectories2 == null) {
+            return;
+        }
+
+        for (String directory2 : testDirectories2) {
+            processDirectoryLevel2(directory1, directory2);
+        }
+    }
+
+    private void processDirectoryLevel2(String directory1, String directory2) {
+        String[] testDirectories3 = new File(getTestDataPath() + "/" + directory1 + "/" + directory2).list();
+        if (testDirectories3 == null) {
+            return;
+        }
+
+        for (String directory3 : testDirectories3) {
+            processDirectoryLevel3(directory1, directory2, directory3);
+        }
+    }
+
+    private void processDirectoryLevel3(String directory1, String directory2, String directory3) {
+        String testDirPath = getTestDataPath() + "/" + directory1 + "/" + directory2 + "/" + directory3;
+        File testDir = new File(testDirPath);
+
+        if (!testDir.isDirectory()) {
+            return;
+        }
+
+        myTestName = directory1 + "/" + directory2 + "/" + directory3 + "/" + directory3;
+        try {
+            LOGGER.info("Starting test: " + myTestName);
+            doTest(true);
+            LOGGER.info("Test passed: " + myTestName);
+        } catch (Exception e) {
+            LOGGER.info("Test failed: " + myTestName);
         }
     }
 
