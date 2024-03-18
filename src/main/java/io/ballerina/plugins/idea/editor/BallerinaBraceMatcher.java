@@ -46,7 +46,6 @@ public class BallerinaBraceMatcher implements PairedBraceMatcher {
             new BracePair(BallerinaTypes.OPEN_NESTED_BRACE_TOKEN, BallerinaTypes.CLOSE_NESTED_BRACE_TOKEN, false),
             new BracePair(BallerinaTypes.IGNORED_OPEN_BRACE_TOKEN, BallerinaTypes.IGNORED_CLOSE_BRACE_TOKEN, false),
             new BracePair(BallerinaTypes.INTERPOLATION_START_TOKEN, BallerinaTypes.INTERPOLATION_END_TOKEN, false),
-
     };
 
     @Override

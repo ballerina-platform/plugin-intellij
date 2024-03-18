@@ -61,5 +61,4 @@ public final class BallerinaFileType extends LanguageFileType {
     public Icon getIcon() {
         return BallerinaIcons.FILE;
     }
-
 }
