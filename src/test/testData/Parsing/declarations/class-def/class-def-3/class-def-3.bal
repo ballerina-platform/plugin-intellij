@@ -95,6 +95,3 @@ readonly client distinct class Foo {
 readonly distinct client class Foo {
     string name;
 }
-
-
-

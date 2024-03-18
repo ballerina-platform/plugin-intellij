@@ -26,4 +26,3 @@ annotation Foo on type,
                   source const,
                   source listener,
                   source worker;
-
