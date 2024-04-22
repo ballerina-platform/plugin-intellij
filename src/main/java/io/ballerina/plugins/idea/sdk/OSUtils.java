@@ -21,6 +21,8 @@ import java.util.Locale;
 
 /**
  * Utility functions used by launcher.
+ *
+ * @since 2.0.0
  */
 public class OSUtils {
 

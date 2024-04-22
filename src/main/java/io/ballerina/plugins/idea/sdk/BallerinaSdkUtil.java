@@ -183,13 +183,15 @@ public class BallerinaSdkUtil {
     }
 
     public static String findBalDistFolder(String initialPath) {
-        Path currentPath = Paths.get(initialPath);
-        while (currentPath != null) {
-            if (currentPath.getFileName().toString().toLowerCase().contains(balDistFolderNameStart)) {
-                return currentPath.normalize().toString();
+        File current = new File(Paths.get(initialPath).normalize().toString());
+
+        while (current != null) {
+            if (current.getName().toLowerCase().contains(balDistFolderNameStart)) {
+                return current.getAbsolutePath();
             }
-            currentPath = currentPath.getParent();
+            current = current.getParentFile();
         }
+
         return "";
     }
 

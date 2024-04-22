@@ -31,19 +31,16 @@ import java.io.File;
 public class BallerinaProjectUtil {
 
     private static final String ballerinaTomlFile = "Ballerina.toml";
-
     private static final String ballerinaTestFolderName = "tests";
-
     private static final String ballerinaModuleFolderName = "modules";
 
     public static String findBallerinaPackage(String startingPath) {
-
         File current = new File(startingPath);
 
         while (current != null) {
             File ballerinaFile = new File(current, ballerinaTomlFile);
             if (ballerinaFile.exists()) {
-                return current.getAbsolutePath(); // Return the path if found
+                return current.getAbsolutePath();
             }
             current = current.getParentFile();
         }

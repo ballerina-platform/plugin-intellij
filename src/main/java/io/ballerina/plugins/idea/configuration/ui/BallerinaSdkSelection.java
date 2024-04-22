@@ -211,14 +211,13 @@ public class BallerinaSdkSelection {
                                 false, false),
                         project, null);
         if (file != null) {
-            String sdkPath = BallerinaSdkUtil
-                    .getBalBatFromDist(BallerinaSdkUtil.findBalDistFolder(file.getPath()));
+            String balDistFolder = BallerinaSdkUtil.findBalDistFolder(file.getPath());
+            String sdkPath = BallerinaSdkUtil.getBalBatFromDist(balDistFolder);
             if (BallerinaSdkUtil.isValidPath(sdkPath)) {
                 sdkPath = Paths.get(sdkPath).normalize().toString();
                 if (sdkPath.equals(systemBalPath)) {
                     sdkVersionComboBox.setSelectedIndex(0);
-                    selectedVersionTextField.setText(systemBallerinaVersionStart
-                            + BallerinaSdkUtil.findBalDistFolder(systemBalVersion));
+                    selectedVersionTextField.setText(systemBallerinaVersionStart + systemBalVersion);
                 } else {
                     selectedSdkPath = sdkPath;
                     boolean found = false;
@@ -237,9 +236,7 @@ public class BallerinaSdkSelection {
                         sdkVersionComboBox.setSelectedIndex(1);
                     }
                     String version = BallerinaSdkUtil.getVersionFromPath(sdkPath);
-                    if (!version.isEmpty()) {
-                        version = BallerinaSdkUtil.findBalDistFolder(version);
-                    } else {
+                    if (version.isEmpty()) {
                         version = ballerinaSwanLake;
                     }
                     selectedSdkVersion = version;
@@ -261,17 +258,14 @@ public class BallerinaSdkSelection {
                 + BallerinaSdkUtil.findBalDistFolder(systemBalPath))) {
             selectedSdkPath = systemBalPath;
             selectedSdkVersion = systemBalVersion;
-            selectedVersionTextField.setText(systemBallerinaVersionStart
-                    + BallerinaSdkUtil.findBalDistFolder(systemBalVersion));
+            selectedVersionTextField.setText(systemBallerinaVersionStart + systemBalVersion);
             selectedVersionTextField.setForeground(defaultColor);
         } else {
             if (path != null) {
                 path = BallerinaSdkUtil.getBalBatFromDist(path);
             }
             String version = BallerinaSdkUtil.getVersionFromPath(path);
-            if (!version.isEmpty()) {
-                version = BallerinaSdkUtil.findBalDistFolder(version);
-            } else {
+            if (version.isEmpty()) {
                 version = ballerinaSwanLake;
             }
             selectedSdkPath = path;

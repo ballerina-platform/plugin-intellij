@@ -56,5 +56,49 @@
 
         <highlightErrorFilter implementation="io.ballerina.plugins.idea.editor.BallerinaHighlightErrorFilter"
                               id="BallerinaHighlightErrorFilter"/>
+
+        <editorFactoryListener implementation="io.ballerina.plugins.idea.preloading.BallerinaEditorFactoryListener"/>
+
+        <statusBarWidgetFactory
+                implementation="io.ballerina.plugins.idea.widget.BallerinaDetectionWidgetFactory"
+                id="BallerinaStatusBarWidget"/>
+
+        <statusBarWidgetFactory implementation="io.ballerina.plugins.idea.widget.BallerinaIconWidgetFactory"
+                                id="BallerinaIconWidget"/>
+
+        <notificationGroup id="Ballerina Plugin Notifications"
+                           displayType="BALLOON"
+                           toolWindowId=""
+                           isLogByDefault="true"/>
+
+        <applicationService serviceImplementation="io.ballerina.plugins.idea.sdk.BallerinaSdkSettings"/>
+
+        <projectConfigurable groupId="language"
+                             instance="io.ballerina.plugins.idea.configuration.BallerinaLanguageSettingsConfigurable"
+                             displayName="Ballerina"/>
+        <configurationType
+                implementation="io.ballerina.plugins.idea.runconfig.application.BallerinaApplicationRunConfigType"/>
+
+        <configurationType
+                implementation="io.ballerina.plugins.idea.runconfig.test.BallerinaTestConfigurationType"/>
+
+        <codeInsight.lineMarkerProvider
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.runconfig.application.BallerinaRunLineMarkerProvider"/>
+
+        <codeInsight.lineMarkerProvider
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.runconfig.test.BallerinaTestLineMarkerProvider"/>
     </extensions>
+    <actions>
+        <action id="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction"
+                class="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction" text="Run Ballerina File">
+            <add-to-group group-id="EditorPopupMenu.Run" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+        <action id="io.ballerina.plugins.idea.runconfig.test.BallerinaTestAction"
+                class="io.ballerina.plugins.idea.runconfig.test.BallerinaTestAction" text="Test Ballerina File">
+            <add-to-group group-id="EditorPopupMenu.Run" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
