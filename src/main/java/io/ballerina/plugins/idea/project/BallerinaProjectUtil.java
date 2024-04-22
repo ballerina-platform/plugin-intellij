@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * Utility class for ballerina project wise configurations.
@@ -35,8 +36,8 @@ public class BallerinaProjectUtil {
     private static final String ballerinaModuleFolderName = "modules";
 
     public static String findBallerinaPackage(String startingPath) {
+        startingPath = Paths.get(startingPath).normalize().toString();
         File current = new File(startingPath);
-
         while (current != null) {
             File ballerinaFile = new File(current, ballerinaTomlFile);
             if (ballerinaFile.exists()) {
@@ -49,7 +50,7 @@ public class BallerinaProjectUtil {
     }
 
     public static String findBallerinaModule(String startingPath) {
-
+        startingPath = Paths.get(startingPath).normalize().toString();
         File current = new File(startingPath);
 
         while (current != null) {
