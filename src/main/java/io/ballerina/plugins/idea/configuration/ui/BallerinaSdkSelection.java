@@ -179,8 +179,7 @@ public class BallerinaSdkSelection {
                 String path = sdkVersionComboBox.getItemAt(0);
                 if (Objects.equals(path, comboBoxDefaultStart + BallerinaSdkUtil.findBalDistFolder(systemBalPath))) {
                     sdkVersionComboBox.setSelectedIndex(0);
-                    selectedVersionTextField.setText(systemBallerinaVersionStart
-                            + BallerinaSdkUtil.findBalDistFolder(systemBalVersion));
+                    selectedVersionTextField.setText(systemBallerinaVersionStart + systemBalVersion);
                     selectedSdkVersion = systemBalVersion;
                     selectedSdkPath = systemBalPath;
                 } else {
