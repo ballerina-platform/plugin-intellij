@@ -104,14 +104,14 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
 
     private void applySdkChange() {
         boolean isCustomSdkSelected = sdkSelectionUI.getUseCustomSdkCheckbox().isSelected();
-        String selectedSdkPath = BallerinaSdkUtil.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
-        String currentSdkPath
-                = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkSettings.getInstance().getBallerinaSdkPath());
-        String systemSdkPath
-                = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkService.getInstance().getSystemBalPath());
         modified = isSdkChanged();
         BallerinaSdkSettings.getInstance().setUseCustomSdk(isCustomSdkSelected);
         if (isCustomSdkSelected) {
+            String selectedSdkPath = BallerinaSdkUtil.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
+            String currentSdkPath
+                    = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkSettings.getInstance().getBallerinaSdkPath());
+            String systemSdkPath
+                    = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkService.getInstance().getSystemBalPath());
             if (!Objects.equals(currentSdkPath, selectedSdkPath)) {
                 String path = sdkSelectionUI.getSelectedSdkPath();
                 String version = sdkSelectionUI.getSelectedSdkVersion();
