@@ -21,7 +21,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
 import io.ballerina.plugins.idea.configuration.ui.BallerinaSdkSelection;
-import io.ballerina.plugins.idea.notification.BallerinaNotification;
+import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkSettings;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
@@ -135,7 +135,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
     public void disposeUIResources() {
         sdkSelectionUI.disposeUi();
         if (modified) {
-            BallerinaNotification.notifyRestartIde(project);
+            BallerinaPluginNotifier.notifyRestartIde(project);
         }
     }
 }

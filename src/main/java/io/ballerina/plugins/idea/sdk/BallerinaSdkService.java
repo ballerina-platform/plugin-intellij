@@ -19,7 +19,7 @@ package io.ballerina.plugins.idea.sdk;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import io.ballerina.plugins.idea.notification.BallerinaNotification;
+import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class BallerinaSdkService {
         }
         if (wrongSettingsPath && !notified && BallerinaSdkUtil.isValidPath(ballerinaPath)) {
             notified = true;
-            BallerinaNotification.customNotification(project,
+            BallerinaPluginNotifier.customNotification(project,
                     NotificationType.INFORMATION,
                     "Invalid Ballerina SDK path",
                     "The Ballerina SDK path set in the settings is invalid. " +

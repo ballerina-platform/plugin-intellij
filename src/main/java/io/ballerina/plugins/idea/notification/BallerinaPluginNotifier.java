@@ -30,7 +30,7 @@ import com.intellij.openapi.project.Project;
  *
  * @since 2.0.0
  */
-public class BallerinaNotification {
+public class BallerinaPluginNotifier {
 
     public static void notifyBallerinaNotDetected(Project project) {
         // Use the builder pattern to create a notification.

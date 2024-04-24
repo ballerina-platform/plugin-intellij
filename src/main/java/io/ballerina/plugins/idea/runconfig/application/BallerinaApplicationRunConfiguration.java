@@ -23,7 +23,7 @@ import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.project.Project;
-import io.ballerina.plugins.idea.notification.BallerinaNotification;
+import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.runconfig.BallerinaExecutionConfiguration;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +48,7 @@ public class BallerinaApplicationRunConfiguration extends BallerinaExecutionConf
             throws ExecutionException {
         if (Objects.equals(BallerinaSdkService.getInstance().getBallerinaVersion(executionEnvironment.getProject()),
                 "")) {
-            BallerinaNotification.notifyBallerinaNotDetected(executionEnvironment.getProject());
+            BallerinaPluginNotifier.notifyBallerinaNotDetected(executionEnvironment.getProject());
             return null;
         }
 

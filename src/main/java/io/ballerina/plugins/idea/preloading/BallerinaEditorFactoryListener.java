@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFileBase;
 import io.ballerina.plugins.idea.BallerinaIcons;
-import io.ballerina.plugins.idea.notification.BallerinaNotification;
+import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.widget.BallerinaDetectionWidget;
 import io.ballerina.plugins.idea.widget.BallerinaDetectionWidgetFactory;
@@ -73,7 +73,7 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
                     ApplicationManager.getApplication().invokeLater(() -> {
                         widget.setMessage("");
                         if (balVersion.isEmpty()) {
-                            BallerinaNotification.notifyBallerinaNotDetected(project);
+                            BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
                         } else {
                             BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
                             if (iconWidget != null) {
