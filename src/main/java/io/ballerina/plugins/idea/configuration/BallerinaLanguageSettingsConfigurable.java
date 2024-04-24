@@ -77,10 +77,6 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
 
         panel.add(sdkSelectionUI.getPanel(), gbc);
 
-        // Add UI components as in the following example. increment the gbc.gridy for each component
-        // gbc.gridy = 1;
-        // panel.add(uiComponent, gbc);
-
         // Add a vertical filler panel to push everything to the top
         JPanel filler = new JPanel();
         gbc.gridy = 1;
@@ -134,7 +130,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
         return !Objects.equals(currentBalPath, selectedBalPath) && !selectedBalPath.isEmpty();
     }
 
-    // Todo: disconnect LSP process
+    // Todo: disconnect and kill the connected LS process and its sub-processes
     @Override
     public void disposeUIResources() {
         sdkSelectionUI.disposeUi();
