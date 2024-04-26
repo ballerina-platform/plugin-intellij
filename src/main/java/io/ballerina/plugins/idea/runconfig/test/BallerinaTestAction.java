@@ -28,7 +28,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
@@ -37,6 +36,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Objects;
+
+import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
 
 /**
  * Represents Ballerina test action for running ballerina tests.
@@ -54,7 +55,7 @@ public class BallerinaTestAction extends AnAction {
         Project project = e.getProject();
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-        if (project == null || file == null || !file.getName().endsWith(BallerinaConstants.BAL_EXTENSION)) {
+        if (project == null || file == null || !file.getName().endsWith(BAL_EXTENSION)) {
             return;
         }
 
@@ -98,7 +99,7 @@ public class BallerinaTestAction extends AnAction {
     }
 
     private String getConfigName(String fileName) {
-        return "Test " + (fileName.endsWith(BallerinaConstants.BAL_EXTENSION)
+        return "Test " + (fileName.endsWith(BAL_EXTENSION)
                 ? fileName.substring(0, fileName.length() - 4) : fileName);
     }
 
@@ -141,7 +142,7 @@ public class BallerinaTestAction extends AnAction {
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
         String version = BallerinaSdkService.getInstance().getBallerinaVersion(e.getProject());
 
-        if (file == null || !file.getName().endsWith(BallerinaConstants.BAL_EXTENSION) || Objects.equals(version, "")) {
+        if (file == null || !file.getName().endsWith(BAL_EXTENSION) || Objects.equals(version, "")) {
             e.getPresentation().setVisible(false);
             return;
         }

@@ -30,7 +30,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
@@ -42,6 +41,8 @@ import java.awt.Cursor;
 import java.nio.file.Paths;
 
 import javax.swing.Icon;
+
+import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
 
 /**
  * Provides gutter icons for main functions and services.
@@ -89,11 +90,11 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
                     Project project = elt.getProject();
                     VirtualFile file = elt.getContainingFile().getVirtualFile();
 
-                    if (file != null && file.getName().endsWith(BallerinaConstants.BAL_EXTENSION)) {
+                    if (file != null && file.getName().endsWith(BAL_EXTENSION)) {
 
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : finalFileName;
-                        String temp = configName.endsWith(BallerinaConstants.BAL_EXTENSION)
+                        String temp = configName.endsWith(BAL_EXTENSION)
                                 ? configName.substring(0, configName.length() - 4)
                                 : configName;
                         RunnerAndConfigurationSettings settings =

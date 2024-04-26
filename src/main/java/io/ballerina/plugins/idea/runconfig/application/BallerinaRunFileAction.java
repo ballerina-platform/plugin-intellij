@@ -28,7 +28,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
@@ -36,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
 import java.util.Objects;
+
+import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
 
 /**
  * Action for running ballerina application.
@@ -53,7 +54,7 @@ public class BallerinaRunFileAction extends AnAction {
         Project project = e.getProject();
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-        if (project != null && file != null && (file.getName().endsWith(BallerinaConstants.BAL_EXTENSION)
+        if (project != null && file != null && (file.getName().endsWith(BAL_EXTENSION)
                 | file.isDirectory())) {
             String fileName = file.getName();
             String path = file.getPath();
@@ -62,7 +63,7 @@ public class BallerinaRunFileAction extends AnAction {
                 fileName = Paths.get(packagePath).normalize().getFileName().toString();
             }
             RunManager runManager = RunManager.getInstance(project);
-            String temp = fileName.endsWith(BallerinaConstants.BAL_EXTENSION)
+            String temp = fileName.endsWith(BAL_EXTENSION)
                     ? fileName.substring(0, fileName.length() - 4) : fileName;
             RunnerAndConfigurationSettings settings =
                     runManager.createConfiguration("Run " + temp, BallerinaApplicationRunConfigType.class);
@@ -110,7 +111,7 @@ public class BallerinaRunFileAction extends AnAction {
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
         String version = BallerinaSdkService.getInstance().getBallerinaVersion(e.getProject());
         boolean visible =
-                file != null && (file.getName().endsWith(BallerinaConstants.BAL_EXTENSION) | file.isDirectory())
+                file != null && (file.getName().endsWith(BAL_EXTENSION) | file.isDirectory())
                         && !Objects.equals(version, "");
         if (visible) {
             String fileName = file.getName();
