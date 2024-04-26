@@ -30,47 +30,47 @@ import java.util.Map;
  */
 public class BallerinaExecutionConfigOptions extends RunConfigurationOptions {
 
-    private final StoredProperty<String> myScriptName =
+    private final StoredProperty<String> scriptName =
             string("").provideDelegate(this, "scriptName");
 
-    private final StoredProperty<List<Object>> myAdditionalCommands =
+    private final StoredProperty<List<Object>> additionalCommands =
             list().provideDelegate(this, "additionalCommands");
 
-    private final StoredProperty<Map<Object, Object>> myEnvVars =
+    private final StoredProperty<Map<Object, Object>> envVars =
             map().provideDelegate(this, "envVars");
 
-    private final StoredProperty<List<Object>> myProgramArguments =
+    private final StoredProperty<List<Object>> programArguments =
             list().provideDelegate(this, "programArguments");
 
     public String getScriptName() {
-        return myScriptName.getValue(this);
+        return scriptName.getValue(this);
     }
 
     public void setScriptName(String scriptName) {
-        myScriptName.setValue(this, scriptName);
+        this.scriptName.setValue(this, scriptName);
     }
 
     public List<String> getAdditionalCommands() {
-        return (List<String>) (List) myAdditionalCommands.getValue(this);
+        return (List<String>) (List) additionalCommands.getValue(this);
     }
 
     public void setAdditionalCommands(List<String> additionalCommands) {
-        myAdditionalCommands.setValue(this, (List) additionalCommands);
+        this.additionalCommands.setValue(this, (List) additionalCommands);
     }
 
     public Map<String, String> getEnvVars() {
-        return (Map<String, String>) (Map) myEnvVars.getValue(this);
+        return (Map<String, String>) (Map) envVars.getValue(this);
     }
 
     public void setEnvVars(Map<String, String> envVars) {
-        myEnvVars.setValue(this, (Map) envVars);
+        this.envVars.setValue(this, (Map) envVars);
     }
 
     public List<String> getProgramArguments() {
-        return (List<String>) (List) myProgramArguments.getValue(this);
+        return (List<String>) (List) programArguments.getValue(this);
     }
 
     public void setProgramArguments(List<String> programArguments) {
-        myProgramArguments.setValue(this, (List) programArguments);
+        this.programArguments.setValue(this, (List) programArguments);
     }
 }
