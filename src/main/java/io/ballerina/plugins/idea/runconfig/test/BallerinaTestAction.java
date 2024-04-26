@@ -28,6 +28,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
@@ -53,7 +54,7 @@ public class BallerinaTestAction extends AnAction {
         Project project = e.getProject();
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
 
-        if (project == null || file == null || !file.getName().endsWith(".bal")) {
+        if (project == null || file == null || !file.getName().endsWith(BallerinaConstants.BAL_EXTENSION)) {
             return;
         }
 
@@ -97,7 +98,8 @@ public class BallerinaTestAction extends AnAction {
     }
 
     private String getConfigName(String fileName) {
-        return "Test " + (fileName.endsWith(".bal") ? fileName.substring(0, fileName.length() - 4) : fileName);
+        return "Test " + (fileName.endsWith(BallerinaConstants.BAL_EXTENSION)
+                ? fileName.substring(0, fileName.length() - 4) : fileName);
     }
 
     private RunnerAndConfigurationSettings getConfigurationSettings(RunManager runManager, String configName,
@@ -139,7 +141,7 @@ public class BallerinaTestAction extends AnAction {
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
         String version = BallerinaSdkService.getInstance().getBallerinaVersion(e.getProject());
 
-        if (file == null || !file.getName().endsWith(".bal") || Objects.equals(version, "")) {
+        if (file == null || !file.getName().endsWith(BallerinaConstants.BAL_EXTENSION) || Objects.equals(version, "")) {
             e.getPresentation().setVisible(false);
             return;
         }

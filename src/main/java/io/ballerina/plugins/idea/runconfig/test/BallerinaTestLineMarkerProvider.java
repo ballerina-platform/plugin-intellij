@@ -29,6 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
@@ -93,12 +94,12 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                     Project project = elt.getProject();
                     VirtualFile file = elt.getContainingFile().getVirtualFile();
 
-                    if (file != null && file.getName().endsWith(".bal")) {
+                    if (file != null && file.getName().endsWith(BallerinaConstants.BAL_EXTENSION)) {
 
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : "finalFileName";
-                        String temp = configName.endsWith(".bal") ? configName.substring(0, configName.length() - 4) :
-                                configName;
+                        String temp = configName.endsWith(BallerinaConstants.BAL_EXTENSION)
+                                ? configName.substring(0, configName.length() - 4) : configName;
                         RunnerAndConfigurationSettings settings =
                                 runManager.createConfiguration(temp, BallerinaTestConfigurationType.class);
                         BallerinaTestConfiguration testConfiguration =

@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
@@ -49,7 +50,6 @@ import javax.swing.Icon;
  */
 public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
 
-    private final String balExtension = ".bal";
 
     @Nullable
     @Override
@@ -89,11 +89,11 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
                     Project project = elt.getProject();
                     VirtualFile file = elt.getContainingFile().getVirtualFile();
 
-                    if (file != null && file.getName().endsWith(balExtension)) {
+                    if (file != null && file.getName().endsWith(BallerinaConstants.BAL_EXTENSION)) {
 
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : finalFileName;
-                        String temp = configName.endsWith(balExtension)
+                        String temp = configName.endsWith(BallerinaConstants.BAL_EXTENSION)
                                 ? configName.substring(0, configName.length() - 4)
                                 : configName;
                         RunnerAndConfigurationSettings settings =

@@ -32,7 +32,6 @@ import javax.swing.Icon;
 final class BallerinaTestConfigurationType extends ConfigurationTypeBase {
 
     static final String ID = "BallerinaTestConfiguration";
-
     static final String EXEC_TYPE = "Test";
 
     BallerinaTestConfigurationType() {
