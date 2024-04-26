@@ -40,7 +40,7 @@ public class BallerinaIconWidget implements StatusBarWidget, StatusBarWidget.Ico
     private static final String ID = "BallerinaIconWidget";
     private final Project project;
     private Icon icon = null;
-    private String tooltipText = "Default tooltip text";
+    private String tooltipText = "";
 
     public BallerinaIconWidget(Project project) {
         this.project = project;
@@ -65,7 +65,8 @@ public class BallerinaIconWidget implements StatusBarWidget, StatusBarWidget.Ico
 
     @Override
     public void dispose() {
-
+        setIcon(null);
+        setTooltipText("");
     }
 
     @Nullable
