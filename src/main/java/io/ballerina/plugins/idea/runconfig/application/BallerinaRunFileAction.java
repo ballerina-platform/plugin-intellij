@@ -53,8 +53,8 @@ public class BallerinaRunFileAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-        if (project != null && file != null && (file.getName().endsWith(balExtension) | file.isDirectory())) {
 
+        if (project != null && file != null && (file.getName().endsWith(balExtension) | file.isDirectory())) {
             String fileName = file.getName();
             String path = file.getPath();
             String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);

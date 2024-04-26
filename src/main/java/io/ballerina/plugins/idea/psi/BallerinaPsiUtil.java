@@ -35,6 +35,7 @@ import java.util.Objects;
  * @since 2.0.0
  */
 public class BallerinaPsiUtil {
+
     public static PsiElement getPreviousSibling(PsiElement element) {
         if (element == null) {
             return null;
@@ -77,11 +78,11 @@ public class BallerinaPsiUtil {
     }
 
     public static boolean isService(@NotNull PsiElement element) {
-        return Objects.requireNonNull(element).getNode().getElementType() == BallerinaTypes.SERVICE_KEYWORD &&
-                element.getParent() != null
+        return Objects.requireNonNull(element).getNode().getElementType() == BallerinaTypes.SERVICE_KEYWORD
+                && element.getParent() != null
                 && Objects.requireNonNull(element.getParent()) instanceof BallerinaServiceDeclImpl
-                && element.getParent().getParent() != null &&
-                Objects.requireNonNull(element.getParent().getParent()) instanceof BallerinaOtherDeclImpl;
+                && element.getParent().getParent() != null
+                && Objects.requireNonNull(element.getParent().getParent()) instanceof BallerinaOtherDeclImpl;
     }
 
     public static String getFunctionName(PsiElement element) {
@@ -94,20 +95,20 @@ public class BallerinaPsiUtil {
     }
 
     public static boolean isTestFunction(@NotNull PsiElement element) {
-        if (Objects.equals(element.getText(), "Config") &&
-                element.getParent() instanceof BallerinaAnnotationImpl &&
-                element.getParent().getParent() instanceof BallerinaAnnotsImpl &&
-                element.getParent().getParent().getParent() instanceof BallerinaMetadataImpl &&
-                element.getParent().getParent().getParent().getParent() instanceof BallerinaFunctionDefnImpl &&
-                element.getParent().getParent().getParent().getParent().getParent() instanceof BallerinaOtherDeclImpl) {
-            PsiElement prev1 = BallerinaPsiUtil.getPreviousSibling(element);
-            PsiElement prev2 = BallerinaPsiUtil.getPreviousSibling(prev1);
-            PsiElement prev3 = BallerinaPsiUtil.getPreviousSibling(prev2);
-            if (prev1 != null && prev2 != null && prev3 != null) {
-                return prev1.getNode().getElementType() == BallerinaTypes.COLON_TOKEN &&
-                        prev2.getText().equals("test") &&
-                        prev3.getNode().getElementType() == BallerinaTypes.AT_TOKEN;
-            }
+        if (Objects.equals(element.getText(), "Config")
+            && element.getParent() instanceof BallerinaAnnotationImpl
+            && element.getParent().getParent() instanceof BallerinaAnnotsImpl
+            && element.getParent().getParent().getParent() instanceof BallerinaMetadataImpl
+            && element.getParent().getParent().getParent().getParent() instanceof BallerinaFunctionDefnImpl
+            && element.getParent().getParent().getParent().getParent().getParent() instanceof BallerinaOtherDeclImpl) {
+                PsiElement prev1 = BallerinaPsiUtil.getPreviousSibling(element);
+                PsiElement prev2 = BallerinaPsiUtil.getPreviousSibling(prev1);
+                PsiElement prev3 = BallerinaPsiUtil.getPreviousSibling(prev2);
+                if (prev1 != null && prev2 != null && prev3 != null) {
+                    return prev1.getNode().getElementType() == BallerinaTypes.COLON_TOKEN &&
+                            prev2.getText().equals("test") &&
+                            prev3.getNode().getElementType() == BallerinaTypes.AT_TOKEN;
+                }
         }
         return false;
     }

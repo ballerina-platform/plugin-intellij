@@ -33,9 +33,7 @@ import com.intellij.openapi.project.Project;
 public class BallerinaPluginNotifier {
 
     public static void notifyBallerinaNotDetected(Project project) {
-        // Use the builder pattern to create a notification.
-        Notification notification =
-                NotificationGroupManager
+        Notification notification = NotificationGroupManager
                         .getInstance().getNotificationGroup("Ballerina Plugin Notifications")
                         .createNotification("Unable to detect Ballerina in your environment.",
                                 NotificationType.ERROR)
@@ -51,22 +49,22 @@ public class BallerinaPluginNotifier {
     }
 
     public static void notifyRestartIde(Project project) {
-        Notification notification =
-                NotificationGroupManager.getInstance().getNotificationGroup("Ballerina Plugin Notifications")
-                        .createNotification("Restart the IDE to apply the changes.", NotificationType.INFORMATION)
-                        .setTitle("Restart the IDE to apply the changes.")
-                        .setContent("Please restart the IDE to apply the changes.")
-                        .addAction(NotificationAction.createSimple("Restart", () -> {
-                            // Restart all opened IDEs
-                            ApplicationManager.getApplication().restart();
-                        }));
+        Notification notification = NotificationGroupManager.getInstance()
+                .getNotificationGroup("Ballerina Plugin Notifications")
+                .createNotification("Restart the IDE to apply the changes.", NotificationType.INFORMATION)
+                .setTitle("Restart the IDE to apply the changes.")
+                .setContent("Please restart the IDE to apply the changes.")
+                .addAction(NotificationAction.createSimple("Restart", () -> {
+                    // Restart all opened IDEs
+                    ApplicationManager.getApplication().restart();
+                }));
         notification.notify(project);
     }
 
     public static void customNotification(Project project, NotificationType type, String title, String msg) {
-        Notification notification =
-                NotificationGroupManager.getInstance().getNotificationGroup("Ballerina Plugin Notifications")
-                        .createNotification("", type).setTitle(title).setContent(msg);
-        notification.notify(project);
+        NotificationGroupManager.getInstance()
+                .getNotificationGroup("Ballerina Plugin Notifications")
+                .createNotification("", type).setTitle(title).setContent(msg)
+                .notify(project);
     }
 }

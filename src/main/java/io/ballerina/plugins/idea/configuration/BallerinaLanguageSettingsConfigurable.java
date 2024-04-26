@@ -20,7 +20,7 @@ package io.ballerina.plugins.idea.configuration;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
-import io.ballerina.plugins.idea.configuration.ui.BallerinaSdkSelection;
+import io.ballerina.plugins.idea.configuration.ui.BallerinaSdkPanel;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkSettings;
@@ -45,7 +45,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
 
     private final Project project;
     private boolean modified = false;
-    private BallerinaSdkSelection sdkSelectionUI;
+    private BallerinaSdkPanel sdkSelectionUI;
 
     public BallerinaLanguageSettingsConfigurable(Project project) {
         this.project = project;
@@ -63,7 +63,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        sdkSelectionUI = new BallerinaSdkSelection(project);
+        sdkSelectionUI = new BallerinaSdkPanel(project);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

@@ -42,7 +42,6 @@ import java.nio.file.Paths;
 
 import javax.swing.Icon;
 
-
 /**
  * Provides gutter icons for main functions and services.
  *

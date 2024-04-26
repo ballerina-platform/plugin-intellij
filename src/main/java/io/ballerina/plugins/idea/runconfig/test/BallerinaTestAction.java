@@ -185,5 +185,4 @@ public class BallerinaTestAction extends AnAction {
         e.getPresentation().setVisible(true);
         e.getPresentation().setText("Test " + testName);
     }
-
 }

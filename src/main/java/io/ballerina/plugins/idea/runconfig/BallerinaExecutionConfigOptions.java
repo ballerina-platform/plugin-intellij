@@ -36,11 +36,11 @@ public class BallerinaExecutionConfigOptions extends RunConfigurationOptions {
     private final StoredProperty<List<Object>> myAdditionalCommands =
             list().provideDelegate(this, "additionalCommands");
 
-    private final StoredProperty<Map<Object, Object>> myEnvVars
-            = map().provideDelegate(this, "envVars");
+    private final StoredProperty<Map<Object, Object>> myEnvVars =
+            map().provideDelegate(this, "envVars");
 
-    private final StoredProperty<List<Object>> myProgramArguments
-            = list().provideDelegate(this, "programArguments");
+    private final StoredProperty<List<Object>> myProgramArguments =
+            list().provideDelegate(this, "programArguments");
 
     public String getScriptName() {
         return myScriptName.getValue(this);

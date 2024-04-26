@@ -88,7 +88,6 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                 // Default run icon
                 psiElement -> "Test " + BallerinaPsiUtil.getFunctionName(element),
                 (e, elt) -> {
-
                     e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
                     Project project = elt.getProject();

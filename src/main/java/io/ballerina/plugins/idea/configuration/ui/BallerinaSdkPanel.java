@@ -47,7 +47,7 @@ import javax.swing.JPanel;
  *
  * @since 2.0.0
  */
-public class BallerinaSdkSelection {
+public class BallerinaSdkPanel {
 
     private ComboBox<String> sdkVersionComboBox = new ComboBox<>();
     private JLabel selectedVersionTextField = new JLabel();
@@ -72,7 +72,7 @@ public class BallerinaSdkSelection {
     private static final String LABEL_TEXT = "Ballerina SDK Path:";
     private static final String CHECKBOX_TEXT = "Use custom Ballerina SDK";
 
-    public BallerinaSdkSelection(Project project) {
+    public BallerinaSdkPanel(Project project) {
         this.project = project;
         init();
     }

@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-
 /**
  * Represents Ballerina test run configuration.
  *
