@@ -209,45 +209,46 @@ public class BallerinaSdkPanel {
                                 false, false,
                                 false, false),
                         project, null);
-        if (file != null) {
-            String balDistFolder = BallerinaSdkUtil.findBalDistFolder(file.getPath());
-            String sdkPath = BallerinaSdkUtil.getBalBatFromDist(balDistFolder);
-            if (BallerinaSdkUtil.isValidPath(sdkPath)) {
-                sdkPath = Paths.get(sdkPath).normalize().toString();
-                if (sdkPath.equals(systemBalPath)) {
-                    sdkVersionComboBox.setSelectedIndex(0);
-                    selectedVersionTextField.setText(SYSTEM_BALLERINA_VERSION + systemBalVersion);
-                } else {
-                    selectedSdkPath = sdkPath;
-                    boolean found = false;
-                    if (sdkVersionComboBox.getItemCount() > 1) {
-                        for (int i = 0; i < sdkVersionComboBox.getItemCount(); i++) {
-                            if (sdkVersionComboBox.getItemAt(i)
-                                    .equals(BallerinaSdkUtil.findBalDistFolder(sdkPath))) {
-                                found = true;
-                                sdkVersionComboBox.setSelectedIndex(i);
-                                break;
-                            }
+        if (file == null) {
+            return;
+        }
+        String balDistFolder = BallerinaSdkUtil.findBalDistFolder(file.getPath());
+        String sdkPath = BallerinaSdkUtil.getBalBatFromDist(balDistFolder);
+        if (BallerinaSdkUtil.isValidPath(sdkPath)) {
+            sdkPath = Paths.get(sdkPath).normalize().toString();
+            if (sdkPath.equals(systemBalPath)) {
+                sdkVersionComboBox.setSelectedIndex(0);
+                selectedVersionTextField.setText(SYSTEM_BALLERINA_VERSION + systemBalVersion);
+            } else {
+                selectedSdkPath = sdkPath;
+                boolean found = false;
+                if (sdkVersionComboBox.getItemCount() > 1) {
+                    for (int i = 0; i < sdkVersionComboBox.getItemCount(); i++) {
+                        if (sdkVersionComboBox.getItemAt(i)
+                                .equals(BallerinaSdkUtil.findBalDistFolder(sdkPath))) {
+                            found = true;
+                            sdkVersionComboBox.setSelectedIndex(i);
+                            break;
                         }
                     }
-                    if (!found) {
-                        sdkVersionComboBox.insertItemAt(BallerinaSdkUtil.findBalDistFolder(sdkPath), 1);
-                        sdkVersionComboBox.setSelectedIndex(1);
-                    }
-                    String version = BallerinaSdkUtil.getVersionFromPath(sdkPath);
-                    if (version.isEmpty()) {
-                        version = BALLERINA_SWAN_LAKE;
-                    }
-                    selectedSdkVersion = version;
-                    selectedVersionTextField.setText(version);
                 }
-                selectedVersionTextField.setForeground(defaultColor);
-            } else {
-                selectedVersionTextField.setText(INVALID_BAL_SDK_PATH);
-                selectedVersionTextField.setForeground(JBColor.RED);
-                selectedSdkVersion = "";
-                selectedSdkPath = "";
+                if (!found) {
+                    sdkVersionComboBox.insertItemAt(BallerinaSdkUtil.findBalDistFolder(sdkPath), 1);
+                    sdkVersionComboBox.setSelectedIndex(1);
+                }
+                String version = BallerinaSdkUtil.getVersionFromPath(sdkPath);
+                if (version.isEmpty()) {
+                    version = BALLERINA_SWAN_LAKE;
+                }
+                selectedSdkVersion = version;
+                selectedVersionTextField.setText(version);
             }
+            selectedVersionTextField.setForeground(defaultColor);
+        } else {
+            selectedVersionTextField.setText(INVALID_BAL_SDK_PATH);
+            selectedVersionTextField.setForeground(JBColor.RED);
+            selectedSdkVersion = "";
+            selectedSdkPath = "";
         }
     }
 

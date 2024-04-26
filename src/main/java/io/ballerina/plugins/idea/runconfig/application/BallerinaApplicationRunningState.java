@@ -62,9 +62,7 @@ public class BallerinaApplicationRunningState extends BallerinaExecutionState {
         if (!programArguments.contains(lastPath)) {
             programArguments.add(lastPath);
         }
-
-        String pattern = "\\s+";
-
+        
         if (commands != null && !commands.isEmpty()) {
             for (String cmd : commands) {
                 if (!Objects.equals(cmd, "")) {
@@ -75,7 +73,7 @@ public class BallerinaApplicationRunningState extends BallerinaExecutionState {
 
         if (!programArguments.isEmpty()) {
             for (String arg : programArguments) {
-                if (!Objects.equals(arg, "") && !arg.matches(pattern)) {
+                if (!arg.isBlank()) {
                     commandLine.addParameter(arg.strip());
                 }
             }

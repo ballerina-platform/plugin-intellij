@@ -62,30 +62,31 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             return;
         }
         VirtualFile file = FileDocumentManager.getInstance().getFile(event.getEditor().getDocument());
-        if (!balSourcesFound && isBalFile(file)) {
-            ApplicationManager.getApplication().executeOnPooledThread(() -> {
-                BallerinaDetectionWidget widget = BallerinaDetectionWidgetFactory.getWidget(project);
-                if (widget != null) {
-                    ApplicationManager.getApplication().invokeLater(() -> widget.setMessage("Detecting Ballerina.."));
-                }
-                String balVersion = BallerinaSdkService.getInstance().getBallerinaVersion(project);
-                if (widget != null) {
-                    ApplicationManager.getApplication().invokeLater(() -> {
-                        widget.setMessage("");
-                        if (balVersion.isEmpty()) {
-                            BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
-                        } else {
-                            BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
-                            if (iconWidget != null) {
-                                iconWidget.setIcon(BallerinaIcons.FILE);
-                                iconWidget.setTooltipText(balVersion);
-                            }
-                        }
-                    });
-                }
-                balSourcesFound = true;
-            });
-            balSourcesFound = true;
+        if (balSourcesFound || !isBalFile(file)) {
+            return;
         }
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            BallerinaDetectionWidget widget = BallerinaDetectionWidgetFactory.getWidget(project);
+            if (widget != null) {
+                ApplicationManager.getApplication().invokeLater(() -> widget.setMessage("Detecting Ballerina.."));
+            }
+            String balVersion = BallerinaSdkService.getInstance().getBallerinaVersion(project);
+            if (widget != null) {
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    widget.setMessage("");
+                    if (balVersion.isEmpty()) {
+                        BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
+                    } else {
+                        BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
+                        if (iconWidget != null) {
+                            iconWidget.setIcon(BallerinaIcons.FILE);
+                            iconWidget.setTooltipText(balVersion);
+                        }
+                    }
+                });
+            }
+            balSourcesFound = true;
+        });
+        balSourcesFound = true;
     }
 }

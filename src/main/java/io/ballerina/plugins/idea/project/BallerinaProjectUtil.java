@@ -52,8 +52,8 @@ public class BallerinaProjectUtil {
 
         while (current != null) {
             if (current.getParentFile() != null
-                && current.getParentFile()
-                    .getName().equalsIgnoreCase(BallerinaConstants.BALLERINA_MODULE_FOLDER_NAME)) {
+                && current.getParentFile().getName()
+                    .equalsIgnoreCase(BallerinaConstants.BALLERINA_MODULE_FOLDER_NAME)) {
                     if (new File(current.getParentFile().getParentFile(), BallerinaConstants.BALLERINA_TOML_FILE)
                             .exists()) {
                         return current.getAbsolutePath();
