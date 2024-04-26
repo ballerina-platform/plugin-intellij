@@ -36,7 +36,7 @@ public class BallerinaProjectUtil {
         startingPath = Paths.get(startingPath).normalize().toString();
         File current = new File(startingPath);
         while (current != null) {
-            File ballerinaFile = new File(current, BallerinaConstants.BALLERINA_TOML_FILE);
+            File ballerinaFile = new File(current, BallerinaConstants.BAL_TOML_FILE);
             if (ballerinaFile.exists()) {
                 return current.getAbsolutePath();
             }
@@ -53,8 +53,8 @@ public class BallerinaProjectUtil {
         while (current != null) {
             if (current.getParentFile() != null
                 && current.getParentFile().getName()
-                    .equalsIgnoreCase(BallerinaConstants.BALLERINA_MODULE_FOLDER_NAME)) {
-                    if (new File(current.getParentFile().getParentFile(), BallerinaConstants.BALLERINA_TOML_FILE)
+                    .equalsIgnoreCase(BallerinaConstants.BAL_MODULE_FOLDER_NAME)) {
+                    if (new File(current.getParentFile().getParentFile(), BallerinaConstants.BAL_TOML_FILE)
                             .exists()) {
                         return current.getAbsolutePath();
                     }
@@ -72,8 +72,8 @@ public class BallerinaProjectUtil {
             String path = virtualFile.getPath();
             File current = new File(path);
             File parent = current.getParentFile();
-            File balToml = new File(parent.getParent(), BallerinaConstants.BALLERINA_TOML_FILE);
-            return parent.getName().equals(BallerinaConstants.BALLERINA_TEST_FOLDER_NAME) && balToml.exists();
+            File balToml = new File(parent.getParent(), BallerinaConstants.BAL_TOML_FILE);
+            return parent.getName().equals(BallerinaConstants.BAL_TEST_FOLDER_NAME) && balToml.exists();
         }
         return false;
     }
@@ -86,9 +86,9 @@ public class BallerinaProjectUtil {
             File current = new File(path);
             File parent = current.getParentFile();
             File grandParent = parent.getParentFile().getParentFile();
-            File balToml = new File(grandParent.getParentFile(), BallerinaConstants.BALLERINA_TOML_FILE);
-            return parent.getName().equals(BallerinaConstants.BALLERINA_TEST_FOLDER_NAME)
-                    && grandParent.getName().equalsIgnoreCase(BallerinaConstants.BALLERINA_MODULE_FOLDER_NAME) &&
+            File balToml = new File(grandParent.getParentFile(), BallerinaConstants.BAL_TOML_FILE);
+            return parent.getName().equals(BallerinaConstants.BAL_TEST_FOLDER_NAME)
+                    && grandParent.getName().equalsIgnoreCase(BallerinaConstants.BAL_MODULE_FOLDER_NAME) &&
                     balToml.exists();
         }
         return false;
