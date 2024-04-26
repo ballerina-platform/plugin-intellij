@@ -84,18 +84,16 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
         return new LineMarkerInfo<>(element, element.getTextRange(), icon,
                 psiElement -> "Run " + finalFileName,
                 (e, elt) -> {
-
                     e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
                     Project project = elt.getProject();
                     VirtualFile file = elt.getContainingFile().getVirtualFile();
 
                     if (file != null && file.getName().endsWith(BAL_EXTENSION)) {
-
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : finalFileName;
-                        String temp = configName.endsWith(BAL_EXTENSION)
-                                ? configName.substring(0, configName.length() - 4)
+                        String temp =
+                                configName.endsWith(BAL_EXTENSION) ? configName.substring(0, configName.length() - 4)
                                 : configName;
                         RunnerAndConfigurationSettings settings =
                                 runManager.createConfiguration("Run " + temp,

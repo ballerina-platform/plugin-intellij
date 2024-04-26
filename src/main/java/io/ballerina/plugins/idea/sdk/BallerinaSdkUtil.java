@@ -39,7 +39,7 @@ public class BallerinaSdkUtil {
 
     private static final String BAL_VERSION_CMD = "bal -v";
     private static final String BAL_HOME_CMD = "bal home";
-    private static final String WINDOWS_BALLERINA_EXECUTABLE = "bal.bat";
+    private static final String WINDOWS_BAL_EXECUTABLE = "bal.bat";
     private static final String UNIX_BAL_EXECUTABLE = "bal";
     private static final String BAL_EXECUTABLE_FOLDER = "bin";
     private static final String BAL_DIST_FOLDER_NAME_START = "ballerina-";
@@ -88,7 +88,7 @@ public class BallerinaSdkUtil {
                 if (Objects.equals(entry.getKey(), BAL_WINDOWS_ENV_VARIABLE)) {
                     String pth = entry.getValue();
                     pth = Paths.get(pth, "distributions", BAL_DIST_FOLDER_NAME_START
-                                    + version.split(" ")[1], BAL_EXECUTABLE_FOLDER, WINDOWS_BALLERINA_EXECUTABLE)
+                                    + version.split(" ")[1], BAL_EXECUTABLE_FOLDER, WINDOWS_BAL_EXECUTABLE)
                             .toString();
                     return pth;
                 }
@@ -128,7 +128,7 @@ public class BallerinaSdkUtil {
 
         String executableName = file.getName();
 
-        if ((OSUtils.isWindows() && !executableName.equals(WINDOWS_BALLERINA_EXECUTABLE)) ||
+        if ((OSUtils.isWindows() && !executableName.equals(WINDOWS_BAL_EXECUTABLE)) ||
                 (!OSUtils.isWindows() && !executableName.equals(UNIX_BAL_EXECUTABLE))) {
             return false;
         }
@@ -174,7 +174,7 @@ public class BallerinaSdkUtil {
                     String version = file.getName().replace('b', 'B').replace('-', ' ');
                     String update = version.split("\\.")[1];
                     version = version + " (Swan Lake Update " + update + ")";
-                    String executableName = OSUtils.isWindows() ? WINDOWS_BALLERINA_EXECUTABLE : UNIX_BAL_EXECUTABLE;
+                    String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
                     Path sdkPath = Paths.get(file.getAbsolutePath(), BAL_EXECUTABLE_FOLDER, executableName);
                     if (isValidSdk(sdkPath.toString(), version)) {
                         sdkList.add(new BallerinaSdk(sdkPath.toString(), version));
@@ -202,7 +202,7 @@ public class BallerinaSdkUtil {
         Path path = Paths.get(distPath).normalize();
         String lastElement = path.getFileName().toString();
 
-        String executableName = OSUtils.isWindows() ? WINDOWS_BALLERINA_EXECUTABLE : UNIX_BAL_EXECUTABLE;
+        String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
 
         if (BAL_EXECUTABLE_FOLDER.equals(lastElement)) {
             return path.resolve(executableName).toString();
