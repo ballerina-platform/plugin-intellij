@@ -23,6 +23,7 @@ import com.intellij.psi.PsiFile;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_MODULE_FOLDER_NAME;
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_TEST_FOLDER_NAME;
@@ -35,77 +36,97 @@ import static io.ballerina.plugins.idea.BallerinaConstants.BAL_TOML_FILE;
  */
 public class BallerinaProjectUtil {
 
-    public static String findBallerinaPackage(String startingPath) {
-        startingPath = Paths.get(startingPath).normalize().toString();
-        File current = new File(startingPath);
-        while (current != null) {
-            File ballerinaFile = new File(current, BAL_TOML_FILE);
-            if (ballerinaFile.exists()) {
-                return current.getAbsolutePath();
+    public static Optional<String> findBallerinaPackage(String startingPath) {
+        try {
+            startingPath = Paths.get(startingPath).normalize().toString();
+            File current = new File(startingPath);
+            while (current != null) {
+                File ballerinaFile = new File(current, BAL_TOML_FILE);
+                if (ballerinaFile.exists()) {
+                    return Optional.of(current.getAbsolutePath());
+                }
+                current = current.getParentFile();
             }
-            current = current.getParentFile();
-        }
 
-        return "";
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public static String findBallerinaModule(String startingPath) {
-        startingPath = Paths.get(startingPath).normalize().toString();
-        File current = new File(startingPath);
+    public static Optional<String> findBallerinaModule(String startingPath) {
+        try {
+            startingPath = Paths.get(startingPath).normalize().toString();
+            File current = new File(startingPath);
 
-        while (current != null) {
-            if (current.getParentFile() != null
-                && current.getParentFile().getName()
-                    .equalsIgnoreCase(BAL_MODULE_FOLDER_NAME)) {
+            while (current != null) {
+                if (current.getParentFile() != null
+                        && current.getParentFile().getName()
+                        .equalsIgnoreCase(BAL_MODULE_FOLDER_NAME)) {
                     if (new File(current.getParentFile().getParentFile(), BAL_TOML_FILE)
                             .exists()) {
-                        return current.getAbsolutePath();
+                        return Optional.of(current.getAbsolutePath());
                     }
+                }
+                current = current.getParentFile();
             }
-            current = current.getParentFile();
-        }
 
-        return "";
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     public static boolean isPackageTest(PsiElement element) {
-        PsiFile containingFile = element.getContainingFile();
-        VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
-        if (virtualFile != null) {
-            String path = virtualFile.getPath();
-            File current = new File(path);
-            File parent = current.getParentFile();
-            File balToml = new File(parent.getParent(), BAL_TOML_FILE);
-            return parent.getName().equals(BAL_TEST_FOLDER_NAME) && balToml.exists();
+        try {
+            PsiFile containingFile = element.getContainingFile();
+            VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
+            if (virtualFile != null) {
+                String path = virtualFile.getPath();
+                File current = new File(path);
+                File parent = current.getParentFile();
+                File balToml = new File(parent.getParent(), BAL_TOML_FILE);
+                return parent.getName().equals(BAL_TEST_FOLDER_NAME) && balToml.exists();
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
     public static boolean isModuleTest(PsiElement element) {
-        PsiFile containingFile = element.getContainingFile();
-        VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
-        if (virtualFile != null) {
-            String path = virtualFile.getPath();
-            File current = new File(path);
-            File parent = current.getParentFile();
-            File grandParent = parent.getParentFile().getParentFile();
-            File balToml = new File(grandParent.getParentFile(), BAL_TOML_FILE);
-            return parent.getName().equals(BAL_TEST_FOLDER_NAME)
-                    && grandParent.getName().equalsIgnoreCase(BAL_MODULE_FOLDER_NAME) &&
-                    balToml.exists();
+        try {
+            PsiFile containingFile = element.getContainingFile();
+            VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
+            if (virtualFile != null) {
+                String path = virtualFile.getPath();
+                File current = new File(path);
+                File parent = current.getParentFile();
+                File grandParent = parent.getParentFile().getParentFile();
+                File balToml = new File(grandParent.getParentFile(), BAL_TOML_FILE);
+                return parent.getName().equals(BAL_TEST_FOLDER_NAME)
+                        && grandParent.getName().equalsIgnoreCase(BAL_MODULE_FOLDER_NAME) &&
+                        balToml.exists();
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
-    public static String getModuleName(PsiElement element) {
-        PsiFile containingFile = element.getContainingFile();
-        VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
-        if (virtualFile != null) {
-            String path = virtualFile.getPath();
-            File current = new File(path);
-            File parent = current.getParentFile();
-            return parent.getParentFile().getName();
+    public static Optional<String> getModuleName(PsiElement element) {
+        try {
+            PsiFile containingFile = element.getContainingFile();
+            VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
+            if (virtualFile != null) {
+                String path = virtualFile.getPath();
+                File current = new File(path);
+                File parent = current.getParentFile();
+                return Optional.of(parent.getParentFile().getName());
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
         }
-        return "";
     }
 }

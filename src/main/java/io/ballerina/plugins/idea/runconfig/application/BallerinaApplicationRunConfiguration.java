@@ -22,6 +22,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.runconfig.BallerinaExecutionConfiguration;
@@ -29,7 +30,9 @@ import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Represents Ballerina application run configuration.
@@ -46,15 +49,28 @@ public class BallerinaApplicationRunConfiguration extends BallerinaExecutionConf
     public @Nullable RunProfileState getState(@NotNull Executor executor,
                                               @NotNull ExecutionEnvironment executionEnvironment)
             throws ExecutionException {
-        if (Objects.equals(BallerinaSdkService.getInstance().getBallerinaVersion(executionEnvironment.getProject()),
-                "")) {
+        if (BallerinaSdkService.getInstance().getBallerinaVersion(executionEnvironment.getProject()).isEmpty()) {
             BallerinaPluginNotifier.notifyBallerinaNotDetected(executionEnvironment.getProject());
+            return null;
+        }
+
+        String script = getOptions().getScriptName();
+
+        try {
+            Path path = Paths.get(script).normalize();
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("File does not exist");
+            }
+            script = path.toString();
+        } catch (Exception e) {
+            BallerinaPluginNotifier.customNotification(executionEnvironment.getProject(), NotificationType.ERROR,
+                    "Invalid script", "Provided script path is not valid or does not exist.");
             return null;
         }
 
         return new BallerinaApplicationRunningState(executionEnvironment,
                 BallerinaSdkService.getInstance().getBallerinaPath(executionEnvironment.getProject()),
-                getOptions().getScriptName(), getOptions().getAdditionalCommands(), getOptions().getProgramArguments(),
+                script, getOptions().getAdditionalCommands(), getOptions().getProgramArguments(),
                 getOptions().getEnvVars());
     }
 }

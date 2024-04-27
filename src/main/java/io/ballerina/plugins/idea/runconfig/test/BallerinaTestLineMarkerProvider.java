@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.Cursor;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
 
@@ -65,7 +66,7 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         String packageName;
         if (virtualFile != null) {
             String path = virtualFile.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
             if (!packagePath.isEmpty()) {
                 packageName = Paths.get(packagePath).normalize().getFileName().toString();
             } else {
@@ -78,7 +79,8 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         String moduleName;
         if (virtualFile != null) {
             if (BallerinaProjectUtil.isModuleTest(element)) {
-                moduleName = BallerinaProjectUtil.getModuleName(element);
+                Optional<String> module = BallerinaProjectUtil.getModuleName(element);
+                moduleName = module.orElse("");
             } else {
                 moduleName = "";
             }
@@ -106,7 +108,7 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                         BallerinaTestConfiguration testConfiguration =
                                 (BallerinaTestConfiguration) settings.getConfiguration();
                         String script = file.getPath();
-                        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+                        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
                         if (!ballerinaPackage.isEmpty()) {
                             script = ballerinaPackage;
                         }

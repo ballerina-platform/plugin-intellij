@@ -58,7 +58,7 @@ public class BallerinaRunFileAction extends AnAction {
                 | file.isDirectory())) {
             String fileName = file.getName();
             String path = file.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
             if (!packagePath.isEmpty()) {
                 fileName = Paths.get(packagePath).normalize().getFileName().toString();
             }
@@ -70,7 +70,7 @@ public class BallerinaRunFileAction extends AnAction {
             BallerinaApplicationRunConfiguration runConfiguration =
                     (BallerinaApplicationRunConfiguration) settings.getConfiguration();
             String script = file.getPath();
-            String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+            String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
             if (!ballerinaPackage.isEmpty()) {
                 script = ballerinaPackage;
             }
@@ -116,7 +116,7 @@ public class BallerinaRunFileAction extends AnAction {
         if (visible) {
             String fileName = file.getName();
             String path = file.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
             String packageName = null;
             if (!packagePath.isEmpty()) {
                 packageName = Paths.get(packagePath).normalize().getFileName().toString();

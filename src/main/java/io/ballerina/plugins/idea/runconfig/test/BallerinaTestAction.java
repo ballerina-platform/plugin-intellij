@@ -60,8 +60,8 @@ public class BallerinaTestAction extends AnAction {
         }
 
         String path = file.getPath();
-        String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
-        String modulePath = BallerinaProjectUtil.findBallerinaModule(path);
+        String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
+        String modulePath = BallerinaProjectUtil.findBallerinaModule(path).orElse("");
         String fileName = extractFileName(packagePath, modulePath, file.getName());
 
         RunManager runManager = RunManager.getInstance(project);
@@ -148,8 +148,8 @@ public class BallerinaTestAction extends AnAction {
         }
 
         String path = file.getPath();
-        String modulePath = BallerinaProjectUtil.findBallerinaModule(path);
-        String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+        String modulePath = BallerinaProjectUtil.findBallerinaModule(path).orElse("");
+        String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
 
         boolean visibilitySet = setVisibilityForModuleTests(e, modulePath);
 

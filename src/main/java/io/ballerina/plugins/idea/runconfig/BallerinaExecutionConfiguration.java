@@ -27,7 +27,6 @@ import com.intellij.openapi.project.Project;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -86,7 +85,7 @@ public abstract class BallerinaExecutionConfiguration extends RunConfigurationBa
     }
 
     public void setScriptName(String scriptName) {
-        getOptions().setScriptName(Paths.get(scriptName).normalize().toString());
+        getOptions().setScriptName(scriptName);
     }
 
     public Map<String, String> getEnvs() {

@@ -46,7 +46,7 @@ public class BallerinaTestState extends BallerinaExecutionState {
 
     @Override
     protected @NotNull ProcessHandler startProcess() throws ExecutionException {
-        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
         if (!ballerinaPackage.isEmpty()) {
             script = ballerinaPackage;
         }

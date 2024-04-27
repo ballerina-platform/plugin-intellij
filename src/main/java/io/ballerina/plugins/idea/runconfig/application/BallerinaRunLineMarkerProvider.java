@@ -69,7 +69,7 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
         String packageName;
         if (virtualFile != null) {
             String path = virtualFile.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
             if (!packagePath.isEmpty()) {
                 packageName = Paths.get(packagePath).normalize().getFileName().toString();
                 fileName = "package " + packageName;
@@ -93,15 +93,15 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : finalFileName;
                         String temp =
-                                configName.endsWith(BAL_EXTENSION) ? configName.substring(0, configName.length() - 4)
-                                : configName;
+                                configName.endsWith(BAL_EXTENSION) ? configName.substring(0, configName.length() - 4) :
+                                configName;
                         RunnerAndConfigurationSettings settings =
                                 runManager.createConfiguration("Run " + temp,
                                         BallerinaApplicationRunConfigType.class);
                         BallerinaApplicationRunConfiguration runConfiguration =
                                 (BallerinaApplicationRunConfiguration) settings.getConfiguration();
                         String script = file.getPath();
-                        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+                        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
                         if (!ballerinaPackage.isEmpty()) {
                             script = ballerinaPackage;
                         }

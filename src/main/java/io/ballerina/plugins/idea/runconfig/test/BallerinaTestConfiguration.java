@@ -21,6 +21,7 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.runconfig.BallerinaExecutionConfiguration;
@@ -28,6 +29,9 @@ import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 /**
@@ -49,9 +53,23 @@ public class BallerinaTestConfiguration extends BallerinaExecutionConfiguration 
             return null;
         }
 
+        String script = getOptions().getScriptName();
+
+        try {
+            Path path = Paths.get(script).normalize();
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("File does not exist");
+            }
+            script = path.toString();
+        } catch (Exception e) {
+            BallerinaPluginNotifier.customNotification(environment.getProject(), NotificationType.ERROR,
+                    "Invalid script", "Provided script path is not valid or does not exist.");
+            return null;
+        }
+
         return new BallerinaTestState(environment,
                 BallerinaSdkService.getInstance().getBallerinaPath(environment.getProject()),
-                getOptions().getScriptName(), getOptions().getAdditionalCommands(),
+                script, getOptions().getAdditionalCommands(),
                 getOptions().getProgramArguments(), getOptions().getEnvVars());
     }
 }
