@@ -61,6 +61,13 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
         if (project == null) {
             return;
         }
+        if (balSourcesFound) {
+            BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
+            if (iconWidget != null) {
+                iconWidget.setIcon(BallerinaIcons.FILE);
+                iconWidget.setTooltipText(BallerinaSdkService.getInstance().getBallerinaVersion(project));
+            }
+        }
         VirtualFile file = FileDocumentManager.getInstance().getFile(event.getEditor().getDocument());
         if (balSourcesFound || !isBalFile(file)) {
             return;
