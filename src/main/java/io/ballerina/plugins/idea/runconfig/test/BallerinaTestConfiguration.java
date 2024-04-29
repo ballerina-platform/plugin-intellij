@@ -63,7 +63,7 @@ public class BallerinaTestConfiguration extends BallerinaExecutionConfiguration 
             script = path.toString();
         } catch (Exception e) {
             BallerinaPluginNotifier.customNotification(environment.getProject(), NotificationType.ERROR,
-                    "Invalid script", "Provided script path is not valid or does not exist.");
+                    "Invalid path", "Provided path is not valid or does not exist.");
             return null;
         }
 

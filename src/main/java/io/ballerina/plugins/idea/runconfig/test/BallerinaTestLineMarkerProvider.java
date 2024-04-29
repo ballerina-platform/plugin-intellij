@@ -33,6 +33,7 @@ import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,12 +67,8 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         String packageName;
         if (virtualFile != null) {
             String path = virtualFile.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
-            if (!packagePath.isEmpty()) {
-                packageName = Paths.get(packagePath).normalize().getFileName().toString();
-            } else {
-                packageName = "";
-            }
+            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            packageName = packagePath.map(s -> Paths.get(s).normalize().getFileName().toString()).orElse("");
         } else {
             packageName = "";
         }
@@ -89,7 +86,6 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         }
 
         return new LineMarkerInfo<>(element, element.getTextRange(), BallerinaIcons.TEST,
-                // Default run icon
                 psiElement -> "Test " + BallerinaPsiUtil.getFunctionName(element),
                 (e, elt) -> {
                     e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -102,15 +98,15 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : "finalFileName";
                         String temp = configName.endsWith(BAL_EXTENSION)
-                                ? configName.substring(0, configName.length() - 4) : configName;
+                                ? configName.substring(0, configName.length() - BAL_EXTENSION.length()) : configName;
                         RunnerAndConfigurationSettings settings =
                                 runManager.createConfiguration(temp, BallerinaTestConfigurationType.class);
                         BallerinaTestConfiguration testConfiguration =
                                 (BallerinaTestConfiguration) settings.getConfiguration();
-                        String script = file.getPath();
-                        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
-                        if (!ballerinaPackage.isEmpty()) {
-                            script = ballerinaPackage;
+                        String script = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+                        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+                        if (ballerinaPackage.isPresent()) {
+                            script = ballerinaPackage.get();
                         }
                         testConfiguration.setScriptName(script);
                         if (BallerinaProjectUtil.isModuleTest(element)) {

@@ -32,7 +32,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
@@ -215,7 +214,7 @@ public class BallerinaSdkPanel {
         String balDistFolder = BallerinaSdkUtil.findBalDistFolder(file.getPath());
         String sdkPath = BallerinaSdkUtil.getBalBatFromDist(balDistFolder);
         if (BallerinaSdkUtil.isValidPath(sdkPath)) {
-            sdkPath = Paths.get(sdkPath).normalize().toString();
+            sdkPath = BallerinaSdkUtil.getNormalizedPath(sdkPath);
             if (sdkPath.equals(systemBalPath)) {
                 sdkVersionComboBox.setSelectedIndex(0);
                 selectedVersionTextField.setText(SYSTEM_BAL_VERSION + systemBalVersion);

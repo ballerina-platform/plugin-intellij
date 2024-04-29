@@ -95,7 +95,7 @@ public class BallerinaSdkUtil {
                         String pth = entry.getValue();
                         pth = Paths.get(pth, "distributions", BAL_DIST_FOLDER_NAME_START
                                         + version.split(" ")[1], BAL_EXECUTABLE_FOLDER, WINDOWS_BAL_EXECUTABLE)
-                                .toString();
+                                .normalize().toString();
                         return pth;
                     }
                 }
@@ -114,7 +114,7 @@ public class BallerinaSdkUtil {
             if (path == null || path.isEmpty()) {
                 return false;
             }
-            path = Paths.get(path).normalize().toString();
+            path = BallerinaSdkUtil.getNormalizedPath(path);
             File file = new File(path);
             if (!file.exists()) {
                 return false;
@@ -144,7 +144,7 @@ public class BallerinaSdkUtil {
     public static String getVersionFromPath(String path) {
         try {
             if (isValidPath(path)) {
-                path = Paths.get(path).normalize().toString();
+                path = BallerinaSdkUtil.getNormalizedPath(path);
                 String version = Paths.get(path).getParent().getParent().getFileName().toString();
                 version = version.replace('b', 'B').replace('-', ' ');
                 String [] parts = version.split("\\.");
@@ -165,7 +165,7 @@ public class BallerinaSdkUtil {
         List<BallerinaSdk> sdkList = new ArrayList<>();
         try {
             if (isValidPath(ballerinaPath)) {
-                ballerinaPath = Paths.get(ballerinaPath).normalize().toString();
+                ballerinaPath = BallerinaSdkUtil.getNormalizedPath(ballerinaPath);
                 File sdkDir = new File(ballerinaPath);
                 File distRoot = sdkDir.getParentFile().getParentFile().getParentFile();
                 File[] files = distRoot.listFiles(
@@ -173,11 +173,13 @@ public class BallerinaSdkUtil {
                                 && name.startsWith(BAL_DIST_FOLDER_NAME_START));
                 if (files != null) {
                     for (File file : files) {
-                        String version = file.getName().replace('b', 'B').replace('-', ' ');
+                        String version = file.getName()
+                                .replace('b', 'B').replace('-', ' ');
                         String update = version.split("\\.")[1];
                         version = version + " (Swan Lake Update " + update + ")";
                         String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
-                        Path sdkPath = Paths.get(file.getAbsolutePath(), BAL_EXECUTABLE_FOLDER, executableName);
+                        Path sdkPath =
+                                Paths.get(file.getAbsolutePath(), BAL_EXECUTABLE_FOLDER, executableName).normalize();
                         if (isValidSdk(sdkPath.toString(), version)) {
                             sdkList.add(new BallerinaSdk(sdkPath.toString(), version));
                         }
@@ -196,7 +198,7 @@ public class BallerinaSdkUtil {
 
             while (current != null) {
                 if (current.getName().toLowerCase().contains(BAL_DIST_FOLDER_NAME_START)) {
-                    return current.getAbsolutePath();
+                    return BallerinaSdkUtil.getNormalizedPath(current.getAbsolutePath());
                 }
                 current = current.getParentFile();
             }
@@ -219,6 +221,17 @@ public class BallerinaSdkUtil {
             } else {
                 return path.resolve(Paths.get(BAL_EXECUTABLE_FOLDER, executableName)).toString();
             }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String getNormalizedPath(String path) {
+        try {
+            if (path.isEmpty()) {
+                return "";
+            }
+            return Paths.get(path).normalize().toString();
         } catch (Exception e) {
             return "";
         }

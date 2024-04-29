@@ -31,10 +31,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
-import java.util.Objects;
+import java.util.Optional;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
 
@@ -57,22 +58,22 @@ public class BallerinaRunFileAction extends AnAction {
         if (project != null && file != null && (file.getName().endsWith(BAL_EXTENSION)
                 | file.isDirectory())) {
             String fileName = file.getName();
-            String path = file.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
-            if (!packagePath.isEmpty()) {
-                fileName = Paths.get(packagePath).normalize().getFileName().toString();
+            String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            if (packagePath.isPresent()) {
+                fileName = Paths.get(packagePath.get()).normalize().getFileName().toString();
             }
             RunManager runManager = RunManager.getInstance(project);
             String temp = fileName.endsWith(BAL_EXTENSION)
-                    ? fileName.substring(0, fileName.length() - 4) : fileName;
+                    ? fileName.substring(0, fileName.length() - BAL_EXTENSION.length()) : fileName;
             RunnerAndConfigurationSettings settings =
                     runManager.createConfiguration("Run " + temp, BallerinaApplicationRunConfigType.class);
             BallerinaApplicationRunConfiguration runConfiguration =
                     (BallerinaApplicationRunConfiguration) settings.getConfiguration();
-            String script = file.getPath();
-            String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
-            if (!ballerinaPackage.isEmpty()) {
-                script = ballerinaPackage;
+            String script = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+            Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+            if (ballerinaPackage.isPresent()) {
+                script = ballerinaPackage.get();
             }
             runConfiguration.setScriptName(script);
 
@@ -93,7 +94,6 @@ public class BallerinaRunFileAction extends AnAction {
                 runManager.addConfiguration(settings);
             }
 
-            // Select the new configuration in the UI
             runManager.setSelectedConfiguration(settings);
 
             try {
@@ -112,14 +112,14 @@ public class BallerinaRunFileAction extends AnAction {
         String version = BallerinaSdkService.getInstance().getBallerinaVersion(e.getProject());
         boolean visible =
                 file != null && (file.getName().endsWith(BAL_EXTENSION) | file.isDirectory())
-                        && !Objects.equals(version, "");
+                        && !version.isEmpty();
         if (visible) {
             String fileName = file.getName();
-            String path = file.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
+            String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
             String packageName = null;
-            if (!packagePath.isEmpty()) {
-                packageName = Paths.get(packagePath).normalize().getFileName().toString();
+            if (packagePath.isPresent()) {
+                packageName = Paths.get(packagePath.get()).normalize().getFileName().toString();
                 fileName = "package " + packageName;
             }
             if (!file.isDirectory() || (file.isDirectory() && file.getName().equals(packageName))) {

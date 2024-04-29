@@ -34,11 +34,13 @@ import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Cursor;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import javax.swing.Icon;
 
@@ -50,7 +52,6 @@ import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
  * @since 2.0.0
  */
 public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
-
 
     @Nullable
     @Override
@@ -68,10 +69,10 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
         VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
         String packageName;
         if (virtualFile != null) {
-            String path = virtualFile.getPath();
-            String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
-            if (!packagePath.isEmpty()) {
-                packageName = Paths.get(packagePath).normalize().getFileName().toString();
+            String path = BallerinaSdkUtil.getNormalizedPath(virtualFile.getPath());
+            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            if (packagePath.isPresent()) {
+                packageName = Paths.get(packagePath.get()).normalize().getFileName().toString();
                 fileName = "package " + packageName;
             } else {
                 packageName = "";
@@ -93,17 +94,18 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
                         RunManager runManager = RunManager.getInstance(project);
                         String configName = !packageName.isEmpty() ? packageName : finalFileName;
                         String temp =
-                                configName.endsWith(BAL_EXTENSION) ? configName.substring(0, configName.length() - 4) :
-                                configName;
+                                configName.endsWith(BAL_EXTENSION)
+                                        ? configName.substring(0, configName.length() - BAL_EXTENSION.length()) :
+                                        configName;
                         RunnerAndConfigurationSettings settings =
                                 runManager.createConfiguration("Run " + temp,
                                         BallerinaApplicationRunConfigType.class);
                         BallerinaApplicationRunConfiguration runConfiguration =
                                 (BallerinaApplicationRunConfiguration) settings.getConfiguration();
-                        String script = file.getPath();
-                        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
-                        if (!ballerinaPackage.isEmpty()) {
-                            script = ballerinaPackage;
+                        String script = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+                        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+                        if (ballerinaPackage.isPresent()) {
+                            script = ballerinaPackage.get();
                         }
                         runConfiguration.setScriptName(script);
 

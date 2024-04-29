@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents how Ballerina testing code is executed.
@@ -46,28 +46,23 @@ public class BallerinaTestState extends BallerinaExecutionState {
 
     @Override
     protected @NotNull ProcessHandler startProcess() throws ExecutionException {
-        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
-        if (!ballerinaPackage.isEmpty()) {
-            script = ballerinaPackage;
-        }
+        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+        ballerinaPackage.ifPresent(s -> script = s);
 
         GeneralCommandLine commandLine = new GeneralCommandLine(balPath, "test");
         commandLine.withEnvironment(envVariables);
 
-        String pattern = "\\s+";
-
         if (commands != null && !commands.isEmpty()) {
             for (String cmd : commands) {
-                if (!Objects.equals(cmd, "")) {
+                if (!cmd.isBlank()) {
                     commandLine.addParameter(cmd.strip());
                 }
             }
         }
 
-        // Todo: check if stripping and checking whitespaces is required
         if (programArguments != null && !programArguments.isEmpty()) {
             for (String arg : programArguments) {
-                if (!Objects.equals(arg, "") && !arg.matches(pattern)) {
+                if (!arg.isBlank()) {
                     commandLine.addParameter(arg.strip());
                 }
             }

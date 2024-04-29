@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents how Ballerina application running code is executed.
@@ -48,10 +48,8 @@ public class BallerinaApplicationRunningState extends BallerinaExecutionState {
 
     @Override
     protected @NotNull ProcessHandler startProcess() throws ExecutionException {
-        String ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script).orElse("");
-        if (!ballerinaPackage.isEmpty()) {
-            script = ballerinaPackage;
-        }
+        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+        ballerinaPackage.ifPresent(s -> script = s);
 
         String lastPath = Paths.get(script).normalize().getFileName().toString();
         String parentPath = Paths.get(script).normalize().getParent().toString();
@@ -65,7 +63,7 @@ public class BallerinaApplicationRunningState extends BallerinaExecutionState {
         
         if (commands != null && !commands.isEmpty()) {
             for (String cmd : commands) {
-                if (!Objects.equals(cmd, "")) {
+                if (!cmd.isBlank()) {
                     commandLine.addParameter(cmd.strip());
                 }
             }

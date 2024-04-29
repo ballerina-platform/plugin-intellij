@@ -31,11 +31,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Objects;
+import java.util.Optional;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
 
@@ -59,15 +60,15 @@ public class BallerinaTestAction extends AnAction {
             return;
         }
 
-        String path = file.getPath();
-        String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
-        String modulePath = BallerinaProjectUtil.findBallerinaModule(path).orElse("");
+        String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+        Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+        Optional<String> modulePath = BallerinaProjectUtil.findBallerinaModule(path);
         String fileName = extractFileName(packagePath, modulePath, file.getName());
 
         RunManager runManager = RunManager.getInstance(project);
         String configName = getConfigName(fileName);
         RunnerAndConfigurationSettings settings =
-                getConfigurationSettings(runManager, configName, project, path, packagePath, modulePath);
+                getConfigurationSettings(runManager, configName, path, packagePath, modulePath);
 
         RunConfiguration runConfiguration = settings.getConfiguration();
         boolean found = false;
@@ -84,40 +85,37 @@ public class BallerinaTestAction extends AnAction {
             runManager.addConfiguration(settings);
         }
 
-        // Select the new configuration in the UI
         runManager.setSelectedConfiguration(settings);
 
         executeConfiguration(project, runConfiguration);
     }
 
-    private String extractFileName(String packagePath, String modulePath, String defaultName) {
-        String finalPath = !modulePath.isEmpty() ? modulePath : packagePath;
-        if (!finalPath.isEmpty()) {
-            return Paths.get(finalPath).normalize().getFileName().toString();
-        }
-        return defaultName;
+    private String extractFileName(Optional<String> packagePath, Optional<String> modulePath, String defaultName) {
+        Optional<String> finalPath = modulePath.isPresent() ? modulePath : packagePath;
+        return finalPath.map(s -> Paths.get(s).normalize().getFileName().toString()).orElse(defaultName);
     }
 
     private String getConfigName(String fileName) {
         return "Test " + (fileName.endsWith(BAL_EXTENSION)
-                ? fileName.substring(0, fileName.length() - 4) : fileName);
+                ? fileName.substring(0, fileName.length() - BAL_EXTENSION.length()) : fileName);
     }
 
     private RunnerAndConfigurationSettings getConfigurationSettings(RunManager runManager, String configName,
-                                                                    Project project, String scriptPath,
-                                                                    String packagePath, String modulePath) {
+                                                                    String scriptPath,
+                                                                    Optional<String> packagePath,
+                                                                    Optional<String> modulePath) {
         RunnerAndConfigurationSettings settings =
                 runManager.createConfiguration(configName, BallerinaTestConfigurationType.class);
         BallerinaTestConfiguration runConfiguration = (BallerinaTestConfiguration) settings.getConfiguration();
         String script = scriptPath;
         String cmd = "";
 
-        if (!modulePath.isEmpty()) {
-            script = modulePath;
-            cmd = new File(packagePath).getName() + "." + new File(script).getName() + ":*";
-        } else if (!packagePath.isEmpty()) {
-            script = packagePath;
-            cmd = new File(packagePath).getName() + ":*";
+        if (modulePath.isPresent() && packagePath.isPresent()) {
+            script = modulePath.get();
+            cmd = new File(packagePath.get()).getName() + "." + new File(script).getName() + ":*";
+        } else if (packagePath.isPresent()) {
+            script = packagePath.get();
+            cmd = new File(script).getName() + ":*";
         }
 
         runConfiguration.setScriptName(script);
@@ -142,14 +140,14 @@ public class BallerinaTestAction extends AnAction {
         VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
         String version = BallerinaSdkService.getInstance().getBallerinaVersion(e.getProject());
 
-        if (file == null || !file.getName().endsWith(BAL_EXTENSION) || Objects.equals(version, "")) {
+        if (file == null || !file.getName().endsWith(BAL_EXTENSION) || version.isEmpty()) {
             e.getPresentation().setVisible(false);
             return;
         }
 
-        String path = file.getPath();
-        String modulePath = BallerinaProjectUtil.findBallerinaModule(path).orElse("");
-        String packagePath = BallerinaProjectUtil.findBallerinaPackage(path).orElse("");
+        String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
+        Optional<String> modulePath = BallerinaProjectUtil.findBallerinaModule(path);
+        Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
 
         boolean visibilitySet = setVisibilityForModuleTests(e, modulePath);
 
@@ -158,11 +156,11 @@ public class BallerinaTestAction extends AnAction {
         }
     }
 
-    private boolean setVisibilityForModuleTests(@NotNull AnActionEvent e, String modulePath) {
-        if (!modulePath.isEmpty()) {
-            File moduleTests = new File(modulePath, "tests");
+    private boolean setVisibilityForModuleTests(@NotNull AnActionEvent e, Optional<String> modulePath) {
+        if (modulePath.isPresent()) {
+            File moduleTests = new File(modulePath.get(), "tests");
             if (moduleTests.exists() && moduleTests.isDirectory()) {
-                String moduleName = new File(modulePath).getName();
+                String moduleName = new File(modulePath.get()).getName();
                 setTestVisibility(e, "module " + moduleName);
                 return true;
             }
@@ -170,11 +168,11 @@ public class BallerinaTestAction extends AnAction {
         return false;
     }
 
-    private void setVisibilityForPackageTests(@NotNull AnActionEvent e, String packagePath) {
-        if (!packagePath.isEmpty()) {
-            File tests = new File(packagePath, "tests");
+    private void setVisibilityForPackageTests(@NotNull AnActionEvent e, Optional<String> packagePath) {
+        if (packagePath.isPresent()) {
+            File tests = new File(packagePath.get(), "tests");
             if (tests.exists() && tests.isDirectory()) {
-                String packageName = new File(packagePath).getName();
+                String packageName = new File(packagePath.get()).getName();
                 setTestVisibility(e, "package " + packageName);
             } else {
                 e.getPresentation().setVisible(false);
