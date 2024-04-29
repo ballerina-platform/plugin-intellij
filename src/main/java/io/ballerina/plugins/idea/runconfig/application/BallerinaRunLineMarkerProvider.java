@@ -31,10 +31,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import io.ballerina.plugins.idea.BallerinaIcons;
-import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
+import io.ballerina.plugins.idea.project.BallerinaProjectUtils;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
-import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,8 +69,8 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
         VirtualFile virtualFile = containingFile != null ? containingFile.getVirtualFile() : null;
         String packageName;
         if (virtualFile != null) {
-            String path = BallerinaSdkUtil.getNormalizedPath(virtualFile.getPath());
-            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String path = BallerinaSdkUtils.getNormalizedPath(virtualFile.getPath());
+            Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
             if (packagePath.isPresent()) {
                 packageName = Paths.get(packagePath.get()).normalize().getFileName().toString();
                 fileName = "package " + packageName;
@@ -102,8 +102,8 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
                                         BallerinaApplicationRunConfigType.class);
                         BallerinaApplicationRunConfiguration runConfiguration =
                                 (BallerinaApplicationRunConfiguration) settings.getConfiguration();
-                        String script = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-                        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+                        String script = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+                        Optional<String> ballerinaPackage = BallerinaProjectUtils.findBallerinaPackage(script);
                         if (ballerinaPackage.isPresent()) {
                             script = ballerinaPackage.get();
                         }

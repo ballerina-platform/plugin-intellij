@@ -24,7 +24,7 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessHandlerFactory;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
+import io.ballerina.plugins.idea.project.BallerinaProjectUtils;
 import io.ballerina.plugins.idea.runconfig.BallerinaExecutionState;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +48,7 @@ public class BallerinaApplicationRunningState extends BallerinaExecutionState {
 
     @Override
     protected @NotNull ProcessHandler startProcess() throws ExecutionException {
-        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+        Optional<String> ballerinaPackage = BallerinaProjectUtils.findBallerinaPackage(script);
         ballerinaPackage.ifPresent(s -> script = s);
 
         String lastPath = Paths.get(script).normalize().getFileName().toString();

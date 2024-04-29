@@ -20,7 +20,7 @@ package io.ballerina.plugins.idea.project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 
 import java.io.File;
 import java.util.Optional;
@@ -34,11 +34,11 @@ import static io.ballerina.plugins.idea.BallerinaConstants.BAL_TOML_FILE;
  *
  * @since 2.0.0
  */
-public class BallerinaProjectUtil {
+public class BallerinaProjectUtils {
 
     public static Optional<String> findBallerinaPackage(String startingPath) {
         try {
-            startingPath = BallerinaSdkUtil.getNormalizedPath(startingPath);
+            startingPath = BallerinaSdkUtils.getNormalizedPath(startingPath);
             File current = new File(startingPath);
             while (current != null) {
                 File ballerinaFile = new File(current, BAL_TOML_FILE);
@@ -56,7 +56,7 @@ public class BallerinaProjectUtil {
 
     public static Optional<String> findBallerinaModule(String startingPath) {
         try {
-            startingPath = BallerinaSdkUtil.getNormalizedPath(startingPath);
+            startingPath = BallerinaSdkUtils.getNormalizedPath(startingPath);
             File current = new File(startingPath);
 
             while (current != null) {

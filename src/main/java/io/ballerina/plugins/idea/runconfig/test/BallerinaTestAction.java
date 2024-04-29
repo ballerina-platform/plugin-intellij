@@ -29,9 +29,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import io.ballerina.plugins.idea.BallerinaIcons;
-import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
+import io.ballerina.plugins.idea.project.BallerinaProjectUtils;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
-import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -60,9 +60,9 @@ public class BallerinaTestAction extends AnAction {
             return;
         }
 
-        String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-        Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
-        Optional<String> modulePath = BallerinaProjectUtil.findBallerinaModule(path);
+        String path = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+        Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
+        Optional<String> modulePath = BallerinaProjectUtils.findBallerinaModule(path);
         String fileName = extractFileName(packagePath, modulePath, file.getName());
 
         RunManager runManager = RunManager.getInstance(project);
@@ -145,9 +145,9 @@ public class BallerinaTestAction extends AnAction {
             return;
         }
 
-        String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-        Optional<String> modulePath = BallerinaProjectUtil.findBallerinaModule(path);
-        Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+        String path = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+        Optional<String> modulePath = BallerinaProjectUtils.findBallerinaModule(path);
+        Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
 
         boolean visibilitySet = setVisibilityForModuleTests(e, modulePath);
 

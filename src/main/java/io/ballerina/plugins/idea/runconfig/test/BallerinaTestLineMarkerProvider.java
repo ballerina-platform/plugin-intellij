@@ -30,10 +30,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import io.ballerina.plugins.idea.BallerinaIcons;
-import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
+import io.ballerina.plugins.idea.project.BallerinaProjectUtils;
 import io.ballerina.plugins.idea.psi.BallerinaPsiUtil;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
-import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +55,7 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
     public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
         String version = BallerinaSdkService.getInstance().getBallerinaVersion(element.getProject());
         if (version != null && BallerinaPsiUtil.isTestFunction(element)
-                && (BallerinaProjectUtil.isPackageTest(element) || BallerinaProjectUtil.isModuleTest(element))) {
+                && (BallerinaProjectUtils.isPackageTest(element) || BallerinaProjectUtils.isModuleTest(element))) {
             return createTestLineMarkerInfo(element);
         }
         return null;
@@ -67,7 +67,7 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         String packageName;
         if (virtualFile != null) {
             String path = virtualFile.getPath();
-            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
             packageName = packagePath.map(s -> Paths.get(s).normalize().getFileName().toString()).orElse("");
         } else {
             packageName = "";
@@ -75,8 +75,8 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
 
         String moduleName;
         if (virtualFile != null) {
-            if (BallerinaProjectUtil.isModuleTest(element)) {
-                Optional<String> module = BallerinaProjectUtil.getModuleName(element);
+            if (BallerinaProjectUtils.isModuleTest(element)) {
+                Optional<String> module = BallerinaProjectUtils.getModuleName(element);
                 moduleName = module.orElse("");
             } else {
                 moduleName = "";
@@ -103,13 +103,13 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                                 runManager.createConfiguration(temp, BallerinaTestConfigurationType.class);
                         BallerinaTestConfiguration testConfiguration =
                                 (BallerinaTestConfiguration) settings.getConfiguration();
-                        String script = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-                        Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+                        String script = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+                        Optional<String> ballerinaPackage = BallerinaProjectUtils.findBallerinaPackage(script);
                         if (ballerinaPackage.isPresent()) {
                             script = ballerinaPackage.get();
                         }
                         testConfiguration.setScriptName(script);
-                        if (BallerinaProjectUtil.isModuleTest(element)) {
+                        if (BallerinaProjectUtils.isModuleTest(element)) {
                             testConfiguration.addCommand("--tests");
                             String arg = packageName + "." + moduleName + ":"
                                     + BallerinaPsiUtil.getFunctionName(element);

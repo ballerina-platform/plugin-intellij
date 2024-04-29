@@ -24,7 +24,7 @@ import io.ballerina.plugins.idea.configuration.ui.BallerinaSdkPanel;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkSettings;
-import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,11 +107,11 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
         modified = isSdkChanged();
         BallerinaSdkSettings.getInstance().setUseCustomSdk(isCustomSdkSelected);
         if (isCustomSdkSelected) {
-            String selectedSdkPath = BallerinaSdkUtil.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
+            String selectedSdkPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
             String currentSdkPath
-                    = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkSettings.getInstance().getBallerinaSdkPath());
+                    = BallerinaSdkUtils.findBalDistFolder(BallerinaSdkSettings.getInstance().getBallerinaSdkPath());
             String systemSdkPath
-                    = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkService.getInstance().getSystemBalPath());
+                    = BallerinaSdkUtils.findBalDistFolder(BallerinaSdkService.getInstance().getSystemBalPath());
             if (!Objects.equals(currentSdkPath, selectedSdkPath)) {
                 String path = sdkSelectionUI.getSelectedSdkPath();
                 String version = sdkSelectionUI.getSelectedSdkVersion();
@@ -125,8 +125,8 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
 
     private boolean isSdkChanged() {
         String currentBalPath
-                = BallerinaSdkUtil.findBalDistFolder(BallerinaSdkService.getInstance().getBallerinaPath(project));
-        String selectedBalPath = BallerinaSdkUtil.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
+                = BallerinaSdkUtils.findBalDistFolder(BallerinaSdkService.getInstance().getBallerinaPath(project));
+        String selectedBalPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
         return !Objects.equals(currentBalPath, selectedBalPath) && !selectedBalPath.isEmpty();
     }
 

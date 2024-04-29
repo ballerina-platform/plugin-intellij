@@ -35,7 +35,7 @@ import java.util.Objects;
  *
  * @since 2.0.0
  */
-public class BallerinaSdkUtil {
+public class BallerinaSdkUtils {
 
     private static final String BAL_VERSION_CMD = "bal -v";
     private static final String BAL_HOME_CMD = "bal home";
@@ -114,7 +114,7 @@ public class BallerinaSdkUtil {
             if (path == null || path.isEmpty()) {
                 return false;
             }
-            path = BallerinaSdkUtil.getNormalizedPath(path);
+            path = BallerinaSdkUtils.getNormalizedPath(path);
             File file = new File(path);
             if (!file.exists()) {
                 return false;
@@ -144,7 +144,7 @@ public class BallerinaSdkUtil {
     public static String getVersionFromPath(String path) {
         try {
             if (isValidPath(path)) {
-                path = BallerinaSdkUtil.getNormalizedPath(path);
+                path = BallerinaSdkUtils.getNormalizedPath(path);
                 String version = Paths.get(path).getParent().getParent().getFileName().toString();
                 version = version.replace('b', 'B').replace('-', ' ');
                 String [] parts = version.split("\\.");
@@ -165,7 +165,7 @@ public class BallerinaSdkUtil {
         List<BallerinaSdk> sdkList = new ArrayList<>();
         try {
             if (isValidPath(ballerinaPath)) {
-                ballerinaPath = BallerinaSdkUtil.getNormalizedPath(ballerinaPath);
+                ballerinaPath = BallerinaSdkUtils.getNormalizedPath(ballerinaPath);
                 File sdkDir = new File(ballerinaPath);
                 File distRoot = sdkDir.getParentFile().getParentFile().getParentFile();
                 File[] files = distRoot.listFiles(
@@ -198,7 +198,7 @@ public class BallerinaSdkUtil {
 
             while (current != null) {
                 if (current.getName().toLowerCase().contains(BAL_DIST_FOLDER_NAME_START)) {
-                    return BallerinaSdkUtil.getNormalizedPath(current.getAbsolutePath());
+                    return BallerinaSdkUtils.getNormalizedPath(current.getAbsolutePath());
                 }
                 current = current.getParentFile();
             }

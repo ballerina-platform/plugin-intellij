@@ -29,9 +29,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import io.ballerina.plugins.idea.BallerinaIcons;
-import io.ballerina.plugins.idea.project.BallerinaProjectUtil;
+import io.ballerina.plugins.idea.project.BallerinaProjectUtils;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
-import io.ballerina.plugins.idea.sdk.BallerinaSdkUtil;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Paths;
@@ -58,8 +58,8 @@ public class BallerinaRunFileAction extends AnAction {
         if (project != null && file != null && (file.getName().endsWith(BAL_EXTENSION)
                 | file.isDirectory())) {
             String fileName = file.getName();
-            String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String path = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+            Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
             if (packagePath.isPresent()) {
                 fileName = Paths.get(packagePath.get()).normalize().getFileName().toString();
             }
@@ -70,8 +70,8 @@ public class BallerinaRunFileAction extends AnAction {
                     runManager.createConfiguration("Run " + temp, BallerinaApplicationRunConfigType.class);
             BallerinaApplicationRunConfiguration runConfiguration =
                     (BallerinaApplicationRunConfiguration) settings.getConfiguration();
-            String script = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-            Optional<String> ballerinaPackage = BallerinaProjectUtil.findBallerinaPackage(script);
+            String script = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+            Optional<String> ballerinaPackage = BallerinaProjectUtils.findBallerinaPackage(script);
             if (ballerinaPackage.isPresent()) {
                 script = ballerinaPackage.get();
             }
@@ -115,8 +115,8 @@ public class BallerinaRunFileAction extends AnAction {
                         && !version.isEmpty();
         if (visible) {
             String fileName = file.getName();
-            String path = BallerinaSdkUtil.getNormalizedPath(file.getPath());
-            Optional<String> packagePath = BallerinaProjectUtil.findBallerinaPackage(path);
+            String path = BallerinaSdkUtils.getNormalizedPath(file.getPath());
+            Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
             String packageName = null;
             if (packagePath.isPresent()) {
                 packageName = Paths.get(packagePath.get()).normalize().getFileName().toString();
