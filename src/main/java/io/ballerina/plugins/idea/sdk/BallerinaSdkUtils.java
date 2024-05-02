@@ -87,9 +87,9 @@ public class BallerinaSdkUtils {
     private static Optional<String> runCommandWithDirectory(String dir, String cmd) {
         SlowOperations.assertSlowOperationsAreAllowed();
         ProcessBuilder processBuilder = new ProcessBuilder();
-//        processBuilder.directory(new File(dir));
+        processBuilder.directory(new File(dir));
         if (OSUtils.isWindows()) {
-            processBuilder.command("cmd.exe", "/c", dir+"\\bal.bat", cmd);
+            processBuilder.command("cmd.exe", "/c", cmd);
         } else {
             cmd = dir + cmd;
             processBuilder.command("sh", "-c", cmd);
