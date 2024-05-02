@@ -23,6 +23,8 @@ import com.intellij.openapi.components.StoredProperty;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Stores Ballerina execution configuration options.
  *
@@ -31,7 +33,7 @@ import java.util.Map;
 public class BallerinaExecutionConfigOptions extends RunConfigurationOptions {
 
     private final StoredProperty<String> scriptName =
-            string("").provideDelegate(this, "scriptName");
+            string(EMPTY).provideDelegate(this, "scriptName");
 
     private final StoredProperty<List<Object>> additionalCommands =
             list().provideDelegate(this, "additionalCommands");

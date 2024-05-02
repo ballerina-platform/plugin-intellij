@@ -23,6 +23,8 @@ import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Acts as an API for sdk path and version retrieval in all places.
  *
@@ -31,16 +33,20 @@ import java.util.List;
 public class BallerinaSdkService {
 
     private static BallerinaSdkService instance;
-    private final String ballerinaVersion;
-    private final String ballerinaPath;
+    private String ballerinaVersion;
+    private String ballerinaPath;
     private boolean notified = false;
 
     private final List<BallerinaSdkUtils.BallerinaSdk> sdkList;
 
     private BallerinaSdkService() {
         // This code will only run once when the IDE starts and the first access to BallerinaSdkService occurs
-        ballerinaVersion = BallerinaSdkUtils.getBallerinaVersion();
-        ballerinaPath = BallerinaSdkUtils.getBallerinaPath();
+        ballerinaPath = BallerinaSdkUtils.getBallerinaPath().orElse(EMPTY);
+        ballerinaVersion = BallerinaSdkUtils.getBallerinaVersion().orElse(EMPTY);
+        if (!BallerinaSdkUtils.isValidPath(ballerinaPath)) {
+            ballerinaVersion = EMPTY;
+            ballerinaPath = EMPTY;
+        }
         sdkList = BallerinaSdkUtils.getBallerinaSdks(ballerinaPath);
     }
 
@@ -55,7 +61,8 @@ public class BallerinaSdkService {
         BallerinaSdkSettings settings = BallerinaSdkSettings.getInstance();
         if (settings != null && settings.isUseCustomSdk()) {
             String version = settings.getBallerinaSdkVersion();
-            if (BallerinaSdkUtils.isValidVersion(version)
+            String sdkPath = settings.getBallerinaSdkPath();
+            if (BallerinaSdkUtils.isValidSdk(sdkPath, version)
                     && BallerinaSdkUtils.getVersionFromPath(getBallerinaPath(project)).equals(version)) {
                 return version;
             }

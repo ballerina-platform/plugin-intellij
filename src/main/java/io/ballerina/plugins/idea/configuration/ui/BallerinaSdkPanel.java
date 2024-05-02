@@ -40,6 +40,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Provides UI for selecting a global sdk version for Intellij IDEA.
  * Can use system sdk and custom sdk and switch between them.
@@ -53,8 +55,8 @@ public class BallerinaSdkPanel {
     private JCheckBox useCustomSdkCheckbox = new JCheckBox();
     private JLabel label = new JLabel();
     private JPanel panel = new JPanel(new GridBagLayout());
-    private String selectedSdkPath = "";
-    private String selectedSdkVersion = "";
+    private String selectedSdkPath = EMPTY;
+    private String selectedSdkVersion = EMPTY;
     private BallerinaSdkService sdkService;
     private BallerinaSdkSettings sdkSettings;
     private Color defaultColor;
@@ -130,8 +132,8 @@ public class BallerinaSdkPanel {
             } else {
                 selectedVersionTextField.setText(NO_VALID_BAL_SDK);
                 selectedVersionTextField.setForeground(JBColor.RED);
-                selectedSdkVersion = "";
-                selectedSdkPath = "";
+                selectedSdkVersion = EMPTY;
+                selectedSdkPath = EMPTY;
             }
         } else {
             String savedPath = BallerinaSdkSettings.getInstance().getBallerinaSdkPath();
@@ -154,8 +156,8 @@ public class BallerinaSdkPanel {
                 } else {
                     selectedVersionTextField.setText(NO_VALID_BAL_SDK);
                     selectedVersionTextField.setForeground(JBColor.RED);
-                    selectedSdkVersion = "";
-                    selectedSdkPath = "";
+                    selectedSdkVersion = EMPTY;
+                    selectedSdkPath = EMPTY;
                 }
             }
         }
@@ -184,8 +186,8 @@ public class BallerinaSdkPanel {
                 } else {
                     sdkVersionComboBox.setSelectedItem(ADD_BAL_SDK);
                     selectedVersionTextField.setText(NO_VALID_BAL_SDK);
-                    selectedSdkVersion = "";
-                    selectedSdkPath = "";
+                    selectedSdkVersion = EMPTY;
+                    selectedSdkPath = EMPTY;
                 }
             }
             sdkVersionComboBox.setEnabled(selected);
@@ -246,8 +248,8 @@ public class BallerinaSdkPanel {
         } else {
             selectedVersionTextField.setText(INVALID_BAL_SDK_PATH);
             selectedVersionTextField.setForeground(JBColor.RED);
-            selectedSdkVersion = "";
-            selectedSdkPath = "";
+            selectedSdkVersion = EMPTY;
+            selectedSdkPath = EMPTY;
         }
     }
 

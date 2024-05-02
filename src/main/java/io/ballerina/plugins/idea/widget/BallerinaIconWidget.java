@@ -29,6 +29,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Icon;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Display ballerina icon in the status bar after detecting bal version.
  * This displays bal version when hovering over it.
@@ -40,7 +42,7 @@ public class BallerinaIconWidget implements StatusBarWidget, StatusBarWidget.Ico
     private static final String ID = "BallerinaIconWidget";
     private final Project project;
     private Icon icon = null;
-    private String tooltipText = "";
+    private String tooltipText = EMPTY;
 
     public BallerinaIconWidget(Project project) {
         this.project = project;
@@ -66,7 +68,7 @@ public class BallerinaIconWidget implements StatusBarWidget, StatusBarWidget.Ico
     @Override
     public void dispose() {
         setIcon(null);
-        setTooltipText("");
+        setTooltipText(EMPTY);
     }
 
     @Nullable

@@ -21,7 +21,6 @@ import com.intellij.util.SlowOperations;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Contains util classes related to Ballerina SDK.
@@ -39,16 +41,22 @@ public class BallerinaSdkUtils {
 
     private static final String BAL_VERSION_CMD = "bal -v";
     private static final String BAL_HOME_CMD = "bal home";
+    private static final String BAL_NAME = "Ballerina";
     private static final String WINDOWS_BAL_EXECUTABLE = "bal.bat";
     private static final String UNIX_BAL_EXECUTABLE = "bal";
-    private static final String BAL_EXECUTABLE_FOLDER = "bin";
-    private static final String BAL_DIST_FOLDER_NAME_START = "ballerina-";
+    private static final String BAL_EXECUTABLE_DIR = "bin";
+    private static final String BAL_DIST_DIR_NAME_START = "ballerina-";
     private static final String BAL_WINDOWS_ENV_VARIABLE = "BALLERINA_HOME";
+    private static final String WINDOWS_BAL_DIST_DIR_NAME = "Program Files";
+    private static final String UNIX_BAL_DIST_DIR_NAME_FIRST = "usr";
+    private static final String UNIX_BAL_DIST_DIR_NAME_SECOND = "lib";
+    private static final String BAL_DIST_DIR_NAME = "distributions";
+    private static final String MAC_BAL_DIST_DIR_NAME = "Library";
+    private static final String WINDOWS_BAL_DRIVE = "C:";
 
-    private static String runCommand(String cmd) {
+    private static Optional<String> runCommand(String cmd) {
         SlowOperations.assertSlowOperationsAreAllowed();
         ProcessBuilder processBuilder = new ProcessBuilder();
-
         if (OSUtils.isWindows()) {
             processBuilder.command("cmd.exe", "/c", cmd);
         } else {
@@ -60,52 +68,102 @@ public class BallerinaSdkUtils {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
-
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                return "";
+                return Optional.empty();
             }
-            return line;
-        } catch (IOException | InterruptedException e) {
-            return "";
-        }
-    }
-
-    public static String getBallerinaVersion() {
-        String version;
-        try {
-            version = runCommand(BAL_VERSION_CMD);
+            return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
         } catch (Exception e) {
-            return "";
+            return Optional.empty();
         }
-        return version == null ? "" : version;
     }
 
-    public static String getBallerinaPath() {
+    private static Optional<String> runCommandWithDirectory(String dir, String cmd) {
+        SlowOperations.assertSlowOperationsAreAllowed();
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(new File(dir));
+        if (OSUtils.isWindows()) {
+            processBuilder.command("cmd.exe", "/c", cmd);
+        } else {
+            processBuilder.command("sh", "-c", cmd);
+        }
+
         try {
-            String version = runCommand(BAL_VERSION_CMD);
-            if (Objects.equals(version, "")) {
-                return "";
+            Process process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = reader.readLine();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                return Optional.empty();
+            }
+            return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> getBallerinaVersion() {
+        try {
+            Optional<String> version = runCommand(BAL_VERSION_CMD);
+            if (version.isPresent()) {
+                return version;
+            }
+            Optional<String> balBinPath = getBalBinBatPath();
+            if (balBinPath.isPresent()) {
+                return runCommandWithDirectory(balBinPath.get(), BAL_VERSION_CMD);
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> getBallerinaPath() {
+        try {
+            Optional<String> version = runCommand(BAL_VERSION_CMD);
+            if (version.isEmpty()) {
+                Optional<String> balBinPath = getBalBinBatPath();
+                if (balBinPath.isPresent()) {
+                    version = runCommandWithDirectory(balBinPath.get(), BAL_VERSION_CMD);
+                } else {
+                    return Optional.empty();
+                }
+            }
+            if (version.isEmpty()) {
+                return version;
             }
             if (OSUtils.isWindows()) {
                 Map<String, String> env = System.getenv();
-
+                String [] versionParts = version.get().split(" ");
+                if (versionParts.length < 2) {
+                    return Optional.empty();
+                }
                 for (Map.Entry<String, String> entry : env.entrySet()) {
                     if (Objects.equals(entry.getKey(), BAL_WINDOWS_ENV_VARIABLE)) {
-                        String pth = entry.getValue();
-                        pth = Paths.get(pth, "distributions", BAL_DIST_FOLDER_NAME_START
-                                        + version.split(" ")[1], BAL_EXECUTABLE_FOLDER, WINDOWS_BAL_EXECUTABLE)
+                        String path = entry.getValue();
+                        path = Paths.get(path, BAL_DIST_DIR_NAME, BAL_DIST_DIR_NAME_START
+                                                + version.get().split(" ")[1],
+                                        BAL_EXECUTABLE_DIR, WINDOWS_BAL_EXECUTABLE)
                                 .normalize().toString();
-                        return pth;
+                        return Optional.of(path);
                     }
                 }
-                return "";
+                return Optional.empty();
             } else {
-                return Paths.get(runCommand(BAL_HOME_CMD),
-                        BAL_EXECUTABLE_FOLDER, UNIX_BAL_EXECUTABLE).normalize().toString();
+                Optional<String> home = runCommand(BAL_HOME_CMD);
+                if (home.isEmpty()) {
+                    Optional<String> balBinPath = getBalBinBatPath();
+                    if (balBinPath.isPresent()) {
+                        home = runCommandWithDirectory(balBinPath.get(), BAL_HOME_CMD);
+                    } else {
+                        return Optional.empty();
+                    }
+                }
+                return home.map(s -> Paths.get(s, BAL_EXECUTABLE_DIR, UNIX_BAL_EXECUTABLE).normalize().toString());
             }
         } catch (Exception e) {
-            return "";
+            return Optional.empty();
         }
     }
 
@@ -149,15 +207,15 @@ public class BallerinaSdkUtils {
                 version = version.replace('b', 'B').replace('-', ' ');
                 String [] parts = version.split("\\.");
                 if (parts.length < 2) {
-                    return "";
+                    return EMPTY;
                 }
                 String update = version.split("\\.")[1];
                 version = version + " (Swan Lake Update " + update + ")";
-                return isValidVersion(version) ? version : "";
+                return isValidVersion(version) ? version : EMPTY;
             }
-            return "";
+            return EMPTY;
         } catch (Exception e) {
-            return "";
+            return EMPTY;
         }
     }
 
@@ -168,9 +226,8 @@ public class BallerinaSdkUtils {
                 ballerinaPath = BallerinaSdkUtils.getNormalizedPath(ballerinaPath);
                 File sdkDir = new File(ballerinaPath);
                 File distRoot = sdkDir.getParentFile().getParentFile().getParentFile();
-                File[] files = distRoot.listFiles(
-                        (current, name) -> new File(current, name).isDirectory()
-                                && name.startsWith(BAL_DIST_FOLDER_NAME_START));
+                File[] files = distRoot.listFiles((current, name) -> new File(current, name).isDirectory() &&
+                        name.startsWith(BAL_DIST_DIR_NAME_START));
                 if (files != null) {
                     for (File file : files) {
                         String version = file.getName()
@@ -179,7 +236,7 @@ public class BallerinaSdkUtils {
                         version = version + " (Swan Lake Update " + update + ")";
                         String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
                         Path sdkPath =
-                                Paths.get(file.getAbsolutePath(), BAL_EXECUTABLE_FOLDER, executableName).normalize();
+                                Paths.get(file.getAbsolutePath(), BAL_EXECUTABLE_DIR, executableName).normalize();
                         if (isValidSdk(sdkPath.toString(), version)) {
                             sdkList.add(new BallerinaSdk(sdkPath.toString(), version));
                         }
@@ -197,15 +254,15 @@ public class BallerinaSdkUtils {
             File current = new File(Paths.get(initialPath).normalize().toString());
 
             while (current != null) {
-                if (current.getName().toLowerCase().contains(BAL_DIST_FOLDER_NAME_START)) {
+                if (current.getName().toLowerCase().contains(BAL_DIST_DIR_NAME_START)) {
                     return BallerinaSdkUtils.getNormalizedPath(current.getAbsolutePath());
                 }
                 current = current.getParentFile();
             }
 
-            return "";
+            return EMPTY;
         } catch (Exception e) {
-            return "";
+            return EMPTY;
         }
     }
 
@@ -216,25 +273,76 @@ public class BallerinaSdkUtils {
 
             String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
 
-            if (BAL_EXECUTABLE_FOLDER.equals(lastElement)) {
+            if (BAL_EXECUTABLE_DIR.equals(lastElement)) {
                 return path.resolve(executableName).toString();
             } else {
-                return path.resolve(Paths.get(BAL_EXECUTABLE_FOLDER, executableName)).toString();
+                return path.resolve(Paths.get(BAL_EXECUTABLE_DIR, executableName)).toString();
             }
         } catch (Exception e) {
-            return "";
+            return EMPTY;
         }
     }
 
     public static String getNormalizedPath(String path) {
         try {
             if (path.isEmpty()) {
-                return "";
+                return EMPTY;
             }
             return Paths.get(path).normalize().toString();
         } catch (Exception e) {
-            return "";
+            return EMPTY;
         }
+    }
+
+    private static Optional<String> getBalBinPathMac() {
+        try {
+            String path = Paths.get(MAC_BAL_DIST_DIR_NAME, BAL_NAME, BAL_EXECUTABLE_DIR).normalize().toString();
+            if (new File(path).exists()) {
+                return Optional.of(path);
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<String> getBalBinPathWindows() {
+        try {
+            String path =
+                    Paths.get(WINDOWS_BAL_DRIVE, WINDOWS_BAL_DIST_DIR_NAME, BAL_NAME, BAL_EXECUTABLE_DIR).normalize()
+                            .toString();
+            if (new File(path).exists()) {
+                return Optional.of(path);
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<String> getBalBinPathUnix() {
+        try {
+            String path =
+                    Paths.get(UNIX_BAL_DIST_DIR_NAME_FIRST, UNIX_BAL_DIST_DIR_NAME_SECOND, BAL_NAME, BAL_EXECUTABLE_DIR)
+                            .normalize().toString();
+            if (new File(path).exists()) {
+                return Optional.of(path);
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> getBalBinBatPath() {
+        if (OSUtils.isWindows()) {
+            return getBalBinPathWindows();
+        } else if (OSUtils.isMac()) {
+            return getBalBinPathMac();
+        } else if (OSUtils.isUnix()) {
+            return getBalBinPathUnix();
+        }
+        return Optional.empty();
     }
 
     public static class BallerinaSdk {

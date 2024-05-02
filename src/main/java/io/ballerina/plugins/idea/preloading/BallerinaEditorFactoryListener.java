@@ -24,15 +24,19 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFileBase;
+import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import io.ballerina.plugins.idea.widget.BallerinaDetectionWidget;
 import io.ballerina.plugins.idea.widget.BallerinaDetectionWidgetFactory;
 import io.ballerina.plugins.idea.widget.BallerinaIconWidget;
 import io.ballerina.plugins.idea.widget.BallerinaIconWidgetFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Editor listener implementation which is used to handle ballerina source files opening.
@@ -42,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 public class BallerinaEditorFactoryListener implements EditorFactoryListener {
 
     private boolean balSourcesFound = false;
+    private boolean balSdkFound = false;
 
     private static boolean isBalFile(@Nullable VirtualFile file) {
         if (file == null || file.getExtension() == null || file instanceof LightVirtualFileBase) {
@@ -52,7 +57,7 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             return false;
         }
 
-        return file.getExtension().equals("bal");
+        return file.getExtension().equals(BallerinaConstants.BAL_EXTENSION.substring(1));
     }
 
     @Override
@@ -61,7 +66,7 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
         if (project == null) {
             return;
         }
-        if (balSourcesFound) {
+        if (balSdkFound) {
             BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
             if (iconWidget != null) {
                 iconWidget.setIcon(BallerinaIcons.FILE);
@@ -80,10 +85,11 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             String balVersion = BallerinaSdkService.getInstance().getBallerinaVersion(project);
             if (widget != null) {
                 ApplicationManager.getApplication().invokeLater(() -> {
-                    widget.setMessage("");
-                    if (balVersion.isEmpty()) {
+                    widget.setMessage(EMPTY);
+                    if (!BallerinaSdkUtils.isValidVersion(balVersion)) {
                         BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
                     } else {
+                        balSdkFound = true;
                         BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
                         if (iconWidget != null) {
                             iconWidget.setIcon(BallerinaIcons.FILE);
