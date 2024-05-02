@@ -29,7 +29,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Icon;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Display ballerina icon in the status bar after detecting bal version.
@@ -42,7 +42,7 @@ public class BallerinaIconWidget implements StatusBarWidget, StatusBarWidget.Ico
     private static final String ID = "BallerinaIconWidget";
     private final Project project;
     private Icon icon = null;
-    private String tooltipText = EMPTY;
+    private String tooltipText = EMPTY_STRING;
 
     public BallerinaIconWidget(Project project) {
         this.project = project;
@@ -68,7 +68,7 @@ public class BallerinaIconWidget implements StatusBarWidget, StatusBarWidget.Ico
     @Override
     public void dispose() {
         setIcon(null);
-        setTooltipText(EMPTY);
+        setTooltipText(EMPTY_STRING);
     }
 
     @Nullable

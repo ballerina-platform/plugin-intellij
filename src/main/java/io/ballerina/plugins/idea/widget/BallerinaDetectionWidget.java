@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Displays "Detecting Ballerina" message in the status bar when a bal file is opened.
@@ -40,7 +40,7 @@ public class BallerinaDetectionWidget implements StatusBarWidget, StatusBarWidge
 
     private static final String ID = "BallerinaDetectionWidget";
     private final Project project;
-    private String message = EMPTY;
+    private String message = EMPTY_STRING;
 
     public BallerinaDetectionWidget(Project project) {
         this.project = project;

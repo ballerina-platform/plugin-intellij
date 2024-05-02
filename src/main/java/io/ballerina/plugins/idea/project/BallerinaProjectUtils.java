@@ -53,7 +53,7 @@ public class BallerinaProjectUtils {
 
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error("Error while finding ballerina package", e);
+            LOG.error("'" + startingPath + "' Error while finding ballerina package: ", e);
             return Optional.empty();
         }
     }
@@ -77,7 +77,7 @@ public class BallerinaProjectUtils {
 
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error("Error while finding ballerina module", e);
+            LOG.error("'" + startingPath + "' Error while finding ballerina module: ", e);
             return Optional.empty();
         }
     }
@@ -95,7 +95,7 @@ public class BallerinaProjectUtils {
             }
             return false;
         } catch (Exception e) {
-            LOG.error("Error while checking if the file is a package test", e);
+            LOG.error("'" + element.getText() + "' Error while checking if the file is a package test: ", e);
             return false;
         }
     }
@@ -116,7 +116,7 @@ public class BallerinaProjectUtils {
             }
             return false;
         } catch (Exception e) {
-            LOG.error("Error while checking if the file is a module test", e);
+            LOG.error("'" + element.getText() + "' Error while checking if the file is a module test: ", e);
             return false;
         }
     }
@@ -133,7 +133,7 @@ public class BallerinaProjectUtils {
             }
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error("Error while getting the module name", e);
+            LOG.error("'" + element.getText() + "' Error while getting the module name: ", e);
             return Optional.empty();
         }
     }

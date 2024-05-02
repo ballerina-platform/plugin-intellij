@@ -25,7 +25,7 @@ import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Stores ballerina sdk selection settings.
@@ -80,7 +80,7 @@ public final class BallerinaSdkSettings implements PersistentStateComponent<Ball
     public static class State {
 
         public boolean useCustomSdk = false;
-        public String ballerinaSdkPath = EMPTY;
-        public String ballerinaSdkVersion = EMPTY;
+        public String ballerinaSdkPath = EMPTY_STRING;
+        public String ballerinaSdkVersion = EMPTY_STRING;
     }
 }

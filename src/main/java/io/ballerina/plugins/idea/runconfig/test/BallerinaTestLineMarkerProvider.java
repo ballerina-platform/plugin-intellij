@@ -42,7 +42,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Provides gutter icons for test functions.
@@ -69,21 +69,21 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         if (virtualFile != null) {
             String path = virtualFile.getPath();
             Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
-            packageName = packagePath.map(s -> Paths.get(s).normalize().getFileName().toString()).orElse(EMPTY);
+            packageName = packagePath.map(s -> Paths.get(s).normalize().getFileName().toString()).orElse(EMPTY_STRING);
         } else {
-            packageName = EMPTY;
+            packageName = EMPTY_STRING;
         }
 
         String moduleName;
         if (virtualFile != null) {
             if (BallerinaProjectUtils.isModuleTest(element)) {
                 Optional<String> module = BallerinaProjectUtils.getModuleName(element);
-                moduleName = module.orElse(EMPTY);
+                moduleName = module.orElse(EMPTY_STRING);
             } else {
-                moduleName = EMPTY;
+                moduleName = EMPTY_STRING;
             }
         } else {
-            moduleName = EMPTY;
+            moduleName = EMPTY_STRING;
         }
 
         return new LineMarkerInfo<>(element, element.getTextRange(), BallerinaIcons.TEST,

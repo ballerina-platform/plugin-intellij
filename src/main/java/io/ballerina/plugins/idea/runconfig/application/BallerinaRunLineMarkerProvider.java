@@ -45,7 +45,7 @@ import java.util.Optional;
 import javax.swing.Icon;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXTENSION;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Provides gutter icons for main functions and services.
@@ -76,10 +76,10 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
                 packageName = Paths.get(packagePath.get()).normalize().getFileName().toString();
                 fileName = "package " + packageName;
             } else {
-                packageName = EMPTY;
+                packageName = EMPTY_STRING;
             }
         } else {
-            packageName = EMPTY;
+            packageName = EMPTY_STRING;
         }
         String finalFileName = fileName;
         Icon icon = BallerinaIcons.RUN;

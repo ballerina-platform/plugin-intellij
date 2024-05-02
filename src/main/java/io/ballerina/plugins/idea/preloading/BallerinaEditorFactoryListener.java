@@ -36,7 +36,7 @@ import io.ballerina.plugins.idea.widget.BallerinaIconWidgetFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Editor listener implementation which is used to handle ballerina source files opening.
@@ -85,7 +85,7 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             String balVersion = BallerinaSdkService.getInstance().getBallerinaVersion(project);
             if (widget != null) {
                 ApplicationManager.getApplication().invokeLater(() -> {
-                    widget.setMessage(EMPTY);
+                    widget.setMessage(EMPTY_STRING);
                     if (!BallerinaSdkUtils.isValidVersion(balVersion)) {
                         BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
                     } else {
