@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
+import io.ballerina.plugins.idea.sdk.BallerinaSdk;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkSettings;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
@@ -62,7 +63,7 @@ public class BallerinaSdkPanel {
     private Color defaultColor;
     private String systemBalPath;
     private String systemBalVersion;
-    private List<BallerinaSdkUtils.ballerinaSdk> sdkList;
+    private List<BallerinaSdk> sdkList;
     private final Project project;
     private static final String CB_DEFAULT_PREFIX = "[System default] ";
     private static final String ADD_BAL_SDK = "Add Ballerina SDK";
@@ -164,9 +165,9 @@ public class BallerinaSdkPanel {
     }
 
     private void fillComboBox() {
-        for (BallerinaSdkUtils.ballerinaSdk sdk : sdkList) {
-            if (!Objects.equals(selectedSdkPath, sdk.path()) && !Objects.equals(systemBalPath, sdk.path())) {
-                sdkVersionComboBox.addItem(BallerinaSdkUtils.findBalDistFolder(sdk.path()));
+        for (BallerinaSdk sdk : sdkList) {
+            if (!Objects.equals(selectedSdkPath, sdk.getPath()) && !Objects.equals(systemBalPath, sdk.getPath())) {
+                sdkVersionComboBox.addItem(BallerinaSdkUtils.findBalDistFolder(sdk.getPath()));
             }
         }
         sdkVersionComboBox.addItem(ADD_BAL_SDK);

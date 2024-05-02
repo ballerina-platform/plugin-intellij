@@ -37,7 +37,7 @@ public class BallerinaSdkService {
     private String ballerinaPath;
     private boolean notified = false;
 
-    private final List<BallerinaSdkUtils.ballerinaSdk> sdkList;
+    private final List<BallerinaSdk> sdkList;
 
     private BallerinaSdkService() {
         // This code will only run once when the IDE starts and the first access to BallerinaSdkService occurs
@@ -110,7 +110,7 @@ public class BallerinaSdkService {
         settings.setBallerinaSdkVersion(version);
     }
 
-    public List<BallerinaSdkUtils.ballerinaSdk> getSdkList() {
+    public List<BallerinaSdk> getSdkList() {
         return sdkList;
     }
 }

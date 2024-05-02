@@ -250,8 +250,8 @@ public class BallerinaSdkUtils {
         }
     }
 
-    public static List<ballerinaSdk> getBallerinaSdks(String ballerinaPath) {
-        List<ballerinaSdk> sdkList = new ArrayList<>();
+    public static List<BallerinaSdk> getBallerinaSdks(String ballerinaPath) {
+        List<BallerinaSdk> sdkList = new ArrayList<>();
         try {
             if (isValidPath(ballerinaPath)) {
                 ballerinaPath = BallerinaSdkUtils.getNormalizedPath(ballerinaPath);
@@ -269,7 +269,7 @@ public class BallerinaSdkUtils {
                         Path sdkPath =
                                 Paths.get(file.getAbsolutePath(), BIN_DIR, executableName).normalize();
                         if (isValidSdk(sdkPath.toString(), version)) {
-                            sdkList.add(new ballerinaSdk(sdkPath.toString(), version));
+                            sdkList.add(new BallerinaSdk(sdkPath.toString(), version));
                         }
                     }
                 }
@@ -391,9 +391,5 @@ public class BallerinaSdkUtils {
             return getDefaultInstallationPathUnix();
         }
         return Optional.empty();
-    }
-
-    public record ballerinaSdk(String path, String version) {
-
     }
 }
