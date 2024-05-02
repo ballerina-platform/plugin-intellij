@@ -124,10 +124,10 @@ public class BallerinaSdkUtils {
                 LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());
                 return runCommandWithDirectory(balBinPath.get(), BAL_VERSION_CMD);
             }
-            LOG.info(BAL_LOG_PREFIX + " Ballerina version is not found");
+            LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " Error occurred while getting the Ballerina version: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina version: ", e);
             return Optional.empty();
         }
     }
@@ -139,21 +139,21 @@ public class BallerinaSdkUtils {
                 Optional<String> balBinPath = getDefaultInstallationPath();
                 if (balBinPath.isPresent()) {
                     version = runCommandWithDirectory(balBinPath.get(), BAL_VERSION_CMD);
-                    LOG.info(BAL_LOG_PREFIX + " Ballerina version: " + version.orElse(EMPTY_STRING));
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version: " + version.orElse(EMPTY_STRING));
                 } else {
-                    LOG.info(BAL_LOG_PREFIX + " Ballerina bin path is not found");
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
                     return Optional.empty();
                 }
             }
             if (version.isEmpty()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina version is not found");
+                LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
                 return version;
             }
             if (OSUtils.isWindows()) {
                 Map<String, String> env = System.getenv();
                 String [] versionParts = version.get().split(" ");
                 if (versionParts.length < 2) {
-                    LOG.info(BAL_LOG_PREFIX + " Ballerina version is not found: " + version.get());
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found: " + version.get());
                     return Optional.empty();
                 }
                 for (Map.Entry<String, String> entry : env.entrySet()) {
@@ -163,25 +163,25 @@ public class BallerinaSdkUtils {
                                                 + version.get().split(" ")[1],
                                         BIN_DIR, WINDOWS_BAL_EXECUTABLE)
                                 .normalize().toString();
-                        LOG.info(BAL_LOG_PREFIX + " Ballerina path: " + path);
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina path: " + path);
                         return Optional.of(path);
                     }
                 }
-                LOG.info(BAL_LOG_PREFIX + " Ballerina path is not found");
+                LOG.info(BAL_LOG_PREFIX + "Ballerina path is not found");
                 return Optional.empty();
             } else {
                 Optional<String> home = runCommand(BAL_HOME_CMD);
                 if (home.isEmpty()) {
                     Optional<String> balBinPath = getDefaultInstallationPath();
                     if (balBinPath.isPresent()) {
-                        LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + balBinPath.get());
                         home = runCommandWithDirectory(balBinPath.get(), BAL_HOME_CMD);
                     } else {
-                        LOG.info(BAL_LOG_PREFIX + " Ballerina bin path is not found");
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
                         return Optional.empty();
                     }
                 }
-                LOG.info(BAL_LOG_PREFIX + " Ballerina home: " + home.orElse(EMPTY_STRING));
+                LOG.info(BAL_LOG_PREFIX + "Ballerina home: " + home.orElse(EMPTY_STRING));
                 return home.map(s -> Paths.get(s, BIN_DIR, UNIX_BAL_EXECUTABLE).normalize().toString());
             }
         } catch (Exception e) {
@@ -192,13 +192,13 @@ public class BallerinaSdkUtils {
     public static boolean isValidPath(String path) {
         try {
             if (path == null || path.isEmpty()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina path is empty: " + path);
+                LOG.info(BAL_LOG_PREFIX + "Ballerina path is empty: " + path);
                 return false;
             }
             path = BallerinaSdkUtils.getNormalizedPath(path);
             File file = new File(path);
             if (!file.exists()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina path does not exist: " + path);
+                LOG.info(BAL_LOG_PREFIX + "Ballerina path does not exist: " + path);
                 return false;
             }
 
@@ -206,14 +206,13 @@ public class BallerinaSdkUtils {
 
             if ((OSUtils.isWindows() && !executableName.equals(WINDOWS_BAL_EXECUTABLE)) ||
                     (!OSUtils.isWindows() && !executableName.equals(UNIX_BAL_EXECUTABLE))) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina executable is not found: " + path);
+                LOG.info(BAL_LOG_PREFIX + "Ballerina executable is not found: " + path);
                 return false;
             }
 
             return file.canExecute();
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + path
-                    + "' Error occurred while validating the Ballerina path: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while validating the Ballerina path: " + path, e);
             return false;
         }
     }
@@ -234,18 +233,19 @@ public class BallerinaSdkUtils {
                 version = version.replace('b', 'B').replace('-', ' ');
                 String [] parts = version.split("\\.");
                 if (parts.length < 2) {
-                    LOG.info(BAL_LOG_PREFIX + " '" + path + "' Ballerina version is not found: " + version);
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found for the path: '" + path
+                            + "' Version: " + version);
                     return EMPTY_STRING;
                 }
                 String update = version.split("\\.")[1];
                 version = version + " (Swan Lake Update " + update + ")";
                 return isValidVersion(version) ? version : EMPTY_STRING;
             }
-            LOG.info(BAL_LOG_PREFIX + " Ballerina path is not valid: " + path);
+            LOG.info(BAL_LOG_PREFIX + "Ballerina path is not valid: " + path);
             return EMPTY_STRING;
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + path
-                    + "' Error occurred while getting the Ballerina version from the path: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina version from the path: "
+                    + path, e);
             return EMPTY_STRING;
         }
     }
@@ -276,8 +276,8 @@ public class BallerinaSdkUtils {
             }
             return sdkList;
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + ballerinaPath
-                    + "' Error occurred while getting the Ballerina SDKs: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina SDKs from the path: "
+                    + ballerinaPath, e);
             return sdkList;
         }
     }
@@ -292,11 +292,11 @@ public class BallerinaSdkUtils {
                 }
                 current = current.getParentFile();
             }
-            LOG.info(BAL_LOG_PREFIX + " Ballerina distribution folder is not found: " + initialPath);
+            LOG.info(BAL_LOG_PREFIX + "Ballerina distribution folder is not found: " + initialPath);
             return EMPTY_STRING;
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + initialPath
-                    + "' Error occurred while finding the Ballerina distribution folder:  ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while finding the Ballerina distribution folder: "
+                    + initialPath, e);
             return EMPTY_STRING;
         }
     }
@@ -314,8 +314,8 @@ public class BallerinaSdkUtils {
                 return path.resolve(Paths.get(BIN_DIR, executableName)).toString();
             }
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + distPath
-                    + "' Error occurred while getting the Ballerina bat from the distribution: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bat from the distribution: "
+                    + distPath, e);
             return EMPTY_STRING;
         }
     }
@@ -328,7 +328,7 @@ public class BallerinaSdkUtils {
             }
             return Paths.get(path).normalize().toString();
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + path + "' Error occurred while normalizing the path: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while normalizing the path: " + path, e);
             return EMPTY_STRING;
         }
     }
@@ -337,13 +337,13 @@ public class BallerinaSdkUtils {
         try {
             String path = Paths.get(MAC_LIBRARY_DIR, BAL_NAME, BIN_DIR).normalize().toString();
             if (new File(path).exists()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + path);
+                LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
                 return Optional.of(path);
             }
-            LOG.info(BAL_LOG_PREFIX + " Ballerina bin path is not found: " + path);
+            LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " Error occurred while getting the Ballerina bin path for Mac: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bin path for Mac: ", e);
             return Optional.empty();
         }
     }
@@ -354,13 +354,13 @@ public class BallerinaSdkUtils {
                     Paths.get(WINDOWS_C_DRIVE, WINDOWS_BAL_DIST_DIR_NAME, BAL_NAME, BIN_DIR)
                             .normalize().toString();
             if (new File(path).exists()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + path);
+                LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
                 return Optional.of(path);
             }
-            LOG.info(BAL_LOG_PREFIX + " Ballerina bin path is not found: " + path);
+            LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " Error occurred while getting the Ballerina bin path for Windows: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bin path for Windows: ", e);
             return Optional.empty();
         }
     }
@@ -371,13 +371,13 @@ public class BallerinaSdkUtils {
                     Paths.get(UNIX_USR_DIR, UNIX_LIB_DIR, BAL_NAME, BIN_DIR)
                             .normalize().toString();
             if (new File(path).exists()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + path);
+                LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
                 return Optional.of(path);
             }
-            LOG.info(BAL_LOG_PREFIX + " Ballerina bin path is not found: " + path);
+            LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " Error occurred while getting the Ballerina bin path for Unix: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bin path for Unix: ", e);
             return Optional.empty();
         }
     }

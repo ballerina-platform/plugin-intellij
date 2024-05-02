@@ -29,5 +29,5 @@ public class BallerinaConstants {
     public static final String BAL_MODULE_DIR_NAME = "modules";
     public static final String BAL_EXTENSION = ".bal";
     public static final String EMPTY_STRING = "";
-    public static final String BAL_LOG_PREFIX = "Ballerina Swan Lake Plugin: ";
+    public static final String BAL_LOG_PREFIX = "[Ballerina Plugin] ";
 }
