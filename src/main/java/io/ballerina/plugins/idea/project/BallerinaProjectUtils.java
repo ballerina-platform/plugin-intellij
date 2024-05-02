@@ -17,6 +17,7 @@
 
 package io.ballerina.plugins.idea.project;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -36,6 +37,8 @@ import static io.ballerina.plugins.idea.BallerinaConstants.BAL_TOML_FILE;
  */
 public class BallerinaProjectUtils {
 
+    private static final Logger LOG = Logger.getInstance(BallerinaProjectUtils.class);
+
     public static Optional<String> findBallerinaPackage(String startingPath) {
         try {
             startingPath = BallerinaSdkUtils.getNormalizedPath(startingPath);
@@ -50,6 +53,7 @@ public class BallerinaProjectUtils {
 
             return Optional.empty();
         } catch (Exception e) {
+            LOG.error("Error while finding ballerina package", e);
             return Optional.empty();
         }
     }
@@ -73,6 +77,7 @@ public class BallerinaProjectUtils {
 
             return Optional.empty();
         } catch (Exception e) {
+            LOG.error("Error while finding ballerina module", e);
             return Optional.empty();
         }
     }
@@ -90,6 +95,7 @@ public class BallerinaProjectUtils {
             }
             return false;
         } catch (Exception e) {
+            LOG.error("Error while checking if the file is a package test", e);
             return false;
         }
     }
@@ -110,6 +116,7 @@ public class BallerinaProjectUtils {
             }
             return false;
         } catch (Exception e) {
+            LOG.error("Error while checking if the file is a module test", e);
             return false;
         }
     }
@@ -126,6 +133,7 @@ public class BallerinaProjectUtils {
             }
             return Optional.empty();
         } catch (Exception e) {
+            LOG.error("Error while getting the module name", e);
             return Optional.empty();
         }
     }
