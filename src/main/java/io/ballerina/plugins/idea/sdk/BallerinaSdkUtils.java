@@ -99,15 +99,16 @@ public class BallerinaSdkUtils {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
-            LOG.info(BAL_LOG_PREFIX + " '" + dir + " '" + cmd + "' command output: " + line);
+            LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + dir + " '" + cmd + "' command output: " + line);
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                LOG.info(BAL_LOG_PREFIX + " '" + dir + " '" + cmd + "' Exit code: " + exitCode);
+                LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + dir + " '" + cmd + "' Exit code: " + exitCode);
                 return Optional.empty();
             }
             return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + cmd + "' Error occurred while running the command: ", e);
+            LOG.error(BAL_LOG_PREFIX + "Bal bin directory: " + dir + " '" + cmd
+                    + "' Error occurred while running the command: ", e);
             return Optional.empty();
         }
     }
