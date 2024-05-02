@@ -56,20 +56,19 @@ public class BallerinaApplicationRunningState extends BallerinaExecutionState {
 
         GeneralCommandLine commandLine = new GeneralCommandLine(balPath, "run");
         commandLine.withEnvironment(envVariables);
-
-        if (!programArguments.contains(lastPath)) {
-            programArguments.add(lastPath);
-        }
         
         if (commands != null && !commands.isEmpty()) {
             for (String cmd : commands) {
                 if (!cmd.isBlank()) {
-                    commandLine.addParameter(cmd.strip());
+                    commandLine.addParameter("--" + cmd.strip());
                 }
             }
         }
 
+        commandLine.addParameter(lastPath);
+
         if (!programArguments.isEmpty()) {
+            commandLine.addParameter("--");
             for (String arg : programArguments) {
                 if (!arg.isBlank()) {
                     commandLine.addParameter(arg.strip());

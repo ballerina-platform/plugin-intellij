@@ -156,7 +156,7 @@ public class BallerinaExecutionSettingsEditor extends SettingsEditor<BallerinaEx
 
     @Override
     protected void resetEditorFrom(@NotNull BallerinaExecutionConfiguration configuration) {
-        scriptPathField.setText(configuration.getScriptName());
+        scriptPathField.setText(configuration.getSourcePath());
         envVarsComponent.setEnvs(configuration.getEnvs());
         commandOptionsModel.clear();
         commandOptionsModel.addAll(configuration.getCommands());
@@ -166,7 +166,7 @@ public class BallerinaExecutionSettingsEditor extends SettingsEditor<BallerinaEx
 
     @Override
     protected void applyEditorTo(@NotNull BallerinaExecutionConfiguration configuration) throws ConfigurationException {
-        configuration.setScriptName(scriptPathField.getText());
+        configuration.setSourcePath(scriptPathField.getText());
         configuration.setEnvs(envVarsComponent.getEnvs());
         List<String> commands = Collections.list(commandOptionsModel.elements());
         configuration.setCommands(commands);

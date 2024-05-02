@@ -109,16 +109,16 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                         if (ballerinaPackage.isPresent()) {
                             script = ballerinaPackage.get();
                         }
-                        testConfiguration.setScriptName(script);
+                        testConfiguration.setSourcePath(script);
                         if (BallerinaProjectUtils.isModuleTest(element)) {
                             testConfiguration.addCommand("--tests");
-                            String arg = packageName + "." + moduleName + ":"
+                            String source = packageName + "." + moduleName + ":"
                                     + BallerinaPsiUtil.getFunctionName(element);
-                            testConfiguration.addProgramArg(arg);
+                            testConfiguration.setSource(source);
                         } else {
                             testConfiguration.addCommand("--tests");
-                            String name = BallerinaPsiUtil.getFunctionName(element);
-                            testConfiguration.addProgramArg(name);
+                            String source = BallerinaPsiUtil.getFunctionName(element);
+                            testConfiguration.setSource(source);
 
                         }
 

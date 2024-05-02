@@ -91,6 +91,7 @@ public class BallerinaSdkUtils {
         if (OSUtils.isWindows()) {
             processBuilder.command("cmd.exe", "/c", cmd);
         } else {
+            cmd = dir + cmd;
             processBuilder.command("sh", "-c", cmd);
         }
 
@@ -99,6 +100,7 @@ public class BallerinaSdkUtils {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
+            System.out.println(line);
             LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + dir + " '" + cmd + "' command output: " + line);
             int exitCode = process.waitFor();
             if (exitCode != 0) {
@@ -115,11 +117,11 @@ public class BallerinaSdkUtils {
 
     public static Optional<String> getBallerinaVersion() {
         try {
-            Optional<String> version = runCommand(BAL_VERSION_CMD);
-            if (version.isPresent()) {
-                LOG.info(BAL_LOG_PREFIX + " Ballerina version: " + version.get());
-                return version;
-            }
+//            Optional<String> version = runCommand(BAL_VERSION_CMD);
+//            if (version.isPresent()) {
+//                LOG.info(BAL_LOG_PREFIX + " Ballerina version: " + version.get());
+//                return version;
+//            }
             Optional<String> balBinPath = getDefaultInstallationPath();
             if (balBinPath.isPresent()) {
                 LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());
@@ -339,7 +341,7 @@ public class BallerinaSdkUtils {
             String path = Paths.get(MAC_LIBRARY_DIR, BAL_NAME, BIN_DIR).normalize().toString();
             if (new File(path).exists()) {
                 LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
-                return Optional.of(path);
+                return Optional.of(path + "/");
             }
             LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();
@@ -356,7 +358,7 @@ public class BallerinaSdkUtils {
                             .normalize().toString();
             if (new File(path).exists()) {
                 LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
-                return Optional.of(path);
+                return Optional.of(path + "/");
             }
             LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();
@@ -373,7 +375,7 @@ public class BallerinaSdkUtils {
                             .normalize().toString();
             if (new File(path).exists()) {
                 LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
-                return Optional.of(path);
+                return Optional.of(path + "/");
             }
             LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();

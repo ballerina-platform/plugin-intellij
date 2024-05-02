@@ -32,8 +32,11 @@ import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
  */
 public class BallerinaExecutionConfigOptions extends RunConfigurationOptions {
 
-    private final StoredProperty<String> scriptName =
-            string(EMPTY_STRING).provideDelegate(this, "scriptName");
+    private final StoredProperty<String> sourcePath =
+            string(EMPTY_STRING).provideDelegate(this, "sourcePath");
+
+    private final StoredProperty<String> source =
+            string(EMPTY_STRING).provideDelegate(this, "source");
 
     private final StoredProperty<List<Object>> additionalCommands =
             list().provideDelegate(this, "additionalCommands");
@@ -44,12 +47,12 @@ public class BallerinaExecutionConfigOptions extends RunConfigurationOptions {
     private final StoredProperty<List<Object>> programArguments =
             list().provideDelegate(this, "programArguments");
 
-    public String getScriptName() {
-        return scriptName.getValue(this);
+    public String getSourcePath() {
+        return sourcePath.getValue(this);
     }
 
-    public void setScriptName(String scriptName) {
-        this.scriptName.setValue(this, scriptName);
+    public void setSourcePath(String sourcePath) {
+        this.sourcePath.setValue(this, sourcePath);
     }
 
     public List<String> getAdditionalCommands() {
@@ -74,5 +77,13 @@ public class BallerinaExecutionConfigOptions extends RunConfigurationOptions {
 
     public void setProgramArguments(List<String> programArguments) {
         this.programArguments.setValue(this, (List) programArguments);
+    }
+
+    public String getSource() {
+        return source.getValue(this);
+    }
+
+    public void setSource(String source) {
+        this.source.setValue(this, source);
     }
 }

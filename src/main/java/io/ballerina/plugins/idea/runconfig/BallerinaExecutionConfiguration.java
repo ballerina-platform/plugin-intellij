@@ -80,12 +80,20 @@ public abstract class BallerinaExecutionConfiguration extends RunConfigurationBa
         getOptions().setAdditionalCommands(commands);
     }
 
-    public String getScriptName() {
-        return getOptions().getScriptName();
+    public String getSourcePath() {
+        return getOptions().getSourcePath();
     }
 
-    public void setScriptName(String scriptName) {
-        getOptions().setScriptName(scriptName);
+    public void setSourcePath(String scriptName) {
+        getOptions().setSourcePath(scriptName);
+    }
+
+    public String getSource() {
+        return getOptions().getSource();
+    }
+
+    public void setSource(String source) {
+        getOptions().setSource(source);
     }
 
     public Map<String, String> getEnvs() {

@@ -75,14 +75,14 @@ public class BallerinaRunFileAction extends AnAction {
             if (ballerinaPackage.isPresent()) {
                 script = ballerinaPackage.get();
             }
-            runConfiguration.setScriptName(script);
+            runConfiguration.setSourcePath(script);
 
             boolean configExists = false;
             for (RunConfiguration existingConfig : runManager.getAllConfigurationsList()) {
                 if (existingConfig instanceof BallerinaApplicationRunConfiguration &&
                         existingConfig.getName().equals(runConfiguration.getName()) &&
-                        ((BallerinaApplicationRunConfiguration) existingConfig).getScriptName()
-                                .equals(runConfiguration.getScriptName())) {
+                        ((BallerinaApplicationRunConfiguration) existingConfig).getSourcePath()
+                                .equals(runConfiguration.getSourcePath())) {
                     configExists = true;
                     settings = runManager.findSettings(existingConfig);
                     runConfiguration = (BallerinaApplicationRunConfiguration) existingConfig;

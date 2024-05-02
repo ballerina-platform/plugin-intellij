@@ -39,9 +39,13 @@ import java.util.Optional;
  */
 public class BallerinaTestState extends BallerinaExecutionState {
 
-    protected BallerinaTestState(ExecutionEnvironment environment, String balPath, String script, List<String> commands,
+    private String source;
+
+    protected BallerinaTestState(ExecutionEnvironment environment, String balPath,
+                                 String script, String source, List<String> commands,
                                  List<String> programArguments, Map<String, String> envVariables) {
         super(environment, balPath, script, commands, programArguments, envVariables);
+        this.source = source;
     }
 
     @Override
@@ -59,6 +63,8 @@ public class BallerinaTestState extends BallerinaExecutionState {
                 }
             }
         }
+
+        commandLine.addParameter(source);
 
         if (programArguments != null && !programArguments.isEmpty()) {
             for (String arg : programArguments) {

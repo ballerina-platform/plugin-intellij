@@ -53,14 +53,14 @@ public class BallerinaTestConfiguration extends BallerinaExecutionConfiguration 
             return null;
         }
 
-        String script = getOptions().getScriptName();
+        String sourcePath = getOptions().getSourcePath();
 
         try {
-            Path path = Paths.get(script).normalize();
+            Path path = Paths.get(sourcePath).normalize();
             if (!Files.exists(path)) {
                 throw new IllegalArgumentException("File does not exist");
             }
-            script = path.toString();
+            sourcePath = path.toString();
         } catch (Exception e) {
             BallerinaPluginNotifier.customNotification(environment.getProject(), NotificationType.ERROR,
                     "Invalid path", "Provided path is not valid or does not exist.");
@@ -69,7 +69,7 @@ public class BallerinaTestConfiguration extends BallerinaExecutionConfiguration 
 
         return new BallerinaTestState(environment,
                 BallerinaSdkService.getInstance().getBallerinaPath(environment.getProject()),
-                script, getOptions().getAdditionalCommands(),
+                sourcePath, getOptions().getSource(), getOptions().getAdditionalCommands(),
                 getOptions().getProgramArguments(), getOptions().getEnvVars());
     }
 }

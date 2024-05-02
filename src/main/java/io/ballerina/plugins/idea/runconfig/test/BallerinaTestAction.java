@@ -75,8 +75,8 @@ public class BallerinaTestAction extends AnAction {
         for (RunConfiguration existingConfig : runManager.getAllConfigurationsList()) {
             if (existingConfig instanceof BallerinaTestConfiguration &&
                     existingConfig.getName().equals(runConfiguration.getName()) &&
-                    ((BallerinaTestConfiguration) existingConfig).getScriptName()
-                            .equals(((BallerinaTestConfiguration) runConfiguration).getScriptName())) {
+                    ((BallerinaTestConfiguration) existingConfig).getSourcePath()
+                            .equals(((BallerinaTestConfiguration) runConfiguration).getSourcePath())) {
                 runConfiguration = existingConfig;
                 found = true;
             }
@@ -108,20 +108,20 @@ public class BallerinaTestAction extends AnAction {
                 runManager.createConfiguration(configName, BallerinaTestConfigurationType.class);
         BallerinaTestConfiguration runConfiguration = (BallerinaTestConfiguration) settings.getConfiguration();
         String script = scriptPath;
-        String cmd = "";
+        String source = "";
 
         if (modulePath.isPresent() && packagePath.isPresent()) {
             script = modulePath.get();
-            cmd = new File(packagePath.get()).getName() + "." + new File(script).getName() + ":*";
+            source = new File(packagePath.get()).getName() + "." + new File(script).getName() + ":*";
         } else if (packagePath.isPresent()) {
             script = packagePath.get();
-            cmd = new File(script).getName() + ":*";
+            source = new File(script).getName() + ":*";
         }
 
-        runConfiguration.setScriptName(script);
+        runConfiguration.setSourcePath(script);
 
         runConfiguration.addCommand("--tests");
-        runConfiguration.addProgramArg(cmd);
+        runConfiguration.setSource(source);
 
         return settings;
     }
