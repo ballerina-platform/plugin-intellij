@@ -100,7 +100,6 @@ public class BallerinaSdkUtils {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
-            System.out.println(line);
             LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + dir + " '" + cmd + "' command output: " + line);
             int exitCode = process.waitFor();
             if (exitCode != 0) {
@@ -358,7 +357,7 @@ public class BallerinaSdkUtils {
                             .normalize().toString();
             if (new File(path).exists()) {
                 LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
-                return Optional.of(path + "/");
+                return Optional.of(path);
             }
             LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
             return Optional.empty();
