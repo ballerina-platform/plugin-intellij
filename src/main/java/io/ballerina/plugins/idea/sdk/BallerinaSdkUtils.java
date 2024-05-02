@@ -87,9 +87,9 @@ public class BallerinaSdkUtils {
     private static Optional<String> runCommandWithDirectory(String dir, String cmd) {
         SlowOperations.assertSlowOperationsAreAllowed();
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(new File(dir));
+//        processBuilder.directory(new File(dir));
         if (OSUtils.isWindows()) {
-            processBuilder.command("cmd.exe", "/c", cmd);
+            processBuilder.command("cmd.exe", "/c", dir+"\\bal.bat", cmd);
         } else {
             cmd = dir + cmd;
             processBuilder.command("sh", "-c", cmd);
@@ -117,11 +117,11 @@ public class BallerinaSdkUtils {
 
     public static Optional<String> getBallerinaVersion() {
         try {
-//            Optional<String> version = runCommand(BAL_VERSION_CMD);
-//            if (version.isPresent()) {
-//                LOG.info(BAL_LOG_PREFIX + " Ballerina version: " + version.get());
-//                return version;
-//            }
+            Optional<String> version = runCommand(BAL_VERSION_CMD);
+            if (version.isPresent()) {
+                LOG.info(BAL_LOG_PREFIX + " Ballerina version: " + version.get());
+                return version;
+            }
             Optional<String> balBinPath = getDefaultInstallationPath();
             if (balBinPath.isPresent()) {
                 LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());

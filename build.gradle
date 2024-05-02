@@ -62,18 +62,18 @@ sourceSets {
     }
 }
 
-//apply plugin: 'checkstyle'
-//checkstyle {
-//    toolVersion = checkStyleVersion
-//    configFile  rootProject.file("/src/main/resources/checkstyle/checkstyle.xml")
-//    checkstyleMain {
-//        source = fileTree("src/main/java")
-//        include '**/*.java'
-//    }
-//    checkstyleTest {
-//        source = fileTree("src/test/java")
-//    }
-//}
+apply plugin: 'checkstyle'
+checkstyle {
+    toolVersion = checkStyleVersion
+    configFile  rootProject.file("/src/main/resources/checkstyle/checkstyle.xml")
+    checkstyleMain {
+        source = fileTree("src/main/java")
+        include '**/*.java'
+    }
+    checkstyleTest {
+        source = fileTree("src/test/java")
+    }
+}
 
 runIde.dependsOn check
 buildPlugin.dependsOn check
