@@ -114,13 +114,13 @@ public class BallerinaRunFileAction extends AnAction {
                 file != null && (file.getName().endsWith(BAL_EXTENSION) | file.isDirectory())
                         && !version.isEmpty();
         if (visible) {
-            String fileName = file.getName();
+            String fileName = "\"" + file.getName() + "\"";
             String path = BallerinaSdkUtils.getNormalizedPath(file.getPath());
             Optional<String> packagePath = BallerinaProjectUtils.findBallerinaPackage(path);
             String packageName = null;
             if (packagePath.isPresent()) {
                 packageName = Paths.get(packagePath.get()).normalize().getFileName().toString();
-                fileName = "package " + packageName;
+                fileName = "package " + "\"" + packageName + "\"";
             }
             if (!file.isDirectory() || (file.isDirectory() && file.getName().equals(packageName))) {
                 e.getPresentation().setVisible(true);

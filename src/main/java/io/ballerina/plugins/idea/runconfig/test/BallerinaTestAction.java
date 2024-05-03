@@ -161,7 +161,7 @@ public class BallerinaTestAction extends AnAction {
             File moduleTests = new File(modulePath.get(), "tests");
             if (moduleTests.exists() && moduleTests.isDirectory()) {
                 String moduleName = new File(modulePath.get()).getName();
-                setTestVisibility(e, "module " + moduleName);
+                setTestVisibility(e, "module " + "\"" + moduleName + "\"");
                 return true;
             }
         }
@@ -173,7 +173,7 @@ public class BallerinaTestAction extends AnAction {
             File tests = new File(packagePath.get(), "tests");
             if (tests.exists() && tests.isDirectory()) {
                 String packageName = new File(packagePath.get()).getName();
-                setTestVisibility(e, "package " + packageName);
+                setTestVisibility(e, "package " + "\"" + packageName + "\"");
             } else {
                 e.getPresentation().setVisible(false);
             }

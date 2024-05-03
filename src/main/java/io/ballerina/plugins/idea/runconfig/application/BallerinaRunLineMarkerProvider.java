@@ -84,7 +84,7 @@ public class BallerinaRunLineMarkerProvider implements LineMarkerProvider {
         String finalFileName = fileName;
         Icon icon = BallerinaIcons.RUN;
         return new LineMarkerInfo<>(element, element.getTextRange(), icon,
-                psiElement -> "Run " + finalFileName,
+                psiElement -> "Run " + "\"" + (!packageName.isEmpty() ? packageName : finalFileName) + "\"",
                 (e, elt) -> {
                     e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

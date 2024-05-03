@@ -87,7 +87,7 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
         }
 
         return new LineMarkerInfo<>(element, element.getTextRange(), BallerinaIcons.TEST,
-                psiElement -> "Test " + BallerinaPsiUtil.getFunctionName(element),
+                psiElement -> "Test " + "\"" + BallerinaPsiUtil.getFunctionName(element) + "\"",
                 (e, elt) -> {
                     e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -129,7 +129,8 @@ public class BallerinaTestLineMarkerProvider implements LineMarkerProvider {
                             throw new RuntimeException(ex);
                         }
                     }
-                }, GutterIconRenderer.Alignment.CENTER, () -> "Test " + BallerinaPsiUtil.getFunctionName(element)
+                }, GutterIconRenderer.Alignment.CENTER, () ->
+                        "Test " + "\"" + BallerinaPsiUtil.getFunctionName(element) + "\""
         );
     }
 }
