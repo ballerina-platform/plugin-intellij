@@ -101,15 +101,6 @@ public class BallerinaSdkService {
         return ballerinaVersion;
     }
 
-    public void setBallerinaSdk(String path, String version) {
-        BallerinaSdkSettings settings = BallerinaSdkSettings.getInstance();
-        if (settings == null) {
-            return;
-        }
-        settings.setBallerinaSdkPath(path);
-        settings.setBallerinaSdkVersion(version);
-    }
-
     public List<BallerinaSdk> getSdkList() {
         return sdkList;
     }

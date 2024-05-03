@@ -115,7 +115,11 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
             if (!Objects.equals(currentSdkPath, selectedSdkPath)) {
                 String path = sdkSelectionUI.getSelectedSdkPath();
                 String version = sdkSelectionUI.getSelectedSdkVersion();
-                BallerinaSdkService.getInstance().setBallerinaSdk(path, version);
+                BallerinaSdkSettings settings = BallerinaSdkSettings.getInstance();
+                if (settings != null) {
+                    settings.setBallerinaSdkPath(path);
+                    settings.setBallerinaSdkVersion(version);
+                }
             }
             if (Objects.equals(selectedSdkPath, systemSdkPath)) {
                 BallerinaSdkSettings.getInstance().setUseCustomSdk(false);
