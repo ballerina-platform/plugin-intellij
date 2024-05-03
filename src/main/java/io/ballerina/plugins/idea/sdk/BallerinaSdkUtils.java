@@ -19,6 +19,7 @@ package io.ballerina.plugins.idea.sdk;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.SlowOperations;
+import io.ballerina.plugins.idea.OSUtils;
 
 import java.io.BufferedReader;
 import java.io.File;

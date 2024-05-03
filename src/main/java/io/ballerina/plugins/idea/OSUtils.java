@@ -15,7 +15,7 @@
  *
  */
 
-package io.ballerina.plugins.idea.sdk;
+package io.ballerina.plugins.idea;
 
 import java.util.Locale;
 
