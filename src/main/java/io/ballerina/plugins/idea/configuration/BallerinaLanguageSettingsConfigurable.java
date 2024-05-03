@@ -102,6 +102,15 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
         applySdkChange();
     }
 
+    // Todo: disconnect and kill the connected LS process and its sub-processes
+    @Override
+    public void disposeUIResources() {
+        sdkSelectionUI.disposeUi();
+        if (modified) {
+            BallerinaPluginNotifier.notifyRestartIde(project);
+        }
+    }
+
     private void applySdkChange() {
         boolean isCustomSdkSelected = sdkSelectionUI.getUseCustomSdkCheckbox().isSelected();
         modified = isSdkChanged();
@@ -132,14 +141,5 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
                 = BallerinaSdkUtils.findBalDistFolder(BallerinaSdkService.getInstance().getBallerinaPath(project));
         String selectedBalPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
         return !Objects.equals(currentBalPath, selectedBalPath) && !selectedBalPath.isEmpty();
-    }
-
-    // Todo: disconnect and kill the connected LS process and its sub-processes
-    @Override
-    public void disposeUIResources() {
-        sdkSelectionUI.disposeUi();
-        if (modified) {
-            BallerinaPluginNotifier.notifyRestartIde(project);
-        }
     }
 }

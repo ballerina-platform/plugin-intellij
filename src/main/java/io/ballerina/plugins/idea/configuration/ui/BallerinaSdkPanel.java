@@ -101,6 +101,41 @@ public class BallerinaSdkPanel {
         return panel;
     }
 
+
+    public ComboBox<String> getSdkVersionComboBox() {
+        return sdkVersionComboBox;
+    }
+
+    public JLabel getSelectedVersionTextField() {
+        return selectedVersionTextField;
+    }
+
+    public JCheckBox getUseCustomSdkCheckbox() {
+        return useCustomSdkCheckbox;
+    }
+
+    public JLabel getLabel() {
+        return label;
+    }
+
+    public String getSelectedSdkPath() {
+        return selectedSdkPath;
+    }
+
+    public String getSelectedSdkVersion() {
+        return selectedSdkVersion;
+    }
+
+    public void disposeUi() {
+        sdkVersionComboBox = null;
+        selectedVersionTextField = null;
+        useCustomSdkCheckbox = null;
+        label = null;
+        selectedSdkPath = null;
+        panel.removeAll();
+        panel = null;
+    }
+
     private void init() {
         initializeComponents();
         handleInitialCheckbox();
@@ -273,39 +308,5 @@ public class BallerinaSdkPanel {
             selectedVersionTextField.setText(version);
             selectedVersionTextField.setForeground(defaultColor);
         }
-    }
-
-    public ComboBox<String> getSdkVersionComboBox() {
-        return sdkVersionComboBox;
-    }
-
-    public JLabel getSelectedVersionTextField() {
-        return selectedVersionTextField;
-    }
-
-    public JCheckBox getUseCustomSdkCheckbox() {
-        return useCustomSdkCheckbox;
-    }
-
-    public JLabel getLabel() {
-        return label;
-    }
-
-    public String getSelectedSdkPath() {
-        return selectedSdkPath;
-    }
-
-    public String getSelectedSdkVersion() {
-        return selectedSdkVersion;
-    }
-
-    public void disposeUi() {
-        sdkVersionComboBox = null;
-        selectedVersionTextField = null;
-        useCustomSdkCheckbox = null;
-        label = null;
-        selectedSdkPath = null;
-        panel.removeAll();
-        panel = null;
     }
 }

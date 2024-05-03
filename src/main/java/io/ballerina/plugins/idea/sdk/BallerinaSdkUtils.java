@@ -60,64 +60,6 @@ public class BallerinaSdkUtils {
     private static final String MAC_LIBRARY_DIR = "/Library";
     private static final String WINDOWS_C_DRIVE = "C:";
 
-    private static Optional<String> runCommand(String cmd) {
-        SlowOperations.assertSlowOperationsAreAllowed();
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        if (OSUtils.isWindows()) {
-            processBuilder.command("cmd.exe", "/c", cmd);
-        } else {
-            processBuilder.command("sh", "-c", cmd);
-        }
-
-        try {
-            Process process = processBuilder.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line = reader.readLine();
-                LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' command output: " + line);
-                int exitCode = process.waitFor();
-                if (exitCode != 0) {
-                    LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' Exit code: " + exitCode);
-                    return Optional.empty();
-                }
-                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
-            }
-        } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + cmd + "' Error occurred while running the command: ", e);
-            return Optional.empty();
-        }
-    }
-
-    private static Optional<String> runBalCommand(Path balExecutablePath, String cmd) {
-        SlowOperations.assertSlowOperationsAreAllowed();
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        if (OSUtils.isWindows()) {
-            processBuilder.command("cmd.exe", "/c", balExecutablePath.toString(), cmd);
-        } else {
-            processBuilder.command("sh", "-c", balExecutablePath.toString() + " " + cmd);
-        }
-
-        try {
-            Process process = processBuilder.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line = reader.readLine();
-                LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
-                        + cmd + "' command output: " + line);
-                int exitCode = process.waitFor();
-                if (exitCode != 0) {
-                    LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
-                            + cmd + "' Exit code: " + exitCode);
-                    return Optional.empty();
-                }
-                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
-            }
-        } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '" + cmd
-                    + "' Error occurred while running the command: ", e);
-            return Optional.empty();
-        }
-    }
-
-
     public static Optional<String> getBallerinaVersion() {
         try {
             Optional<String> version = runCommand(BAL_VERSION_CMD);
@@ -339,6 +281,63 @@ public class BallerinaSdkUtils {
         }
     }
 
+    private static Optional<String> runCommand(String cmd) {
+        SlowOperations.assertSlowOperationsAreAllowed();
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (OSUtils.isWindows()) {
+            processBuilder.command("cmd.exe", "/c", cmd);
+        } else {
+            processBuilder.command("sh", "-c", cmd);
+        }
+
+        try {
+            Process process = processBuilder.start();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = reader.readLine();
+                LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' command output: " + line);
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' Exit code: " + exitCode);
+                    return Optional.empty();
+                }
+                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
+            }
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + " '" + cmd + "' Error occurred while running the command: ", e);
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<String> runBalCommand(Path balExecutablePath, String cmd) {
+        SlowOperations.assertSlowOperationsAreAllowed();
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (OSUtils.isWindows()) {
+            processBuilder.command("cmd.exe", "/c", balExecutablePath.toString(), cmd);
+        } else {
+            processBuilder.command("sh", "-c", balExecutablePath.toString() + " " + cmd);
+        }
+
+        try {
+            Process process = processBuilder.start();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = reader.readLine();
+                LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
+                        + cmd + "' command output: " + line);
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
+                            + cmd + "' Exit code: " + exitCode);
+                    return Optional.empty();
+                }
+                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
+            }
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '" + cmd
+                    + "' Error occurred while running the command: ", e);
+            return Optional.empty();
+        }
+    }
+
     private static Optional<Path> getDefaultInstallationPathMac() {
         try {
             Path path = Paths.get(MAC_LIBRARY_DIR, BAL_NAME, BIN_DIR, UNIX_BAL_EXECUTABLE).normalize();
@@ -385,7 +384,7 @@ public class BallerinaSdkUtils {
         }
     }
 
-    public static Optional<Path> getDefaultInstallationPath() {
+    private static Optional<Path> getDefaultInstallationPath() {
         if (OSUtils.isWindows()) {
             return getDefaultInstallationPathWindows();
         } else if (OSUtils.isMac()) {
