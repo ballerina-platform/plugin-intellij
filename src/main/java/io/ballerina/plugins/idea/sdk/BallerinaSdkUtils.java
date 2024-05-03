@@ -212,7 +212,7 @@ public class BallerinaSdkUtils {
                         String version = file.getName()
                                 .replace('b', 'B').replace('-', ' ');
                         String update = version.split("\\.")[1];
-                        version = version + " (Swan Lake Update " + update + ")";
+                        version = String.format("%s (Swan Lake Update %s)", version, update);
                         String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
                         Path sdkPath =
                                 Paths.get(file.getAbsolutePath(), BIN_DIR, executableName).normalize();
