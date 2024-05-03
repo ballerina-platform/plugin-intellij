@@ -67,6 +67,7 @@ public class BallerinaTestState extends BallerinaExecutionState {
         commandLine.addParameter(source);
 
         if (programArguments != null && !programArguments.isEmpty()) {
+            commandLine.addParameter("--");
             for (String arg : programArguments) {
                 if (!arg.isBlank()) {
                     commandLine.addParameter(arg.strip());
