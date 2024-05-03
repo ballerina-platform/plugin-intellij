@@ -58,8 +58,6 @@ public class BallerinaSdkPanel {
     private JPanel panel = new JPanel(new GridBagLayout());
     private String selectedSdkPath = EMPTY_STRING;
     private String selectedSdkVersion = EMPTY_STRING;
-    private BallerinaSdkService sdkService;
-    private BallerinaSdkSettings sdkSettings;
     private Color defaultColor;
     private String systemBalPath;
     private String systemBalVersion;
@@ -117,7 +115,7 @@ public class BallerinaSdkPanel {
         label.setFont(new Font(labelFont.getName(), labelFont.getStyle(), labelFont.getSize() + 1));
         useCustomSdkCheckbox.setText(CHECKBOX_TEXT);
         useCustomSdkCheckbox.setSelected(BallerinaSdkSettings.getInstance().isUseCustomSdk());
-        Color defaultColor = selectedVersionTextField.getForeground();
+        defaultColor = selectedVersionTextField.getForeground();
         sdkList = BallerinaSdkService.getInstance().getSdkList();
         systemBalPath = BallerinaSdkService.getInstance().getSystemBalPath();
         systemBalVersion = BallerinaSdkService.getInstance().getSystemBalVersion();
