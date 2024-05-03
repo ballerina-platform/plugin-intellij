@@ -71,16 +71,16 @@ public class BallerinaSdkUtils {
 
         try {
             Process process = processBuilder.start();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = reader.readLine();
-            LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' command output: " + line);
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' Exit code: " + exitCode);
-                return Optional.empty();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = reader.readLine();
+                LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' command output: " + line);
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' Exit code: " + exitCode);
+                    return Optional.empty();
+                }
+                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
             }
-            return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
         } catch (Exception e) {
             LOG.error(BAL_LOG_PREFIX + " '" + cmd + "' Error occurred while running the command: ", e);
             return Optional.empty();
@@ -93,29 +93,30 @@ public class BallerinaSdkUtils {
         if (OSUtils.isWindows()) {
             processBuilder.command("cmd.exe", "/c", balExecutablePath.toString(), cmd);
         } else {
-            processBuilder.command("sh", "-c", balExecutablePath.toString(), cmd);
+            processBuilder.command("sh", "-c", balExecutablePath.toString() + " " + cmd);
         }
 
         try {
             Process process = processBuilder.start();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = reader.readLine();
-            LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
-                    + cmd + "' command output: " + line);
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = reader.readLine();
                 LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
-                        + cmd + "' Exit code: " + exitCode);
-                return Optional.empty();
+                        + cmd + "' command output: " + line);
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
+                            + cmd + "' Exit code: " + exitCode);
+                    return Optional.empty();
+                }
+                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
             }
-            return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
         } catch (Exception e) {
             LOG.error(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '" + cmd
                     + "' Error occurred while running the command: ", e);
             return Optional.empty();
         }
     }
+
 
     public static Optional<String> getBallerinaVersion() {
         try {
@@ -139,22 +140,22 @@ public class BallerinaSdkUtils {
 
     public static Optional<String> getBallerinaPath() {
         try {
-            Optional<String> version = runCommand(BAL_VERSION_CMD);
-            if (version.isEmpty()) {
-                Optional<Path> balBinPath = getDefaultInstallationPath();
-                if (balBinPath.isPresent()) {
-                    version = runBalCommand(balBinPath.get(), BAL_VERSION);
-                    LOG.info(BAL_LOG_PREFIX + "Ballerina version: " + version.orElse(EMPTY_STRING));
-                } else {
-                    LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
-                    return Optional.empty();
-                }
-            }
-            if (version.isEmpty()) {
-                LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
-                return version;
-            }
             if (OSUtils.isWindows()) {
+                Optional<String> version = runCommand(BAL_VERSION_CMD);
+                if (version.isEmpty()) {
+                    Optional<Path> balBinPath = getDefaultInstallationPath();
+                    if (balBinPath.isPresent()) {
+                        version = runBalCommand(balBinPath.get(), BAL_VERSION);
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina version: " + version.orElse(EMPTY_STRING));
+                    } else {
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
+                        return Optional.empty();
+                    }
+                }
+                if (version.isEmpty()) {
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
+                    return version;
+                }
                 Map<String, String> env = System.getenv();
                 String [] versionParts = version.get().split(" ");
                 if (versionParts.length < 2) {
