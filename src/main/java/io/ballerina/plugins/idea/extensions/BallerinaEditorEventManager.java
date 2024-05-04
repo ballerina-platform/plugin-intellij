@@ -63,9 +63,4 @@ public class BallerinaEditorEventManager extends EditorEventManager {
         }
         return lastIndex >= 0 ? documentText.substring(lastIndex + 1, offset) : documentText.substring(0, offset);
     }
-
-    @Override
-    public void refreshAnnotations() {
-
-    }
 }
