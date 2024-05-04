@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFileBase;
 import io.ballerina.plugins.idea.BallerinaConstants;
@@ -37,6 +38,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
+import static io.ballerina.plugins.idea.preloading.LSPUtils.registerProject;
+import static io.ballerina.plugins.idea.preloading.LSPUtils.stopProcesses;
 
 /**
  * Editor listener implementation which is used to handle ballerina source files opening.
@@ -74,9 +77,19 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             }
         }
         VirtualFile file = FileDocumentManager.getInstance().getFile(event.getEditor().getDocument());
+        if (isBalFile(file)) {
+            registerProject(project);
+        }
         if (balSourcesFound || !isBalFile(file)) {
             return;
         }
+        ProjectManager.getInstance().addProjectManagerListener(proj -> {
+            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+            if (openProjects.length <= 1) {
+                stopProcesses();
+            }
+            return true;
+        });
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
             BallerinaDetectionWidget widget = BallerinaDetectionWidgetFactory.getWidget(project);
             if (widget != null) {

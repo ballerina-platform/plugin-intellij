@@ -35,6 +35,8 @@ import java.util.Objects;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import static io.ballerina.plugins.idea.preloading.LSPUtils.stopProcesses;
+
 /**
  * Settings page for Ballerina Language. Can add custom settings UI components and handle
  * their behavior.
@@ -102,11 +104,11 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
         applySdkChange();
     }
 
-    // Todo: disconnect and kill the connected LS process and its sub-processes
     @Override
     public void disposeUIResources() {
         sdkSelectionUI.disposeUi();
         if (modified) {
+            stopProcesses();
             BallerinaPluginNotifier.notifyRestartIde(project);
         }
     }
