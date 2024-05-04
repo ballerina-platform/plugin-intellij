@@ -120,6 +120,8 @@
         <notificationGroup id="LSPProgressNotification"
                            displayType="NONE"
         />
+
+        <editorFactoryMouseMotionListener implementation="io.ballerina.plugins.idea.highlighting.BallerinaIdentifierUnderline"/>
     </extensions>
     <actions>
         <action id="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction"
