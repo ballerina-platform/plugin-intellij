@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,7 +71,7 @@ public class BallerinaSdkUtils {
             Optional<Path> balBinPath = getDefaultInstallationPath();
             if (balBinPath.isPresent()) {
                 LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());
-                return runBalCommand(balBinPath.get(), BAL_VERSION);
+                return runCommand(balBinPath.get().toString(), BAL_VERSION);
             }
             LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
             return Optional.empty();
@@ -87,7 +88,7 @@ public class BallerinaSdkUtils {
                 if (version.isEmpty()) {
                     Optional<Path> balBinPath = getDefaultInstallationPath();
                     if (balBinPath.isPresent()) {
-                        version = runBalCommand(balBinPath.get(), BAL_VERSION);
+                        version = runCommand(balBinPath.get().toString(), BAL_VERSION);
                         LOG.info(BAL_LOG_PREFIX + "Ballerina version: " + version.orElse(EMPTY_STRING));
                     } else {
                         LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
@@ -123,7 +124,7 @@ public class BallerinaSdkUtils {
                     Optional<Path> balBinPath = getDefaultInstallationPath();
                     if (balBinPath.isPresent()) {
                         LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + balBinPath.get());
-                        home = runBalCommand(balBinPath.get(), BAL_HOME);
+                        home = runCommand(balBinPath.get().toString(), BAL_HOME);
                     } else {
                         LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
                         return Optional.empty();
@@ -281,58 +282,36 @@ public class BallerinaSdkUtils {
         }
     }
 
-    private static Optional<String> runCommand(String cmd) {
+    private static Optional<String> runCommand(String... cmd) {
         SlowOperations.assertSlowOperationsAreAllowed();
         ProcessBuilder processBuilder = new ProcessBuilder();
+        String [] commands = new String[cmd.length + 2];
         if (OSUtils.isWindows()) {
-            processBuilder.command("cmd.exe", "/c", cmd);
+            commands[0] = "cmd.exe";
+            commands[1] = "/c";
         } else {
-            processBuilder.command("sh", "-c", cmd);
+            commands[0] = "sh";
+            commands[1] = "-c";
         }
+        for (int i = 0; i < cmd.length; i++) {
+            commands[i + 2] = cmd[i];
+        }
+        processBuilder.command(commands);
 
         try {
             Process process = processBuilder.start();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line = reader.readLine();
-                LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' command output: " + line);
+                LOG.info(BAL_LOG_PREFIX + " '" + Arrays.toString(cmd) + "' command output: " + line);
                 int exitCode = process.waitFor();
                 if (exitCode != 0) {
-                    LOG.info(BAL_LOG_PREFIX + " '" + cmd + "' Exit code: " + exitCode);
+                    LOG.info(BAL_LOG_PREFIX + " '" + Arrays.toString(cmd) + "' Exit code: " + exitCode);
                     return Optional.empty();
                 }
                 return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
             }
         } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + " '" + cmd + "' Error occurred while running the command: ", e);
-            return Optional.empty();
-        }
-    }
-
-    private static Optional<String> runBalCommand(Path balExecutablePath, String cmd) {
-        SlowOperations.assertSlowOperationsAreAllowed();
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        if (OSUtils.isWindows()) {
-            processBuilder.command("cmd.exe", "/c", balExecutablePath.toString(), cmd);
-        } else {
-            processBuilder.command("sh", "-c", balExecutablePath.toString() + " " + cmd);
-        }
-
-        try {
-            Process process = processBuilder.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line = reader.readLine();
-                LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
-                        + cmd + "' command output: " + line);
-                int exitCode = process.waitFor();
-                if (exitCode != 0) {
-                    LOG.info(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '"
-                            + cmd + "' Exit code: " + exitCode);
-                    return Optional.empty();
-                }
-                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
-            }
-        } catch (Exception e) {
-            LOG.error(BAL_LOG_PREFIX + "Bal bin directory: " + balExecutablePath + " '" + cmd
+            LOG.error(BAL_LOG_PREFIX + " '" + Arrays.toString(cmd)
                     + "' Error occurred while running the command: ", e);
             return Optional.empty();
         }
