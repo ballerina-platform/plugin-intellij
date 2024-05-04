@@ -77,9 +77,11 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             }
         }
         VirtualFile file = FileDocumentManager.getInstance().getFile(event.getEditor().getDocument());
-        if (isBalFile(file)) {
-            registerProject(project);
-        }
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            if (isBalFile(file)) {
+                registerProject(project);
+            }
+        });
         if (balSourcesFound || !isBalFile(file)) {
             return;
         }

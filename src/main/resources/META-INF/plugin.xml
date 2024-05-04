@@ -98,10 +98,6 @@
 
         <notificationGroup id="lsp" displayType="STICKY_BALLOON"/>
 
-        <statusBarWidgetFactory implementation="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
-                                id="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
-                                order="first" />
-
         <completion.contributor implementationClass="org.wso2.lsp4intellij.contributors.LSPCompletionContributor"
                                 id="org.wso2.lsp4intellij.contributors.LSPCompletionContributor" language="any"/>
 

@@ -287,15 +287,13 @@ public class BallerinaSdkUtils {
         ProcessBuilder processBuilder = new ProcessBuilder();
         String [] commands = new String[cmd.length + 2];
         if (OSUtils.isWindows()) {
-            commands[0] = "cmd.exe";
+            commands[0] = "cmd";
             commands[1] = "/c";
         } else {
             commands[0] = "sh";
             commands[1] = "-c";
         }
-        for (int i = 0; i < cmd.length; i++) {
-            commands[i + 2] = cmd[i];
-        }
+        System.arraycopy(cmd, 0, commands, 2, cmd.length);
         processBuilder.command(commands);
 
         try {
