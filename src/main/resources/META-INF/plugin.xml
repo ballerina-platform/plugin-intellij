@@ -145,5 +145,7 @@
                   topic="com.intellij.openapi.vfs.VirtualFileListener"/>
         <listener class="org.wso2.lsp4intellij.listeners.LSPProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener class="io.ballerina.plugins.idea.project.BallerinaProjectListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 </idea-plugin>
