@@ -28,6 +28,7 @@ import org.wso2.lsp4intellij.client.languageserver.serverdefinition.ProcessBuild
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -44,7 +45,7 @@ import static io.ballerina.plugins.idea.OSUtils.getOperatingSystem;
  */
 public class LSPUtils {
 
-    private static final Set<Project> registeredProjects = new java.util.HashSet<>();
+    private static final Set<Project> registeredProjects = new HashSet<>();
     private static final Logger LOG = Logger.getInstance(LSPUtils.class);
 
     public static void registerProject(@NotNull Project project) {

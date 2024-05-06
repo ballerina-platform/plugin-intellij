@@ -99,7 +99,7 @@
         <notificationGroup id="lsp" displayType="STICKY_BALLOON"/>
 
         <completion.contributor implementationClass="org.wso2.lsp4intellij.contributors.LSPCompletionContributor"
-                                id="org.wso2.lsp4intellij.contributors.LSPCompletionContributor" language="any"/>
+                                id="org.wso2.lsp4intellij.contributors.LSPCompletionContributor" language="Ballerina"/>
 
         <typedHandler implementation="org.wso2.lsp4intellij.listeners.LSPTypedHandler"
                       id="LSPTypedHandler"/>
@@ -114,8 +114,7 @@
         <renamePsiElementProcessor implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameProcessor" id="LSPRenameProcessor" order="first"/>
 
         <notificationGroup id="LSPProgressNotification"
-                           displayType="NONE"
-        />
+                           displayType="NONE"/>
 
         <editorFactoryMouseMotionListener implementation="io.ballerina.plugins.idea.highlighting.BallerinaIdentifierUnderline"/>
     </extensions>
