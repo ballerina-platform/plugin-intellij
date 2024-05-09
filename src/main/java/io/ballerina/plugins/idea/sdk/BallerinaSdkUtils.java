@@ -71,7 +71,10 @@ public class BallerinaSdkUtils {
             Optional<Path> balBinPath = getDefaultInstallationPath();
             if (balBinPath.isPresent()) {
                 LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());
-                return runCommand(balBinPath.get().toString(), BAL_VERSION);
+                if (OSUtils.isWindows()) {
+                    return runCommand(balBinPath.get().toString(), BAL_VERSION);
+                }
+                return runCommand(balBinPath.get() + " " + BAL_VERSION);
             }
             LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
             return Optional.empty();
@@ -124,7 +127,7 @@ public class BallerinaSdkUtils {
                     Optional<Path> balBinPath = getDefaultInstallationPath();
                     if (balBinPath.isPresent()) {
                         LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + balBinPath.get());
-                        home = runCommand(balBinPath.get().toString(), BAL_HOME);
+                        home = runCommand(balBinPath.get() + " " + BAL_HOME);
                     } else {
                         LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
                         return Optional.empty();
