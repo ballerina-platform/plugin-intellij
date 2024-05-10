@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
-import static io.ballerina.plugins.idea.preloading.LSPUtils.registerProject;
+import static io.ballerina.plugins.idea.preloading.BallerinaLSPUtils.registerProject;
 
 /**
  * Editor listener implementation which is used to handle ballerina source files opening.

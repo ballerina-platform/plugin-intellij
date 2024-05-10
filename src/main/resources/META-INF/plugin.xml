@@ -73,6 +73,8 @@
 
         <applicationService serviceImplementation="io.ballerina.plugins.idea.sdk.BallerinaSdkSettings"/>
 
+        <applicationService serviceImplementation="io.ballerina.plugins.idea.preloading.BallerinaLSConfigSettings"/>
+
         <projectConfigurable groupId="language"
                              instance="io.ballerina.plugins.idea.configuration.BallerinaLanguageSettingsConfigurable"
                              displayName="Ballerina"/>
@@ -117,6 +119,10 @@
                            displayType="NONE"/>
 
         <editorFactoryMouseMotionListener implementation="io.ballerina.plugins.idea.highlighting.BallerinaIdentifierUnderline"/>
+
+        <statusBarWidgetFactory implementation="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
+                                id="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
+                                order="first" />
     </extensions>
     <actions>
         <action id="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction"
@@ -143,8 +149,6 @@
         <listener class="org.wso2.lsp4intellij.listeners.VFSListener"
                   topic="com.intellij.openapi.vfs.VirtualFileListener"/>
         <listener class="org.wso2.lsp4intellij.listeners.LSPProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-        <listener class="io.ballerina.plugins.idea.project.BallerinaProjectListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 </idea-plugin>

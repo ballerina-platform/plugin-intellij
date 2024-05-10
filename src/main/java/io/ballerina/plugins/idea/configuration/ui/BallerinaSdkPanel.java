@@ -49,7 +49,7 @@ import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
  *
  * @since 2.0.0
  */
-public class BallerinaSdkPanel {
+public class BallerinaSdkPanel implements BallerinaSettingsPanel {
 
     private ComboBox<String> sdkVersionComboBox = new ComboBox<>();
     private JLabel selectedVersionTextField = new JLabel();
@@ -77,29 +77,33 @@ public class BallerinaSdkPanel {
         init();
     }
 
+    @Override
     public JComponent getPanel() {
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 0; // Start at the first row
         gbc.weightx = 1.0;
         gbc.weighty = 0;
         gbc.insets = JBUI.insets(2, 0);
 
+        panel.add(BallerinaSettingsPanelTitle.getTitleComponent("SDK settings"), gbc);
+
+        // Increment gridy for next component
+        gbc.gridy++;
+
         panel.add(label, gbc);
-
-        gbc.gridy++;
+        gbc.gridy++; // Increment for next component
         panel.add(sdkVersionComboBox, gbc);
-
-        gbc.gridy++;
+        gbc.gridy++; // Increment for next component
         panel.add(selectedVersionTextField, gbc);
-
-        gbc.gridy++;
+        gbc.gridy++; // Increment for next component
         panel.add(useCustomSdkCheckbox, gbc);
 
         return panel;
     }
+
 
 
     public ComboBox<String> getSdkVersionComboBox() {
@@ -126,6 +130,7 @@ public class BallerinaSdkPanel {
         return selectedSdkVersion;
     }
 
+    @Override
     public void disposeUi() {
         sdkVersionComboBox = null;
         selectedVersionTextField = null;

@@ -20,8 +20,10 @@ package io.ballerina.plugins.idea.configuration;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
+import io.ballerina.plugins.idea.configuration.ui.BallerinaLSPanel;
 import io.ballerina.plugins.idea.configuration.ui.BallerinaSdkPanel;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
+import io.ballerina.plugins.idea.preloading.BallerinaLSConfigSettings;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkSettings;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
@@ -35,8 +37,6 @@ import java.util.Objects;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import static io.ballerina.plugins.idea.preloading.LSPUtils.stopProcesses;
-
 /**
  * Settings page for Ballerina Language. Can add custom settings UI components and handle
  * their behavior.
@@ -48,6 +48,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
     private final Project project;
     private boolean modified = false;
     private BallerinaSdkPanel sdkSelectionUI;
+    private BallerinaLSPanel languageServerConfigUI;
 
     public BallerinaLanguageSettingsConfigurable(Project project) {
         this.project = project;
@@ -66,6 +67,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
     @Override
     public JComponent createComponent() {
         sdkSelectionUI = new BallerinaSdkPanel(project);
+        languageServerConfigUI = new BallerinaLSPanel();
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -78,11 +80,14 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
         gbc.insets = JBUI.insets(2, 0);
 
         panel.add(sdkSelectionUI.getPanel(), gbc);
+        gbc.gridy++;
 
-        // Add a vertical filler panel to push everything to the top
+        panel.add(languageServerConfigUI.getPanel(), gbc);
+        gbc.gridy++;
+
         JPanel filler = new JPanel();
-        gbc.gridy = 1;
-        gbc.weighty = 1;  // Take up all extra space
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.VERTICAL;
         panel.add(filler, gbc);
 
         return panel;
@@ -93,7 +98,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
      */
     @Override
     public boolean isModified() {
-        return isSdkChanged();
+        return isSdkChanged() || isLanguageServerConfigChanged();
     }
 
     /**
@@ -101,21 +106,26 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
      */
     @Override
     public void apply() {
-        applySdkChange();
+        if (isSdkChanged()) {
+            applySdkChange();
+        }
+        if (isLanguageServerConfigChanged()) {
+            applyLanguageServerConfigChange();
+        }
     }
 
     @Override
     public void disposeUIResources() {
         sdkSelectionUI.disposeUi();
+        languageServerConfigUI.disposeUi();
         if (modified) {
-            stopProcesses();
             BallerinaPluginNotifier.notifyRestartIde(project);
         }
     }
 
     private void applySdkChange() {
         boolean isCustomSdkSelected = sdkSelectionUI.getUseCustomSdkCheckbox().isSelected();
-        modified = isSdkChanged();
+        modified = modified || isSdkChanged();
         BallerinaSdkSettings.getInstance().setUseCustomSdk(isCustomSdkSelected);
         if (isCustomSdkSelected) {
             String selectedSdkPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
@@ -143,5 +153,18 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
                 = BallerinaSdkUtils.findBalDistFolder(BallerinaSdkService.getInstance().getBallerinaPath(project));
         String selectedBalPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
         return !Objects.equals(currentBalPath, selectedBalPath) && !selectedBalPath.isEmpty();
+    }
+
+    private void applyLanguageServerConfigChange() {
+        modified = modified || isLanguageServerConfigChanged();
+        BallerinaLSConfigSettings settings = BallerinaLSConfigSettings.getInstance();
+        settings.setDebugLog(languageServerConfigUI.isDebugLogsEnabled());
+        settings.setTraceLog(languageServerConfigUI.isTraceLogsEnabled());
+    }
+
+    private boolean isLanguageServerConfigChanged() {
+        BallerinaLSConfigSettings settings = BallerinaLSConfigSettings.getInstance();
+        return settings.isDebugLog() != languageServerConfigUI.isDebugLogsEnabled()
+                || settings.isTraceLog() != languageServerConfigUI.isTraceLogsEnabled();
     }
 }
