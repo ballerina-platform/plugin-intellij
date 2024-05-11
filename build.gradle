@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.ballerina-platform:lsp4intellij:master-SNAPSHOT'
+    implementation 'com.github.ballerina-platform:lsp4intellij:0.96.1'
 }
 
 intellij {

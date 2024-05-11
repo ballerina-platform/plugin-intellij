@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
+import org.jetbrains.annotations.NotNull;
 import org.wso2.lsp4intellij.client.ClientContext;
 import org.wso2.lsp4intellij.client.languageserver.ServerOptions;
 import org.wso2.lsp4intellij.client.languageserver.requestmanager.DefaultRequestManager;
@@ -66,11 +67,11 @@ public class BallerinaLSPExtensionManager implements LSPExtensionManager {
 
     @Override
     public Class<? extends LanguageServer> getExtendedServerInterface() {
-        return null;
+        return BallerinaExtendedLanguageServer.class;
     }
 
     @Override
-    public LanguageClient getExtendedClientFor(ClientContext clientContext) {
-        return null;
+    public LanguageClient getExtendedClientFor(@NotNull ClientContext clientContext) {
+        return new BallerinaExtendedLanguageClient(clientContext);
     }
 }

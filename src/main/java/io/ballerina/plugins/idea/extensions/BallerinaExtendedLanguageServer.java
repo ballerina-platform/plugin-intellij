@@ -15,18 +15,15 @@
  *
  */
 
-package io.ballerina.plugins.idea.configuration.ui;
+package io.ballerina.plugins.idea.extensions;
 
-import javax.swing.JComponent;
+import org.eclipse.lsp4j.services.LanguageServer;
 
 /**
- * Represents a Ballerina settings panel.
+ * Extended Language Server interface for Ballerina.
  *
  * @since 2.0.0
  */
-public interface BallerinaSettingsPanel {
+public interface BallerinaExtendedLanguageServer extends LanguageServer {
 
-    void disposeUi();
-
-    JComponent getPanel();
 }
