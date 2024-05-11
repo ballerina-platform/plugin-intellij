@@ -49,37 +49,17 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
     private boolean balSourcesFound = false;
     private boolean balSdkFound = false;
 
-    private static boolean isBalFile(@Nullable VirtualFile file) {
-        if (file == null || file.getExtension() == null || file instanceof LightVirtualFileBase) {
-            return false;
-        }
-        String fileUrl = file.getUrl();
-        if (fileUrl.isEmpty() || fileUrl.startsWith("jar:")) {
-            return false;
-        }
-
-        return file.getExtension().equals(BallerinaConstants.BAL_EXTENSION.substring(1));
-    }
-
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         Project project = event.getEditor().getProject();
         if (project == null) {
             return;
         }
-        if (balSdkFound) {
-            BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
-            if (iconWidget != null) {
-                iconWidget.setIcon(BallerinaIcons.FILE);
-                iconWidget.setTooltipText(BallerinaSdkService.getInstance().getBallerinaVersion(project));
-            }
-        }
         VirtualFile file = FileDocumentManager.getInstance().getFile(event.getEditor().getDocument());
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-            if (isBalFile(file)) {
-                registerProject(project);
-            }
-        });
+        if (balSdkFound) {
+            registerIconWidget(project);
+            registerLanguageServer(project);
+        }
         if (balSourcesFound || !isBalFile(file)) {
             return;
         }
@@ -96,16 +76,39 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
                         BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
                     } else {
                         balSdkFound = true;
-                        BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
-                        if (iconWidget != null) {
-                            iconWidget.setIcon(BallerinaIcons.FILE);
-                            iconWidget.setTooltipText(balVersion);
-                        }
+                        registerIconWidget(project);
+                        registerLanguageServer(project);
                     }
                 });
             }
             balSourcesFound = true;
         });
         balSourcesFound = true;
+    }
+
+    private static boolean isBalFile(@Nullable VirtualFile file) {
+        if (file == null || file.getExtension() == null || file instanceof LightVirtualFileBase) {
+            return false;
+        }
+        String fileUrl = file.getUrl();
+        if (fileUrl.isEmpty() || fileUrl.startsWith("jar:")) {
+            return false;
+        }
+
+        return file.getExtension().equals(BallerinaConstants.BAL_EXTENSION.substring(1));
+    }
+
+    private void registerIconWidget(Project project) {
+        BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
+        if (iconWidget != null) {
+            iconWidget.setIcon(BallerinaIcons.FILE);
+            iconWidget.setTooltipText(BallerinaSdkService.getInstance().getBallerinaVersion(project));
+        }
+    }
+
+    private void registerLanguageServer(Project project) {
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            registerProject(project);
+        });
     }
 }
