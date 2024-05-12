@@ -17,11 +17,10 @@
 
 package io.ballerina.plugins.idea.extensions;
 
-import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
+import com.intellij.openapi.project.Project;
 import io.ballerina.plugins.idea.preloading.BallerinaLSConfigSettings;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.MessageParams;
@@ -51,10 +50,12 @@ public class BallerinaExtendedLanguageClient extends DefaultLanguageClient {
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private boolean statusTriggered = false;
+    private final Project project;
 
     public BallerinaExtendedLanguageClient(@NotNull ClientContext context) {
         super(context);
         startStatusListener();
+        this.project = context.getProject();
     }
 
     private void startStatusListener() {
@@ -104,7 +105,6 @@ public class BallerinaExtendedLanguageClient extends DefaultLanguageClient {
         urlMatcher.appendTail(sb);
         message = sb.toString();
 
-        Notification notification = notificationGroup.createNotification(title, message, notificationType, null);
-        Notifications.Bus.notify(notification);
+        notificationGroup.createNotification(message, notificationType).setTitle(title).notify(project);
     }
 }
