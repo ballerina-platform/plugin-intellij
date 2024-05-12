@@ -56,10 +56,10 @@ public class BallerinaLSPanel implements BallerinaSettingsPanel {
         panel.add(BallerinaSettingsPanelTitle.getTitleComponent("Language server settings"), gbc);
         gbc.gridy++;
 
-        panel.add(traceLogsCheckBox, gbc);
+        panel.add(debugLogsCheckBox, gbc);
         gbc.gridy++;
 
-        panel.add(debugLogsCheckBox, gbc);
+        panel.add(traceLogsCheckBox, gbc);
         gbc.gridy++;
 
         return panel;
