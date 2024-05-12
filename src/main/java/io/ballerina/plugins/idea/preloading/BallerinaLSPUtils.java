@@ -20,6 +20,7 @@ package io.ballerina.plugins.idea.preloading;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import io.ballerina.plugins.idea.extensions.BallerinaLSPExtensionManager;
 import io.ballerina.plugins.idea.extensions.BallerinaLanguageServerDefinition;
 import io.ballerina.plugins.idea.project.BallerinaProjectListener;
@@ -30,10 +31,10 @@ import org.wso2.lsp4intellij.IntellijLanguageClient;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_EXT_NAME;
 import static io.ballerina.plugins.idea.BallerinaConstants.BAL_LOG_PREFIX;
@@ -46,11 +47,11 @@ import static io.ballerina.plugins.idea.BallerinaConstants.BAL_LS_CMD;
  */
 public class BallerinaLSPUtils {
 
-    private static final Set<String> registeredProjects = new HashSet<>();
+    private static final Map<String, ProjectManagerListener> registeredProjects = new HashMap<>();
     private static final Logger LOG = Logger.getInstance(BallerinaLSPUtils.class);
 
     public static void registerProject(@NotNull Project project) {
-        if (registeredProjects.contains(project.getBasePath())) {
+        if (registeredProjects.containsKey(project.getBasePath())) {
             return;
         }
         String sdkPath = BallerinaSdkService.getInstance().getBallerinaPath(project);
@@ -67,17 +68,20 @@ public class BallerinaLSPUtils {
             IntellijLanguageClient.addExtensionManager(BAL_EXT_NAME, new BallerinaLSPExtensionManager());
             IntellijLanguageClient
                     .addServerDefinition(new BallerinaLanguageServerDefinition(BAL_EXT_NAME, processBuilder), project);
-            registeredProjects.add(project.getBasePath());
-            ProjectManager.getInstance().addProjectManagerListener(project, new BallerinaProjectListener());
+            ProjectManagerListener projectManagerListener = new BallerinaProjectListener();
+            registeredProjects.put(project.getBasePath(), projectManagerListener);
+            ProjectManager.getInstance().addProjectManagerListener(project, projectManagerListener);
         } catch (Exception e) {
             LOG.error(BAL_LOG_PREFIX + "Error while registering the Ballerina Language Server", e);
         }
     }
 
     public static void unregisterProject(@NotNull Project project) {
-        if (!registeredProjects.contains(project.getBasePath())) {
+        if (!registeredProjects.containsKey(project.getBasePath())) {
             return;
         }
+        ProjectManager.getInstance()
+                .removeProjectManagerListener(project, registeredProjects.get(project.getBasePath()));
         registeredProjects.remove(project.getBasePath());
     }
 }
