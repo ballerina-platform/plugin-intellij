@@ -44,8 +44,7 @@ public class BallerinaEditorEventManager extends EditorEventManager {
                                        ServerOptions serverOptions,
                                        LanguageServerWrapper wrapper) {
         super(editor, documentListener, mouseListener, mouseMotionListener, caretListener, requestmanager,
-                serverOptions,
-                wrapper);
+                serverOptions, wrapper);
     }
 
     @Override

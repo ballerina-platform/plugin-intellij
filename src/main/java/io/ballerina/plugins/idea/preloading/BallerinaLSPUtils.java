@@ -19,8 +19,10 @@ package io.ballerina.plugins.idea.preloading;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import io.ballerina.plugins.idea.extensions.BallerinaLSPExtensionManager;
 import io.ballerina.plugins.idea.extensions.BallerinaLanguageServerDefinition;
+import io.ballerina.plugins.idea.project.BallerinaProjectListener;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
 import org.jetbrains.annotations.NotNull;
@@ -44,11 +46,11 @@ import static io.ballerina.plugins.idea.BallerinaConstants.BAL_LS_CMD;
  */
 public class BallerinaLSPUtils {
 
-    private static final Set<Project> registeredProjects = new HashSet<>();
+    private static final Set<String> registeredProjects = new HashSet<>();
     private static final Logger LOG = Logger.getInstance(BallerinaLSPUtils.class);
 
     public static void registerProject(@NotNull Project project) {
-        if (registeredProjects.contains(project)) {
+        if (registeredProjects.contains(project.getBasePath())) {
             return;
         }
         String sdkPath = BallerinaSdkService.getInstance().getBallerinaPath(project);
@@ -65,9 +67,17 @@ public class BallerinaLSPUtils {
             IntellijLanguageClient.addExtensionManager(BAL_EXT_NAME, new BallerinaLSPExtensionManager());
             IntellijLanguageClient
                     .addServerDefinition(new BallerinaLanguageServerDefinition(BAL_EXT_NAME, processBuilder), project);
-            registeredProjects.add(project);
+            registeredProjects.add(project.getBasePath());
+            ProjectManager.getInstance().addProjectManagerListener(project, new BallerinaProjectListener());
         } catch (Exception e) {
             LOG.error(BAL_LOG_PREFIX + "Error while registering the Ballerina Language Server", e);
         }
+    }
+
+    public static void unregisterProject(@NotNull Project project) {
+        if (!registeredProjects.contains(project.getBasePath())) {
+            return;
+        }
+        registeredProjects.remove(project.getBasePath());
     }
 }

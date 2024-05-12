@@ -67,7 +67,6 @@ public final class BallerinaLSConfigSettings implements PersistentStateComponent
         return myState.traceLog;
     }
 
-
     public static class State {
 
         public boolean debugLog = false;
