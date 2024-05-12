@@ -33,7 +33,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.JCheckBox;
@@ -52,7 +54,7 @@ import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 public class BallerinaSdkPanel implements BallerinaSettingsPanel {
 
     private ComboBox<String> sdkVersionComboBox = new ComboBox<>();
-    private JLabel selectedVersionTextField = new JLabel();
+    private JLabel sdkSettingsTextField = new JLabel();
     private JCheckBox useCustomSdkCheckbox = new JCheckBox();
     private JLabel label = new JLabel();
     private JPanel panel = new JPanel(new GridBagLayout());
@@ -63,7 +65,6 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
     private String systemBalVersion;
     private List<BallerinaSdk> sdkList;
     private final Project project;
-    private static final String CB_DEFAULT_PREFIX = "[System default] ";
     private static final String ADD_BAL_SDK = "Add Ballerina SDK";
     private static final String SYSTEM_BAL_VERSION = "[System Ballerina version] ";
     private static final String BALLERINA_SWAN_LAKE = "Ballerina Swan Lake";
@@ -71,6 +72,7 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
     private static final String NO_VALID_BAL_SDK = "No valid Ballerina SDK found";
     private static final String LABEL_TEXT = "Ballerina SDK Path:";
     private static final String CHECKBOX_TEXT = "Use custom Ballerina SDK";
+    private static final Map<String, String> sdkVersiontoPathMap = new HashMap<>();
 
     public BallerinaSdkPanel(Project project) {
         this.project = project;
@@ -83,22 +85,21 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
-        gbc.gridy = 0; // Start at the first row
+        gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.weighty = 0;
         gbc.insets = JBUI.insets(2, 0);
 
         panel.add(BallerinaSettingsPanelTitle.getTitleComponent("SDK settings"), gbc);
 
-        // Increment gridy for next component
         gbc.gridy++;
 
         panel.add(label, gbc);
-        gbc.gridy++; // Increment for next component
+        gbc.gridy++;
         panel.add(sdkVersionComboBox, gbc);
-        gbc.gridy++; // Increment for next component
-        panel.add(selectedVersionTextField, gbc);
-        gbc.gridy++; // Increment for next component
+        gbc.gridy++;
+        panel.add(sdkSettingsTextField, gbc);
+        gbc.gridy++;
         panel.add(useCustomSdkCheckbox, gbc);
 
         return panel;
@@ -110,8 +111,8 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
         return sdkVersionComboBox;
     }
 
-    public JLabel getSelectedVersionTextField() {
-        return selectedVersionTextField;
+    public JLabel getSdkSettingsTextField() {
+        return sdkSettingsTextField;
     }
 
     public JCheckBox getUseCustomSdkCheckbox() {
@@ -133,7 +134,7 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
     @Override
     public void disposeUi() {
         sdkVersionComboBox = null;
-        selectedVersionTextField = null;
+        sdkSettingsTextField = null;
         useCustomSdkCheckbox = null;
         label = null;
         selectedSdkPath = null;
@@ -155,22 +156,23 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
         label.setFont(new Font(labelFont.getName(), labelFont.getStyle(), labelFont.getSize() + 1));
         useCustomSdkCheckbox.setText(CHECKBOX_TEXT);
         useCustomSdkCheckbox.setSelected(BallerinaSdkSettings.getInstance().isUseCustomSdk());
-        defaultColor = selectedVersionTextField.getForeground();
+        defaultColor = sdkSettingsTextField.getForeground();
         sdkList = BallerinaSdkService.getInstance().getSdkList();
         systemBalPath = BallerinaSdkService.getInstance().getSystemBalPath();
         systemBalVersion = BallerinaSdkService.getInstance().getSystemBalVersion();
+        sdkVersiontoPathMap.put(SYSTEM_BAL_VERSION + systemBalVersion, systemBalPath);
     }
 
     private void handleInitialCheckbox() {
         if (!useCustomSdkCheckbox.isSelected()) {
             if (BallerinaSdkUtils.isValidSdk(systemBalPath, systemBalVersion)) {
-                sdkVersionComboBox.addItem(CB_DEFAULT_PREFIX + BallerinaSdkUtils.findBalDistFolder(systemBalPath));
-                selectedVersionTextField.setText(SYSTEM_BAL_VERSION + systemBalVersion);
+                sdkVersionComboBox.addItem(SYSTEM_BAL_VERSION + systemBalVersion);
+                sdkSettingsTextField.setText(EMPTY_STRING);
                 selectedSdkPath = systemBalPath;
                 selectedSdkVersion = systemBalVersion;
             } else {
-                selectedVersionTextField.setText(NO_VALID_BAL_SDK);
-                selectedVersionTextField.setForeground(JBColor.RED);
+                sdkSettingsTextField.setText(NO_VALID_BAL_SDK);
+                sdkSettingsTextField.setForeground(JBColor.RED);
                 selectedSdkVersion = EMPTY_STRING;
                 selectedSdkPath = EMPTY_STRING;
             }
@@ -178,23 +180,24 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
             String savedPath = BallerinaSdkSettings.getInstance().getBallerinaSdkPath();
             String savedVersion = BallerinaSdkSettings.getInstance().getBallerinaSdkVersion();
             if (BallerinaSdkUtils.isValidSdk(systemBalPath, systemBalVersion)) {
-                sdkVersionComboBox.addItem(CB_DEFAULT_PREFIX + BallerinaSdkUtils.findBalDistFolder(systemBalPath));
+                sdkVersionComboBox.addItem(SYSTEM_BAL_VERSION + systemBalVersion);
             }
             if (BallerinaSdkUtils.isValidSdk(savedPath, savedVersion)) {
-                sdkVersionComboBox.addItem(BallerinaSdkUtils.findBalDistFolder(savedPath));
+                sdkVersiontoPathMap.put(savedVersion, savedPath);
+                sdkVersionComboBox.addItem(savedVersion);
                 sdkVersionComboBox.setSelectedIndex(sdkVersionComboBox.getItemCount() - 1);
-                selectedVersionTextField.setText(savedVersion);
+                sdkSettingsTextField.setText(EMPTY_STRING);
                 selectedSdkPath = savedPath;
                 selectedSdkVersion = savedVersion;
             } else {
                 if (BallerinaSdkUtils.isValidSdk(systemBalPath, systemBalVersion)) {
                     sdkVersionComboBox.setSelectedIndex(0);
-                    selectedVersionTextField.setText(SYSTEM_BAL_VERSION + systemBalVersion);
+                    sdkSettingsTextField.setText(EMPTY_STRING);
                     selectedSdkPath = systemBalPath;
                     selectedSdkVersion = systemBalVersion;
                 } else {
-                    selectedVersionTextField.setText(NO_VALID_BAL_SDK);
-                    selectedVersionTextField.setForeground(JBColor.RED);
+                    sdkSettingsTextField.setText(NO_VALID_BAL_SDK);
+                    sdkSettingsTextField.setForeground(JBColor.RED);
                     selectedSdkVersion = EMPTY_STRING;
                     selectedSdkPath = EMPTY_STRING;
                 }
@@ -205,7 +208,8 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
     private void fillComboBox() {
         for (BallerinaSdk sdk : sdkList) {
             if (!Objects.equals(selectedSdkPath, sdk.getPath()) && !Objects.equals(systemBalPath, sdk.getPath())) {
-                sdkVersionComboBox.addItem(BallerinaSdkUtils.findBalDistFolder(sdk.getPath()));
+                sdkVersionComboBox.addItem(sdk.getVersion());
+                sdkVersiontoPathMap.put(sdk.getVersion(), sdk.getPath());
             }
         }
         sdkVersionComboBox.addItem(ADD_BAL_SDK);
@@ -216,15 +220,15 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
         useCustomSdkCheckbox.addActionListener(e -> {
             boolean selected = useCustomSdkCheckbox.isSelected();
             if (!selected) {
-                String path = sdkVersionComboBox.getItemAt(0);
-                if (Objects.equals(path, CB_DEFAULT_PREFIX + BallerinaSdkUtils.findBalDistFolder(systemBalPath))) {
+                String version = sdkVersionComboBox.getItemAt(0);
+                if (Objects.equals(version, SYSTEM_BAL_VERSION + systemBalVersion)) {
                     sdkVersionComboBox.setSelectedIndex(0);
-                    selectedVersionTextField.setText(SYSTEM_BAL_VERSION + systemBalVersion);
+                    sdkSettingsTextField.setText(EMPTY_STRING);
                     selectedSdkVersion = systemBalVersion;
                     selectedSdkPath = systemBalPath;
                 } else {
                     sdkVersionComboBox.setSelectedItem(ADD_BAL_SDK);
-                    selectedVersionTextField.setText(NO_VALID_BAL_SDK);
+                    sdkSettingsTextField.setText(NO_VALID_BAL_SDK);
                     selectedSdkVersion = EMPTY_STRING;
                     selectedSdkPath = EMPTY_STRING;
                 }
@@ -258,60 +262,57 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
             sdkPath = BallerinaSdkUtils.getNormalizedPath(sdkPath);
             if (sdkPath.equals(systemBalPath)) {
                 sdkVersionComboBox.setSelectedIndex(0);
-                selectedVersionTextField.setText(SYSTEM_BAL_VERSION + systemBalVersion);
+                sdkSettingsTextField.setText(EMPTY_STRING);
             } else {
                 selectedSdkPath = sdkPath;
                 boolean found = false;
                 if (sdkVersionComboBox.getItemCount() > 1) {
                     for (int i = 0; i < sdkVersionComboBox.getItemCount(); i++) {
-                        if (sdkVersionComboBox.getItemAt(i)
-                                .equals(BallerinaSdkUtils.findBalDistFolder(sdkPath))) {
+                        String item = sdkVersionComboBox.getItemAt(i);
+                        if (sdkVersiontoPathMap.containsKey(item) && sdkVersiontoPathMap.get(item).equals(sdkPath)) {
                             found = true;
                             sdkVersionComboBox.setSelectedIndex(i);
                             break;
                         }
                     }
                 }
+                String version = BallerinaSdkUtils.getVersionFromPath(sdkPath);
                 if (!found) {
-                    sdkVersionComboBox.insertItemAt(BallerinaSdkUtils.findBalDistFolder(sdkPath), 1);
+                    sdkVersiontoPathMap.put(version, sdkPath);
+                    sdkVersionComboBox.insertItemAt(version, 1);
                     sdkVersionComboBox.setSelectedIndex(1);
                 }
-                String version = BallerinaSdkUtils.getVersionFromPath(sdkPath);
                 if (version.isEmpty()) {
                     version = BALLERINA_SWAN_LAKE;
                 }
                 selectedSdkVersion = version;
-                selectedVersionTextField.setText(version);
+                sdkSettingsTextField.setText(EMPTY_STRING);
             }
-            selectedVersionTextField.setForeground(defaultColor);
+            sdkSettingsTextField.setForeground(defaultColor);
         } else {
-            selectedVersionTextField.setText(INVALID_BAL_SDK_PATH);
-            selectedVersionTextField.setForeground(JBColor.RED);
+            sdkSettingsTextField.setText(INVALID_BAL_SDK_PATH);
+            sdkSettingsTextField.setForeground(JBColor.RED);
             selectedSdkVersion = EMPTY_STRING;
             selectedSdkPath = EMPTY_STRING;
         }
     }
 
     private void handleDetectedPathsSelection() {
-        String path = (String) sdkVersionComboBox.getSelectedItem();
-        if (Objects.equals(path, CB_DEFAULT_PREFIX
-                + BallerinaSdkUtils.findBalDistFolder(systemBalPath))) {
+        String version = (String) sdkVersionComboBox.getSelectedItem();
+        String path = sdkVersiontoPathMap.get(version);
+        if (Objects.equals(version, SYSTEM_BAL_VERSION + systemBalVersion)) {
             selectedSdkPath = systemBalPath;
             selectedSdkVersion = systemBalVersion;
-            selectedVersionTextField.setText(SYSTEM_BAL_VERSION + systemBalVersion);
-            selectedVersionTextField.setForeground(defaultColor);
+            sdkSettingsTextField.setText(EMPTY_STRING);
+            sdkSettingsTextField.setForeground(defaultColor);
         } else {
-            if (path != null) {
-                path = BallerinaSdkUtils.getBalBatFromDist(path);
-            }
-            String version = BallerinaSdkUtils.getVersionFromPath(path);
-            if (version.isEmpty()) {
+            if (version != null && version.isEmpty()) {
                 version = BALLERINA_SWAN_LAKE;
             }
             selectedSdkPath = path;
             selectedSdkVersion = version;
-            selectedVersionTextField.setText(version);
-            selectedVersionTextField.setForeground(defaultColor);
+            sdkSettingsTextField.setText(EMPTY_STRING);
+            sdkSettingsTextField.setForeground(defaultColor);
         }
     }
 }
