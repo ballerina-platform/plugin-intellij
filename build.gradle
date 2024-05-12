@@ -23,6 +23,11 @@ version = ballerinaPluginVersion
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.ballerina-platform:lsp4intellij:0.96.1'
 }
 
 intellij {

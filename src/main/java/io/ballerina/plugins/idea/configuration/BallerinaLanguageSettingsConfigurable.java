@@ -76,11 +76,11 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
         gbc.insets = JBUI.insets(2, 0);
 
         panel.add(sdkSelectionUI.getPanel(), gbc);
+        gbc.gridy++;
 
-        // Add a vertical filler panel to push everything to the top
         JPanel filler = new JPanel();
-        gbc.gridy = 1;
-        gbc.weighty = 1;  // Take up all extra space
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.VERTICAL;
         panel.add(filler, gbc);
 
         return panel;
@@ -99,10 +99,11 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
      */
     @Override
     public void apply() {
-        applySdkChange();
+        if (isSdkChanged()) {
+            applySdkChange();
+        }
     }
 
-    // Todo: disconnect and kill the connected LS process and its sub-processes
     @Override
     public void disposeUIResources() {
         sdkSelectionUI.disposeUi();
@@ -113,7 +114,7 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
 
     private void applySdkChange() {
         boolean isCustomSdkSelected = sdkSelectionUI.getUseCustomSdkCheckbox().isSelected();
-        modified = isSdkChanged();
+        modified = modified || isSdkChanged();
         BallerinaSdkSettings.getInstance().setUseCustomSdk(isCustomSdkSelected);
         if (isCustomSdkSelected) {
             String selectedSdkPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());

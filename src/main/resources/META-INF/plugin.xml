@@ -73,6 +73,8 @@
 
         <applicationService serviceImplementation="io.ballerina.plugins.idea.sdk.BallerinaSdkSettings"/>
 
+        <applicationService serviceImplementation="io.ballerina.plugins.idea.preloading.BallerinaLSConfigSettings"/>
+
         <projectConfigurable groupId="language"
                              instance="io.ballerina.plugins.idea.configuration.BallerinaLanguageSettingsConfigurable"
                              displayName="Ballerina"/>
@@ -89,6 +91,38 @@
         <codeInsight.lineMarkerProvider
                 language="Ballerina"
                 implementationClass="io.ballerina.plugins.idea.runconfig.test.BallerinaTestLineMarkerProvider"/>
+
+        <applicationService serviceImplementation="org.wso2.lsp4intellij.IntellijLanguageClient"/>
+
+        <editorFactoryListener implementation="org.wso2.lsp4intellij.listeners.LSPEditorListener"/>
+
+        <fileDocumentManagerListener implementation="org.wso2.lsp4intellij.listeners.LSPFileDocumentManagerListener"/>
+
+        <notificationGroup id="lsp" displayType="STICKY_BALLOON"/>
+
+        <completion.contributor implementationClass="org.wso2.lsp4intellij.contributors.LSPCompletionContributor"
+                                id="org.wso2.lsp4intellij.contributors.LSPCompletionContributor" language="Ballerina"/>
+
+        <typedHandler implementation="org.wso2.lsp4intellij.listeners.LSPTypedHandler"
+                      id="LSPTypedHandler"/>
+
+        <externalAnnotator id="LSPAnnotator" language="Ballerina"
+                           implementationClass="org.wso2.lsp4intellij.contributors.annotator.LSPAnnotator"/>
+
+        <gotoSymbolContributor implementation="org.wso2.lsp4intellij.contributors.symbol.LSPSymbolContributor"
+                               id="LSPSymbolContributor"/>
+
+        <renameHandler implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameHandler" id="LSPRenameHandler" order="first"/>
+        <renamePsiElementProcessor implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameProcessor" id="LSPRenameProcessor" order="first"/>
+
+        <notificationGroup id="LSPProgressNotification"
+                           displayType="NONE"/>
+
+        <editorFactoryMouseMotionListener implementation="io.ballerina.plugins.idea.highlighting.BallerinaIdentifierUnderline"/>
+
+        <statusBarWidgetFactory implementation="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
+                                id="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
+                                order="first" />
     </extensions>
     <actions>
         <action id="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction"
@@ -100,5 +134,21 @@
                 class="io.ballerina.plugins.idea.runconfig.test.BallerinaTestAction" text="Test Ballerina File">
             <add-to-group group-id="EditorPopupMenu.Run" anchor="last"/>
         </action>
+        <action id="org.intellij.sdk.action.QuickDocAction" class="org.wso2.lsp4intellij.actions.LSPQuickDocAction">
+        </action>
+        <action class="org.wso2.lsp4intellij.actions.LSPReferencesAction" id="LSPFindUsages">
+            <keyboard-shortcut first-keystroke="shift alt F7" keymap="$default"/>
+        </action>
+        <action class="org.wso2.lsp4intellij.actions.LSPReformatAction" id="ReformatCode"
+                use-shortcut-of="ReformatCode"
+                overrides="true" text="Reformat Code"/>
+        <action class="org.wso2.lsp4intellij.actions.LSPShowReformatDialogAction" id="ShowReformatFileDialog"
+                use-shortcut-of="ShowReformatFileDialog" overrides="true" text="Show Reformat File Dialog"/>
     </actions>
+    <applicationListeners>
+        <listener class="org.wso2.lsp4intellij.listeners.VFSListener"
+                  topic="com.intellij.openapi.vfs.VirtualFileListener"/>
+        <listener class="org.wso2.lsp4intellij.listeners.LSPProjectManagerListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </applicationListeners>
 </idea-plugin>

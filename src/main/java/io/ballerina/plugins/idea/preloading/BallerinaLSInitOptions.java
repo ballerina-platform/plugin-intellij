@@ -15,21 +15,26 @@
  *
  */
 
-package io.ballerina.plugins.idea;
+package io.ballerina.plugins.idea.preloading;
 
 /**
- * Contains Ballerina constants strings that will be used project wide.
+ * Custom initialization options for Ballerina Language server.
  *
  * @since 2.0.0
  */
-public class BallerinaConstants {
-    
-    public static final String BAL_TOML_FILE = "Ballerina.toml";
-    public static final String BAL_TEST_DIR_NAME = "tests";
-    public static final String BAL_MODULE_DIR_NAME = "modules";
-    public static final String BAL_EXTENSION = ".bal";
-    public static final String EMPTY_STRING = "";
-    public static final String BAL_LOG_PREFIX = "[Ballerina Plugin] ";
-    public static final String BAL_LS_CMD = "start-language-server";
-    public static final String BAL_EXT_NAME = "bal";
+public class BallerinaLSInitOptions {
+
+    private boolean enableIndexPackages;
+
+    public BallerinaLSInitOptions() {
+        this.enableIndexPackages = false;
+    }
+
+    public void setEnableIndexPackages(boolean enableIndexPackages) {
+        this.enableIndexPackages = enableIndexPackages;
+    }
+
+    public boolean isEnableIndexPackages() {
+        return enableIndexPackages;
+    }
 }
