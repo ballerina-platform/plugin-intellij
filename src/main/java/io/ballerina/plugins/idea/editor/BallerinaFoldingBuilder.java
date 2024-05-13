@@ -58,19 +58,19 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
         if (!(psiElement instanceof BallerinaFile)) {
             return;
         }
-        matchPair(list, psiElement, BallerinaTypes.OPEN_BRACE_TOKEN, BallerinaTypes.CLOSE_BRACE_TOKEN,
-                BRACE_PLACEHOLDER);
-        matchPair(list, psiElement, BallerinaTypes.OPEN_NESTED_BRACE_TOKEN, BallerinaTypes.CLOSE_NESTED_BRACE_TOKEN,
-                BRACE_PLACEHOLDER);
-        matchPair(list, psiElement, BallerinaTypes.IGNORED_OPEN_BRACE_TOKEN, BallerinaTypes.IGNORED_CLOSE_BRACE_TOKEN,
-                BRACE_PLACEHOLDER);
-        matchPair(list, psiElement, BallerinaTypes.OPEN_BRACE_PIPE_TOKEN, BallerinaTypes.CLOSE_BRACE_PIPE_TOKEN,
-                BRACE_PIPE_PLACEHOLDER);
-        matchPair(list, psiElement, BallerinaTypes.OPEN_NESTED_BRACE_PIPE_TOKEN,
-                BallerinaTypes.CLOSE_NESTED_BRACE_PIPE_TOKEN, BRACE_PIPE_PLACEHOLDER);
-        buildImportFoldingRegion(list, psiElement);
-        buildDocumentationFoldingRegions(list, psiElement);
-        buildMultiCommentFoldingRegions(list, psiElement);
+        list.addAll(createFoldingRegions(psiElement, BallerinaTypes.OPEN_BRACE_TOKEN,
+                BallerinaTypes.CLOSE_BRACE_TOKEN, BRACE_PLACEHOLDER));
+        list.addAll(createFoldingRegions(psiElement, BallerinaTypes.OPEN_NESTED_BRACE_TOKEN,
+                BallerinaTypes.CLOSE_NESTED_BRACE_TOKEN, BRACE_PLACEHOLDER));
+        list.addAll(createFoldingRegions(psiElement, BallerinaTypes.IGNORED_OPEN_BRACE_TOKEN,
+                BallerinaTypes.IGNORED_CLOSE_BRACE_TOKEN, BRACE_PLACEHOLDER));
+        list.addAll(createFoldingRegions(psiElement, BallerinaTypes.OPEN_BRACE_PIPE_TOKEN,
+                BallerinaTypes.CLOSE_BRACE_PIPE_TOKEN, BRACE_PIPE_PLACEHOLDER));
+        list.addAll(createFoldingRegions(psiElement, BallerinaTypes.OPEN_NESTED_BRACE_PIPE_TOKEN,
+                BallerinaTypes.CLOSE_NESTED_BRACE_PIPE_TOKEN, BRACE_PIPE_PLACEHOLDER));
+        list.addAll(createImportFoldingRegions(psiElement));
+        list.addAll(createDocumentationFoldingRegions(psiElement));
+        list.addAll(createMultiCommentFoldingRegions(psiElement));
     }
 
     @Override
@@ -83,8 +83,9 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
         return false;
     }
 
-    private void matchPair(List<FoldingDescriptor> list, PsiElement psiElement, IElementType open, IElementType close,
-                           String placeholder) {
+    private List<FoldingDescriptor> createFoldingRegions(PsiElement psiElement, IElementType open, IElementType close,
+                                      String placeholder) {
+        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
         List<PsiElement> leaves = new ArrayList<>();
         Stack<PsiElement> stack = new Stack<>();
         stack.push(psiElement);
@@ -111,15 +112,17 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
                 int startOffset = openBrace.getTextRange().getStartOffset();
                 int endOffset = leaf.getTextRange().getEndOffset();
                 if (endOffset > startOffset) {
-                    list.add(new FoldingDescriptor(openBrace.getNode(),
+                    foldingDescriptors.add(new FoldingDescriptor(openBrace.getNode(),
                             new TextRange(startOffset, endOffset), null,
                             placeholder));
                 }
             }
         }
+        return foldingDescriptors;
     }
 
-    private void buildImportFoldingRegion(List<FoldingDescriptor> list, PsiElement psiElement) {
+    private List<FoldingDescriptor> createImportFoldingRegions(PsiElement psiElement) {
+        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
         Collection<BallerinaImportDecl> importDeclarationNodes =
                 PsiTreeUtil.findChildrenOfType(psiElement, BallerinaImportDecl.class);
         if (!importDeclarationNodes.isEmpty()) {
@@ -130,26 +133,30 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
             int startOffset = firstImport.getTextRange().getStartOffset() + importOffset;
             int lastOffset = lastImport.getTextRange().getEndOffset();
             if (startOffset < lastOffset) {
-                list.add(new FoldingDescriptor(firstImport, startOffset, lastOffset, null, DEFAULT_PLACEHOLDER));
+                foldingDescriptors.add(new FoldingDescriptor(firstImport, startOffset,
+                        lastOffset, null, DEFAULT_PLACEHOLDER));
             }
         }
+        return foldingDescriptors;
     }
 
-    private void buildDocumentationFoldingRegions(@NotNull List<FoldingDescriptor> list, @NotNull PsiElement root) {
+    private List<FoldingDescriptor> createDocumentationFoldingRegions(@NotNull PsiElement root) {
+        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
         Collection<BallerinaDocumentationString> docStrings =
                 PsiTreeUtil.findChildrenOfType(root, BallerinaDocumentationString.class);
         for (BallerinaDocumentationString docString : docStrings) {
             if (docString != null) {
                 int startOffset = docString.getTextRange().getStartOffset();
                 int endOffset = docString.getTextRange().getEndOffset();
-                list.add(new FoldingDescriptor(docString, startOffset, endOffset,
+                foldingDescriptors.add(new FoldingDescriptor(docString, startOffset, endOffset,
                         null, DOCUMENTATION_PLACEHOLDER));
             }
         }
+        return foldingDescriptors;
     }
 
-    private void buildMultiCommentFoldingRegions(@NotNull List<FoldingDescriptor> list, @NotNull PsiElement root) {
-
+    private List<FoldingDescriptor> createMultiCommentFoldingRegions(@NotNull PsiElement root) {
+        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
         Collection<PsiComment> comments = PsiTreeUtil.findChildrenOfType(root, PsiComment.class);
 
         for (PsiComment comment : comments) {
@@ -169,8 +176,10 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
             int startOffset = comment.getTextRange().getStartOffset();
             int endOffset = lastElement.getTextRange().getEndOffset();
 
-            list.add(new FoldingDescriptor(comment, startOffset, endOffset, null, COMMENT_PLACEHOLDER));
+            foldingDescriptors.add(new FoldingDescriptor(comment, startOffset, endOffset,
+                    null, COMMENT_PLACEHOLDER));
         }
+        return foldingDescriptors;
     }
 
     private PsiElement getPreviousElement(PsiElement element) {
