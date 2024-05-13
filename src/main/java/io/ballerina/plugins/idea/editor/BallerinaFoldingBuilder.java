@@ -34,8 +34,8 @@ import io.ballerina.plugins.idea.psi.BallerinaImportDecl;
 import io.ballerina.plugins.idea.psi.BallerinaTypes;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -85,8 +85,8 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
 
     private List<FoldingDescriptor> createFoldingRegions(PsiElement psiElement, IElementType open, IElementType close,
                                       String placeholder) {
-        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
-        List<PsiElement> leaves = new ArrayList<>();
+        List<FoldingDescriptor> foldingDescriptors = new LinkedList<>();
+        List<PsiElement> leaves = new LinkedList<>();
         Stack<PsiElement> stack = new Stack<>();
         stack.push(psiElement);
 
@@ -122,7 +122,7 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
     }
 
     private List<FoldingDescriptor> createImportFoldingRegions(PsiElement psiElement) {
-        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
+        List<FoldingDescriptor> foldingDescriptors = new LinkedList<>();
         Collection<BallerinaImportDecl> importDeclarationNodes =
                 PsiTreeUtil.findChildrenOfType(psiElement, BallerinaImportDecl.class);
         if (!importDeclarationNodes.isEmpty()) {
@@ -141,7 +141,7 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
     }
 
     private List<FoldingDescriptor> createDocumentationFoldingRegions(@NotNull PsiElement root) {
-        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
+        List<FoldingDescriptor> foldingDescriptors = new LinkedList<>();
         Collection<BallerinaDocumentationString> docStrings =
                 PsiTreeUtil.findChildrenOfType(root, BallerinaDocumentationString.class);
         for (BallerinaDocumentationString docString : docStrings) {
@@ -156,7 +156,7 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
     }
 
     private List<FoldingDescriptor> createMultiCommentFoldingRegions(@NotNull PsiElement root) {
-        List<FoldingDescriptor> foldingDescriptors = new ArrayList<>();
+        List<FoldingDescriptor> foldingDescriptors = new LinkedList<>();
         Collection<PsiComment> comments = PsiTreeUtil.findChildrenOfType(root, PsiComment.class);
 
         for (PsiComment comment : comments) {
