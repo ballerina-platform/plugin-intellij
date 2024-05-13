@@ -112,9 +112,6 @@
         <gotoSymbolContributor implementation="org.wso2.lsp4intellij.contributors.symbol.LSPSymbolContributor"
                                id="LSPSymbolContributor"/>
 
-        <renameHandler implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameHandler" id="LSPRenameHandler" order="first"/>
-        <renamePsiElementProcessor implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameProcessor" id="LSPRenameProcessor" order="first"/>
-
         <notificationGroup id="LSPProgressNotification"
                            displayType="NONE"/>
 
@@ -123,6 +120,13 @@
         <statusBarWidgetFactory implementation="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
                                 id="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
                                 order="first" />
+
+        <lang.foldingBuilder language="Ballerina"
+                             implementationClass="io.ballerina.plugins.idea.editor.BallerinaFoldingBuilder"/>
+
+        <!--        Todo: Enable after restoring the renaming support-->
+        <!--        <renameHandler implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameHandler" id="LSPRenameHandler" order="first"/>-->
+        <!--        <renamePsiElementProcessor implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameProcessor" id="LSPRenameProcessor" order="first"/>-->
     </extensions>
     <actions>
         <action id="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction"
