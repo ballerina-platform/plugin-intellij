@@ -117,10 +117,6 @@
 
         <editorFactoryMouseMotionListener implementation="io.ballerina.plugins.idea.highlighting.BallerinaIdentifierUnderline"/>
 
-        <statusBarWidgetFactory implementation="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
-                                id="org.wso2.lsp4intellij.statusbar.LSPServerStatusWidgetFactory"
-                                order="first" />
-
         <lang.foldingBuilder language="Ballerina"
                              implementationClass="io.ballerina.plugins.idea.editor.BallerinaFoldingBuilder"/>
 
