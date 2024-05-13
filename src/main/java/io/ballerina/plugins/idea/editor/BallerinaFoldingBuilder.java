@@ -30,11 +30,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import io.ballerina.plugins.idea.psi.BallerinaDocumentationString;
 import io.ballerina.plugins.idea.psi.BallerinaFile;
-import io.ballerina.plugins.idea.psi.BallerinaFunctionDefnBody;
 import io.ballerina.plugins.idea.psi.BallerinaImportDecl;
-import io.ballerina.plugins.idea.psi.BallerinaMappingConstructorExpr;
-import io.ballerina.plugins.idea.psi.BallerinaTokens;
-import io.ballerina.plugins.idea.psi.BallerinaTokensIgnore;
 import io.ballerina.plugins.idea.psi.BallerinaTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -123,35 +119,6 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
         }
     }
 
-    private void buildAnnotFoldingRegions(List<FoldingDescriptor> list, PsiElement psiElement) {
-        Collection<BallerinaMappingConstructorExpr> mappingConstructorExprs =
-                PsiTreeUtil.findChildrenOfType(psiElement, BallerinaMappingConstructorExpr.class);
-        for (BallerinaMappingConstructorExpr mappingConstructorExpr : mappingConstructorExprs) {
-            int startOffset = mappingConstructorExpr.getTextRange().getStartOffset();
-            int endOffset = mappingConstructorExpr.getTextRange().getEndOffset();
-            list.add(new FoldingDescriptor(mappingConstructorExpr,
-                    startOffset, endOffset, null, BRACE_PLACEHOLDER));
-        }
-    }
-
-    private void buildFunctionFoldingRegion(List<FoldingDescriptor> list, PsiElement psiElement) {
-        Collection<BallerinaFunctionDefnBody> functionDefnBodies =
-                PsiTreeUtil.findChildrenOfType(psiElement, BallerinaFunctionDefnBody.class);
-
-        for (BallerinaFunctionDefnBody functionDefnBody : functionDefnBodies) {
-            BallerinaTokens tokens = PsiTreeUtil.getChildOfType(functionDefnBody, BallerinaTokens.class);
-            if (tokens == null) {
-                BallerinaTokensIgnore tokensIgnore =
-                        PsiTreeUtil.getChildOfType(functionDefnBody, BallerinaTokensIgnore.class);
-                if (tokensIgnore == null) {
-                    continue;
-                }
-                addFoldingDescriptor(list, functionDefnBody, tokensIgnore, true);
-            }
-            addFoldingDescriptor(list, functionDefnBody, tokens, true);
-        }
-    }
-
     private void buildImportFoldingRegion(List<FoldingDescriptor> list, PsiElement psiElement) {
         Collection<BallerinaImportDecl> importDeclarationNodes =
                 PsiTreeUtil.findChildrenOfType(psiElement, BallerinaImportDecl.class);
@@ -220,27 +187,5 @@ public class BallerinaFoldingBuilder extends CustomFoldingBuilder implements Dum
             next = next.getNextSibling();
         }
         return next;
-    }
-
-    private void addFoldingDescriptor(@NotNull List<FoldingDescriptor> descriptors, PsiElement node,
-                                      PsiElement bodyNode, boolean includePrevious) {
-
-        if (bodyNode == null || node == null) {
-            return;
-        }
-        PsiElement startNode = bodyNode;
-        if (includePrevious) {
-            PsiElement prevSibling = bodyNode.getPrevSibling();
-            while ((prevSibling instanceof PsiComment || prevSibling instanceof PsiWhiteSpace)) {
-                prevSibling = prevSibling.getPrevSibling();
-            }
-            startNode = prevSibling;
-        }
-
-        if (startNode != null) {
-            int startOffset = startNode.getTextRange().getStartOffset();
-            int endOffset = node.getTextRange().getEndOffset();
-            descriptors.add(new FoldingDescriptor(node, startOffset, endOffset, null, BRACE_PLACEHOLDER));
-        }
     }
 }
