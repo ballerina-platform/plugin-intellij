@@ -18,6 +18,8 @@
 package io.ballerina.plugins.idea.preloading;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -26,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFileBase;
 import io.ballerina.plugins.idea.BallerinaConstants;
 import io.ballerina.plugins.idea.BallerinaIcons;
+import io.ballerina.plugins.idea.highlighting.BallerinaIdentifierHighlighter;
 import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import io.ballerina.plugins.idea.sdk.BallerinaSdkUtils;
@@ -35,6 +38,9 @@ import io.ballerina.plugins.idea.widget.BallerinaIconWidget;
 import io.ballerina.plugins.idea.widget.BallerinaIconWidgetFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 import static io.ballerina.plugins.idea.preloading.BallerinaLSPUtils.registerProject;
@@ -48,6 +54,8 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
 
     private boolean balSourcesFound = false;
     private boolean balSdkFound = false;
+    private final Map<Editor, CaretListener> editorCaretListenerMap = new HashMap<>();
+
 
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
@@ -60,7 +68,13 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             registerIconWidget(project);
             registerLanguageServer(project);
         }
-        if (balSourcesFound || !isBalFile(file)) {
+        boolean isBallerinaFile = isBalFile(file);
+        if (isBallerinaFile) {
+            CaretListener caretListener = new BallerinaIdentifierHighlighter(project);
+            event.getEditor().getCaretModel().addCaretListener(caretListener);
+            editorCaretListenerMap.put(event.getEditor(), caretListener);
+        }
+        if (balSourcesFound || !isBallerinaFile) {
             return;
         }
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
@@ -84,6 +98,14 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
             balSourcesFound = true;
         });
         balSourcesFound = true;
+    }
+
+    @Override
+    public void editorReleased(@NotNull EditorFactoryEvent event) {
+        CaretListener caretListener = editorCaretListenerMap.get(event.getEditor());
+        if (caretListener != null) {
+            event.getEditor().getCaretModel().removeCaretListener(caretListener);
+        }
     }
 
     private static boolean isBalFile(@Nullable VirtualFile file) {
