@@ -19,7 +19,7 @@ pluginManagement {
     plugins {
         id "org.jetbrains.intellij" version "${intellijPluginVersion}"
         id "de.undercouch.download" version "${downloadPluginVersion}"
-
+        id "com.github.spotbugs" version "${spotbugsPluginVersion}"
     }
 
     repositories {

@@ -19,6 +19,7 @@ plugins {
     id 'org.jetbrains.intellij'
     id 'java'
     id 'checkstyle'
+    id 'com.github.spotbugs'
 }
 
  repositories {
@@ -66,6 +67,28 @@ sourceSets {
             srcDir 'src/main/gen'
         }
     }
+}
+
+spotbugsMain {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "low"
+    reportsDir = file("$project.buildDir/reports/spotbugs")
+    def excludeFile = file("${rootDir}/build-config/spotbugs-exclude.xml")
+    if (excludeFile.exists()) {
+        it.excludeFilter = excludeFile
+    }
+    reports {
+        text.enabled = true
+    }
+}
+
+spotbugsTest {
+    enabled = false
+}
+
+tasks.withType(Checkstyle) {
+    exclude '**/module-info.java'
 }
 
 checkstyle {
