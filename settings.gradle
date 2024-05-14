@@ -15,4 +15,21 @@
  *
  */
 
+pluginManagement {
+    plugins {
+        id "org.jetbrains.intellij" version "${intellijPluginVersion}"
+        id "de.undercouch.download" version "${downloadPluginVersion}"
+
+    }
+
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 rootProject.name = 'ballerina-intellij-idea-plugin'
+
+include ":checkstyle"
+project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
