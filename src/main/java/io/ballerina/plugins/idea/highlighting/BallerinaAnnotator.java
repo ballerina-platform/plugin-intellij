@@ -60,10 +60,6 @@ public class BallerinaAnnotator implements Annotator {
                         .range(element.getTextRange())
                         .textAttributes(DefaultLanguageHighlighterColors.METADATA)
                         .create();
-            } else if (elementType == BallerinaTypes.SINGLE_BACKTICK_CONTENT ||
-                    elementType == BallerinaTypes.DOUBLE_BACKTICK_CONTENT ||
-                    elementType == BallerinaTypes.TRIPLE_BACKTICK_CONTENT) {
-                annotateInlineCode(element, holder);
             } else if (elementType == BallerinaTypes.SLASH_TOKEN &&
                     (parent instanceof BallerinaResourcePath || parent instanceof BallerinaAbsoluteResourcePath)) {
                 holder.newAnnotation(HighlightSeverity.INFORMATION, "")
@@ -74,11 +70,6 @@ public class BallerinaAnnotator implements Annotator {
                     elementType == BallerinaTypes.MARKDOWN_DOCUMENTATION_LINE_START ||
                     elementType == BallerinaTypes.PARAMETER_DOCUMENTATION_START) {
                 annotateDocumentation(element, holder);
-            } else if (elementType == BallerinaTypes.PARAMETER_NAME) {
-                holder.newAnnotation(HighlightSeverity.INFORMATION, "")
-                        .range(element.getTextRange())
-                        .textAttributes(DefaultLanguageHighlighterColors.DOC_COMMENT_TAG)
-                        .create();
             } else if (elementType == BallerinaTypes.IDENTIFIER_TOKEN) {
                 annotateIdentifier(element, holder, parent);
             } else if (elementType == BallerinaTypes.AT_TOKEN) {
@@ -86,26 +77,24 @@ public class BallerinaAnnotator implements Annotator {
 
             } else if (elementType == BallerinaTypes.STRING_TEMPLATE_START_TOKEN) {
                 TextRange textRange = element.getTextRange();
-                // Assuming the backtick is only at the start or end of the token,
-                // you adjust the range to exclude the backtick character.
                 TextRange newTextRange = new TextRange(textRange.getStartOffset(), textRange.getEndOffset() - 1);
 
                 holder.newAnnotation(HighlightSeverity.INFORMATION, "")
-                        .range(newTextRange) // Apply highlighting to the adjusted range, excluding the backtick
+                        .range(newTextRange)
                         .textAttributes(DefaultLanguageHighlighterColors.KEYWORD)
                         .create();
             } else if (elementType == BallerinaTypes.RETURN_PARAMETER_DOCUMENTATION_START) {
                 String tokenText = element.getText();
-                int returnStart = tokenText.indexOf("return"); // Find the start index of "return" within the token text
+                int returnStart = tokenText.indexOf("return");
 
-                if (returnStart >= 0) { // Ensure "return" is found within the token text
-                    TextRange entireRange = element.getTextRange(); // Get the entire text range of the token
+                if (returnStart >= 0) {
+                    TextRange entireRange = element.getTextRange();
                     TextRange returnRange = new TextRange(entireRange.getStartOffset() + returnStart,
                             entireRange.getStartOffset() + returnStart +
-                                    "return".length()); // Calculate the text range for "return"
+                                    "return".length());
 
                     holder.newAnnotation(HighlightSeverity.INFORMATION, "")
-                            .range(returnRange) // Apply the annotation to the range of "return" only
+                            .range(returnRange)
                             .textAttributes(DefaultLanguageHighlighterColors.DOC_COMMENT_TAG)
                             .create();
                 }
@@ -130,13 +119,6 @@ public class BallerinaAnnotator implements Annotator {
         holder.newAnnotation(HighlightSeverity.INFORMATION, "")
                 .range(element.getTextRange())
                 .textAttributes(textAttributesKey)
-                .create();
-    }
-
-    private void annotateInlineCode(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        holder.newAnnotation(HighlightSeverity.INFORMATION, "")
-                .range(element.getTextRange())
-                .textAttributes(DefaultLanguageHighlighterColors.DOC_COMMENT_TAG_VALUE)
                 .create();
     }
 

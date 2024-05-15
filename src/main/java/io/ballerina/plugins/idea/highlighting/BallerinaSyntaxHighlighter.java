@@ -58,6 +58,8 @@ public class BallerinaSyntaxHighlighter extends SyntaxHighlighterBase {
 
     public static final TextAttributesKey DOC =
             createTextAttributesKey("BAL_DOCREF", DefaultLanguageHighlighterColors.DOC_COMMENT);
+    public static final TextAttributesKey DOC_COMMENT_TAG =
+            createTextAttributesKey("BAL_DOC_TAG_REF", DefaultLanguageHighlighterColors.DOC_COMMENT_TAG);
 
     public static final TextAttributesKey LITERAL =
             createTextAttributesKey("BAL_LITERAL", DefaultLanguageHighlighterColors.NUMBER);
@@ -80,6 +82,7 @@ public class BallerinaSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final TextAttributesKey[] SEPARATOR_KEYS = new TextAttributesKey[]{SEPARATOR};
     private static final TextAttributesKey[] OPERATOR_KEYS = new TextAttributesKey[]{OPERATOR};
     private static final TextAttributesKey[] DOCUMENTATION_KEYS = new TextAttributesKey[]{DOC};
+    private static final TextAttributesKey[] DOC_PARAM_KEYS = new TextAttributesKey[]{DOC_COMMENT_TAG};
     private static final TextAttributesKey[] LITERAL_KEYS = new TextAttributesKey[]{LITERAL};
     private static final TextAttributesKey[] IDENTIFYER_KEYS = new TextAttributesKey[]{IDENTIFYER};
     private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
@@ -100,7 +103,7 @@ public class BallerinaSyntaxHighlighter extends SyntaxHighlighterBase {
         } else if (KEYWORDS.contains(tokenType)) {
             return KEYWORD_KEYS;
         } else if (tokenType.equals(BallerinaTypes.PARAMETER_NAME)) {
-            return TYPE_KEYS;
+            return DOC_PARAM_KEYS;
         } else if (DOCUMENTATION.contains(tokenType)) {
             return DOCUMENTATION_KEYS;
         } else if (CONTEXTUALS.contains(tokenType)) {
