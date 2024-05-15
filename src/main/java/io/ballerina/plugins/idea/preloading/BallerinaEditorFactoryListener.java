@@ -87,7 +87,11 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
                 ApplicationManager.getApplication().invokeLater(() -> {
                     widget.setMessage(EMPTY_STRING);
                     if (!BallerinaSdkUtils.isValidVersion(balVersion)) {
-                        BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
+                        if (BallerinaSdkUtils.isOldVersion(balVersion)) {
+                            BallerinaPluginNotifier.notifyToUseSwanLake(project);
+                        } else {
+                            BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
+                        }
                     } else {
                         balSdkFound = true;
                         registerIconWidget(project);

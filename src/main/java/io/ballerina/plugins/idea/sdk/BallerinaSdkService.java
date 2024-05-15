@@ -36,14 +36,13 @@ public class BallerinaSdkService {
     private String ballerinaVersion;
     private String ballerinaPath;
     private boolean notified = false;
-
     private final List<BallerinaSdk> sdkList;
 
     private BallerinaSdkService() {
         // This code will only run once when the IDE starts and the first access to BallerinaSdkService occurs
         ballerinaPath = BallerinaSdkUtils.getBallerinaPath().orElse(EMPTY_STRING);
         ballerinaVersion = BallerinaSdkUtils.getBallerinaVersion().orElse(EMPTY_STRING);
-        if (!BallerinaSdkUtils.isValidPath(ballerinaPath)) {
+        if (!BallerinaSdkUtils.isValidSdk(ballerinaPath, ballerinaVersion)) {
             ballerinaVersion = EMPTY_STRING;
             ballerinaPath = EMPTY_STRING;
         }
@@ -62,7 +61,8 @@ public class BallerinaSdkService {
         if (settings != null && settings.isUseCustomSdk()) {
             String version = settings.getBallerinaSdkVersion();
             String sdkPath = settings.getBallerinaSdkPath();
-            if (BallerinaSdkUtils.isValidSdk(sdkPath, version)
+            if ((version.isEmpty() && sdkPath.isEmpty())
+                    || BallerinaSdkUtils.isValidSdk(sdkPath, version)
                     && BallerinaSdkUtils.getVersionFromPath(getBallerinaPath(project)).equals(version)) {
                 return version;
             }
@@ -75,13 +75,14 @@ public class BallerinaSdkService {
         boolean wrongSettingsPath = false;
         if (settings != null  && settings.isUseCustomSdk()) {
             String sdkPath = settings.getBallerinaSdkPath();
-            if (BallerinaSdkUtils.isValidPath(sdkPath)) {
+            String version = settings.getBallerinaSdkVersion();
+            if ((sdkPath.isEmpty() && version.isEmpty()) || BallerinaSdkUtils.isValidSdk(sdkPath, version)) {
                 return sdkPath;
             } else {
                 wrongSettingsPath = true;
             }
         }
-        if (wrongSettingsPath && !notified && BallerinaSdkUtils.isValidPath(ballerinaPath)) {
+        if (wrongSettingsPath && !notified && BallerinaSdkUtils.isValidSdk(ballerinaPath, ballerinaVersion)) {
             notified = true;
             BallerinaPluginNotifier.customNotification(project,
                     NotificationType.INFORMATION,

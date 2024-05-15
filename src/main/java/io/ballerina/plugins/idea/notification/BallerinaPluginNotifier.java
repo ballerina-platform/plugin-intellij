@@ -41,10 +41,23 @@ public class BallerinaPluginNotifier {
                         .setContent(
                                 "If you just installed Ballerina, you may need " +
                                         "to restart the IDE. If not, please install Ballerina.")
-                        .addAction(NotificationAction.createSimple("Download Ballerina", () -> {
+                        .addAction(NotificationAction.createSimple("Download Ballerina Swan Lake", () -> {
                             BrowserUtil.browse("https://ballerina.io/downloads/");
                         }));
 
+        notification.notify(project);
+    }
+
+    public static void notifyToUseSwanLake(Project project) {
+        Notification notification = NotificationGroupManager.getInstance()
+                .getNotificationGroup("Ballerina Plugin Notifications")
+                .createNotification("Use Ballerina Swan Lake.", NotificationType.INFORMATION)
+                .setTitle("Invalid Ballerina version detected.")
+                .setContent("This plugin only supports Ballerina Swan Lake versions." +
+                        " Please install Ballerina Swan Lake.")
+                .addAction(NotificationAction.createSimple("Download Ballerina Swan Lake", () -> {
+                    BrowserUtil.browse("https://ballerina.io/downloads/");
+                }));
         notification.notify(project);
     }
 
