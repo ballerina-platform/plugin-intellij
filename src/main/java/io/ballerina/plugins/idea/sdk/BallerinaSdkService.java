@@ -62,8 +62,8 @@ public class BallerinaSdkService {
             String version = settings.getBallerinaSdkVersion();
             String sdkPath = settings.getBallerinaSdkPath();
             if ((version.isEmpty() && sdkPath.isEmpty())
-                    || BallerinaSdkUtils.isValidSdk(sdkPath, version)
-                    && BallerinaSdkUtils.getVersionFromPath(getBallerinaPath(project)).equals(version)) {
+                    || (BallerinaSdkUtils.isValidSdk(sdkPath, version)
+                    && BallerinaSdkUtils.getVersionFromPath(getBallerinaPath(project)).equals(version))) {
                 return version;
             }
         }
