@@ -17,8 +17,9 @@
 
 package io.ballerina.plugins.idea;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import psi.io.ballerina.plugins.idea.BallerinaTypes;
+import io.ballerina.plugins.idea.psi.BallerinaTypes;
 
 %%
 
@@ -136,7 +137,7 @@ SUB = "-"
 RETURN = "return"
 
 // SINGLE_BACKTICKED_MARKDOWN
-SINGLE_BACKTICK_CONTENT = (([^`\n] | '\\' {BACKTICK})* [\n])? ({MARKDOWN_DOCUMENTATION_LINE_START} ([^`\n] | '\\' {BACKTICK})* [\n]?)+ | ([^`\n] | '\\' {BACKTICK})+
+SINGLE_BACKTICK_CONTENT = (([^`] | '\\' {BACKTICK})* [\n])? ({MARKDOWN_DOCUMENTATION_LINE_START} ([^`] | '\\' {BACKTICK})* [\n]?)+ | ([^`] | '\\' {BACKTICK})+
 SINGLE_BACKTICK_MARKDOWN_START = {BACKTICK}
 SINGLE_BACKTICK_MARKDOWN_END =  {BACKTICK}
 
