@@ -127,7 +127,7 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
     private void registerIconWidget(Project project) {
         BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
         if (iconWidget != null) {
-            iconWidget.setIcon(BallerinaIcons.FILE);
+            iconWidget.setIcon(BallerinaIcons.BAL_ICON);
             iconWidget.setTooltipText(BallerinaSdkService.getInstance().getBallerinaVersion(project));
         }
     }
