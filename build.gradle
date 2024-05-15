@@ -16,37 +16,39 @@
  */
 
 plugins {
-    id 'org.jetbrains.intellij' version '1.16.1'
+    id 'org.jetbrains.intellij'
+    id 'java'
+    id 'checkstyle'
+    id 'com.github.spotbugs'
 }
 
-version = ballerinaPluginVersion
-
-repositories {
+ repositories {
+    gradlePluginPortal()
     mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
+version = project.ballerinaPluginVersion
+
 dependencies {
-    implementation 'com.github.ballerina-platform:lsp4intellij:0.96.1'
+    implementation group: "com.github.ballerina-platform", name: "lsp4intellij", version: "${lsp4IntellijVersion}"
 }
 
 intellij {
-    version = ideaVersion
-    pluginName = ballerinaPluginName
+    version = project.ideaVersion
+    pluginName = project.ballerinaPluginName
     type = 'IC'
-
     plugins = []
 }
 
 tasks.withType(JavaCompile) {
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
 }
 
-
 patchPluginXml {
-    sinceBuild = '222'
-    untilBuild = '241.*'
+    sinceBuild = project.sinceBuild
+    untilBuild = project.untilBuild
 }
 
 signPlugin {
@@ -67,18 +69,45 @@ sourceSets {
     }
 }
 
-apply plugin: 'checkstyle'
-checkstyle {
-    toolVersion = checkStyleVersion
-    configFile  rootProject.file("/src/main/resources/checkstyle/checkstyle.xml")
-    checkstyleMain {
-        source = fileTree("src/main/java")
-        include '**/*.java'
+spotbugsMain {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "low"
+    reportsDir = file("$project.buildDir/reports/spotbugs")
+    def excludeFile = file("${rootDir}/build-config/spotbugs-exclude.xml")
+    if (excludeFile.exists()) {
+        it.excludeFilter = excludeFile
     }
-    checkstyleTest {
-        source = fileTree("src/test/java")
+    reports {
+        text.enabled = true
     }
 }
 
+spotbugsTest {
+    enabled = false
+}
+
+tasks.withType(Checkstyle) {
+    exclude '**/module-info.java'
+}
+
+checkstyle {
+    toolVersion = project.checkStyleVersion
+    configFile file("${rootDir}/build-config/checkstyle/build/checkstyle.xml")
+    configProperties = ["suppressionFile": file("${rootDir}/build-config/checkstyle/build/suppressions.xml")]
+}
+
+checkstyleMain {
+    source = fileTree("src/main/java")
+    classpath = sourceSets.main.compileClasspath
+    include '**/*.java'
+}
+
+checkstyleTest {
+    source = fileTree("src/test/java")
+    classpath = sourceSets.test.compileClasspath
+}
+
+build.dependsOn check
 runIde.dependsOn check
 buildPlugin.dependsOn check
