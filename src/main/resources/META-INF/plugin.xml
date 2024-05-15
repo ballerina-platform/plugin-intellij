@@ -144,6 +144,12 @@
                 overrides="true" text="Reformat Code"/>
         <action class="org.wso2.lsp4intellij.actions.LSPShowReformatDialogAction" id="ShowReformatFileDialog"
                 use-shortcut-of="ShowReformatFileDialog" overrides="true" text="Show Reformat File Dialog"/>
+        <action id="CreateBallerinaFile"
+                class="io.ballerina.plugins.idea.actions.BallerinaCreateFileAction"
+                text="Create Ballerina File"
+                description="Creates a new Ballerina file">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
     </actions>
     <applicationListeners>
         <listener class="org.wso2.lsp4intellij.listeners.VFSListener"

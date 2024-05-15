@@ -40,6 +40,7 @@ public class BallerinaIcons {
     public static final Icon APPLICATION_TEST = createIconWithShift(BAL_ICON, AllIcons.Nodes.JunitTestMark);
     public static final Icon RUN = AllIcons.RunConfigurations.TestState.Run;
     public static final Icon PACKAGE = PlatformIcons.FOLDER_ICON;
+    public static final Icon MAIN = AllIcons.Nodes.Method;
     public static final Icon TEST = AllIcons.RunConfigurations.TestState.Green2;
     public static final Icon RECURSIVE = AllIcons.Gutter.RecursiveMethod;
     public static final Icon FUNCTION = createIconWithShift(AllIcons.Nodes.Field, AllIcons.Nodes.RunnableMark);
