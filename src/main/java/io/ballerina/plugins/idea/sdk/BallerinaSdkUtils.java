@@ -174,7 +174,7 @@ public class BallerinaSdkUtils {
     }
 
     public static boolean isOldVersion(String version) {
-        return version.toLowerCase().contains("ballerina 1.2.");
+        return version.toLowerCase().startsWith("ballerina 1.");
     }
 
     public static boolean isValidSdk(String path, String version) {

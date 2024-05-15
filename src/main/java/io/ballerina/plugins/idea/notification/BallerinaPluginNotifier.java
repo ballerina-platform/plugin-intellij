@@ -52,7 +52,7 @@ public class BallerinaPluginNotifier {
         Notification notification = NotificationGroupManager.getInstance()
                 .getNotificationGroup("Ballerina Plugin Notifications")
                 .createNotification("Use Ballerina Swan Lake.", NotificationType.INFORMATION)
-                .setTitle("Invalid Ballerina version detected.")
+                .setTitle("Older Ballerina version detected.")
                 .setContent("This plugin only supports Ballerina Swan Lake versions." +
                         " Please install Ballerina Swan Lake.")
                 .addAction(NotificationAction.createSimple("Download Ballerina Swan Lake", () -> {
