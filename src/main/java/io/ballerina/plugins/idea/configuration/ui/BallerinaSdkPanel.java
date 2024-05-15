@@ -69,6 +69,7 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
     private static final String SYSTEM_BAL_VERSION = "[System Ballerina version] ";
     private static final String BALLERINA_SWAN_LAKE = "Ballerina Swan Lake";
     private static final String INVALID_BAL_SDK_PATH = "Invalid Ballerina SDK path selected";
+    private static final String NO_SDK = "No SDK";
     private static final String NO_VALID_BAL_SDK = "No valid Ballerina SDK found";
     private static final String LABEL_TEXT = "Ballerina SDK Path:";
     private static final String CHECKBOX_TEXT = "Use custom Ballerina SDK";
@@ -190,7 +191,12 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
                 selectedSdkPath = savedPath;
                 selectedSdkVersion = savedVersion;
             } else {
-                if (BallerinaSdkUtils.isValidSdk(systemBalPath, systemBalVersion)) {
+                if (savedPath.isEmpty() || savedVersion.isEmpty()) {
+                    sdkSettingsTextField.setText(EMPTY_STRING);
+                    sdkSettingsTextField.setForeground(defaultColor);
+                    selectedSdkVersion = EMPTY_STRING;
+                    selectedSdkPath = EMPTY_STRING;
+                } else if (BallerinaSdkUtils.isValidSdk(systemBalPath, systemBalVersion)) {
                     sdkVersionComboBox.setSelectedIndex(0);
                     sdkSettingsTextField.setText(EMPTY_STRING);
                     selectedSdkPath = systemBalPath;
@@ -212,8 +218,12 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
                 sdkVersiontoPathMap.put(sdk.getVersion(), sdk.getPath());
             }
         }
+        sdkVersionComboBox.addItem(NO_SDK);
         sdkVersionComboBox.addItem(ADD_BAL_SDK);
         sdkVersionComboBox.setEnabled(useCustomSdkCheckbox.isSelected());
+        if (selectedSdkPath.isEmpty() && selectedSdkVersion.isEmpty()) {
+            sdkVersionComboBox.setSelectedItem(NO_SDK);
+        }
     }
 
     private void setupCheckBoxListener() {
@@ -241,10 +251,19 @@ public class BallerinaSdkPanel implements BallerinaSettingsPanel {
         sdkVersionComboBox.addActionListener(e -> {
             if (ADD_BAL_SDK.equals(sdkVersionComboBox.getSelectedItem())) {
                 handleCustomFolderSelection();
+            } else if (NO_SDK.equals(sdkVersionComboBox.getSelectedItem())) {
+                handleNoSdkSelection();
             } else {
                 handleDetectedPathsSelection();
             }
         });
+    }
+
+    private void handleNoSdkSelection() {
+        sdkSettingsTextField.setText(EMPTY_STRING);
+        sdkSettingsTextField.setForeground(defaultColor);
+        selectedSdkVersion = EMPTY_STRING;
+        selectedSdkPath = EMPTY_STRING;
     }
 
     private void handleCustomFolderSelection() {

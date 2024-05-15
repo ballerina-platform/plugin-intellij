@@ -87,7 +87,11 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
                 ApplicationManager.getApplication().invokeLater(() -> {
                     widget.setMessage(EMPTY_STRING);
                     if (!BallerinaSdkUtils.isValidVersion(balVersion)) {
-                        BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
+                        if (BallerinaSdkUtils.isOldVersion(balVersion)) {
+                            BallerinaPluginNotifier.notifyToUseSwanLake(project);
+                        } else {
+                            BallerinaPluginNotifier.notifyBallerinaNotDetected(project);
+                        }
                     } else {
                         balSdkFound = true;
                         registerIconWidget(project);
@@ -123,7 +127,7 @@ public class BallerinaEditorFactoryListener implements EditorFactoryListener {
     private void registerIconWidget(Project project) {
         BallerinaIconWidget iconWidget = BallerinaIconWidgetFactory.getWidget(project);
         if (iconWidget != null) {
-            iconWidget.setIcon(BallerinaIcons.FILE);
+            iconWidget.setIcon(BallerinaIcons.BAL_ICON);
             iconWidget.setTooltipText(BallerinaSdkService.getInstance().getBallerinaVersion(project));
         }
     }

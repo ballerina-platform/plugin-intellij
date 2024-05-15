@@ -170,7 +170,11 @@ public class BallerinaSdkUtils {
     }
 
     public static boolean isValidVersion(String version) {
-        return version != null && !version.isEmpty();
+        return version != null && !version.isEmpty() && !isOldVersion(version);
+    }
+
+    public static boolean isOldVersion(String version) {
+        return version.toLowerCase().startsWith("ballerina 1.");
     }
 
     public static boolean isValidSdk(String path, String version) {
@@ -226,6 +230,7 @@ public class BallerinaSdkUtils {
                     }
                 }
             }
+            sdkList.sort((sdk1, sdk2) -> sdk2.getVersion().compareTo(sdk1.getVersion()));
             return sdkList;
         } catch (Exception e) {
             LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina SDKs from the path: "

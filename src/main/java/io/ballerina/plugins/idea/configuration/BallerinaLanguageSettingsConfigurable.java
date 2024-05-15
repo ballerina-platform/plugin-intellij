@@ -151,6 +151,10 @@ public class BallerinaLanguageSettingsConfigurable implements Configurable {
     }
 
     private boolean isSdkChanged() {
+        if (sdkSelectionUI.getSelectedSdkPath().isEmpty()
+            && sdkSelectionUI.getSelectedSdkVersion().isEmpty()) {
+            return true;
+        }
         String currentBalPath
                 = BallerinaSdkUtils.findBalDistFolder(BallerinaSdkService.getInstance().getBallerinaPath(project));
         String selectedBalPath = BallerinaSdkUtils.findBalDistFolder(sdkSelectionUI.getSelectedSdkPath());
