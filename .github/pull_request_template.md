@@ -14,12 +14,10 @@ Fixes #<Issue Number>
 
 ## Check List
 - [ ] Read the [Contributing Guide](https://github.com/ballerina-platform/ballerina-lang/blob/master/CONTRIBUTING.md)
-- [ ] Checked Tooling Support (#<Issue Number>)
+- [ ] Added/updated necessary documentation
+- [ ] Checked Tooling Support
 - [ ] Added necessary tests
    - [ ] Unit Tests
    - [ ] Integration Tests
 - [ ] Increased Test Coverage
-- [ ] Added necessary documentation
-   - [ ] API documentation
-   - [ ] Module documentation in Module.md files
-   - [ ] Ballerina By Examples
+
