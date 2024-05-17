@@ -2,21 +2,22 @@
 
 The following features are supported by the plugin, as listed below.
 
-- [Running Ballerina Programs](#running-ballerina-programs)
-- [Import modules On-the-fly](#import-modules-on-the-fly)
-- [Find Usage](#find-usage)
-- [Go to Definition](#go-to-definition)
+- [Running ballerina programs](#running-ballerina-programs)
+- [Running ballerina tests](#running-ballerina-tests)
+- [Import modules on-the-fly](#import-modules-on-the-fly)
+- [Find usage](#find-usage)
+- [Go to definition](#go-to-definition)
 - [Formatting](#formatting)
 - [Signature help](#signature-help)
-- [Quick Documentation](#quick-documentation)
+- [Quick documentation](#quick-documentation)
 - [Code completions](#code-completions)
-- [Code snippets](#code-snippets)
+- [Live templates](#live-templates)
 - [Code actions](#code-actions)
 - [Error diagnostics](#error-diagnostics)
-- [File Templates](#file-templates)
-- [Spell Checking](#spell-checking)
+- [File templates](#file-templates)
+- [Spell checking](#spell-checking)
 
-## Running Ballerina Programs
+## Running ballerina programs
 
 You can run Ballerina main/service programs with only few clicks. You don't have to add or change any configurations.
 You can click on the gutter icon, right click menu or the run button
@@ -24,27 +25,34 @@ to execute a ballerina program.
 
 ![alt text](images/run.gif)
 
-You can also run ballerina tests easily like running ballerina programs with right click actions and gutter icons.
-
-![alt text](images/test.gif)
-
-You can customize run configurations with custom environment variables, command options and program arguments.
+You can customize run configurations with custom environment variables, command options and program arguments. The same configuration options
+are available for running ballerina tests as well.
 
 ![alt text](images/runConfig.png)
 
-## Import Modules On-the-fly
+## Running ballerina tests
+
+You can also run ballerina tests easily like running ballerina programs with right click actions and gutter icons.
+You can run individual test functions by clicking the gutter icon next to it.
+Package level test can be run by right-clicking on a package test file or
+a package root level ballerina file. Module level test can be run by right-clicking on a module test file or a module root level ballerina file.
+
+![alt text](images/test.gif)
+
+
+## Import Modules on-the-fly
 
 This feature adds import declarations on the fly. All you need to do is to select the module name from the lookup list and then the module declaration will be added automatically.
 
 ![alt text](images/import.gif)
 
-## Find Usage
+## Find usage
 
 You can find usage of variables, functions, etc.
 
 ![alt text](images/usage.gif)
 
-## Go to Definition
+## Go to definition
 
 You can go to definition of variables, function invocations, etc by `Ctrl`+`Click` on the reference.
 
@@ -62,7 +70,7 @@ You can view the required parameters of a functions, remote functions, etc. afte
 
 ![alt text](images/signature.gif)
 
-## Quick Documentation
+## Quick documentation
 
 You can view the documentation of a functions, remote functions, etc by pressing `Ctrl`+`Q` or hovering over the element while pressing `Ctrl`.
 
@@ -74,9 +82,9 @@ Completion suggestions are provided for all identifiers, keywords, module import
 
 ![alt text](images/completions.gif)
 
-## Code Snippets
+## Live templates
 
-Code snippets contain boilerplate codes and allows you to enter them easily. This will be available in completion suggestions.
+Live templates contain boilerplate codes and allows you to enter them easily. This will be available in completion suggestions.
 
 ![alt text](images/snippet.gif)
 
@@ -94,7 +102,7 @@ These errors and warnings will be highlighted and you can view the error message
 
 ![alt text](images/diagnostics.gif)
 
-## File Templates
+## File templates
 
 Three types of Ballerina file templates are available.
 1) Ballerina Main - Contains a sample main program
@@ -103,7 +111,7 @@ Three types of Ballerina file templates are available.
 
 ![alt text](images/fileTemp.gif)
 
-## Spell Checking
+## Spell checking
 
 Spell checking is enabled for all identifiers, comments and markdown text. You can get the suggested words by clicking the code action bulb.
 

@@ -5,7 +5,7 @@
 After opening a ballerina file, the plugin will automatically detect the default ballerina SDK in the system.
 If the default system ballerina SDK is not detected, and if a custom SDK is not set, the plugin will prompt you to add an SDK.
 
-### SDK Configuration
+### Custom SDK Configuration
 
 You can configure custom ballerina SDKs by going to **Settings -> Languages and Frameworks -> Ballerina -> SDK settings**.
 
