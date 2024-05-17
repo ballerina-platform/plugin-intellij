@@ -1,46 +1,35 @@
 ## Setting up Ballerina SDK
 
-### 1) When Creating a New Ballerina Project
+### SDK Auto Detection
 
-1) Go to **File -> New -> Project** and select **Ballerina** project and select **Next**.
+After opening a ballerina file, the plugin will automatically detect the default ballerina SDK in the system.
+If the default system ballerina SDK is not detected, and if a custom SDK is not set, the plugin will prompt you to add an SDK.
 
-![alt text](images/Figure-1-1.png)
+### SDK Configuration
 
-2) If you have previously configured the Ballerina SDKs, they will appear in the next window. You can select a SDK and continue with project creation by selecting **Next**.
+You can configure custom ballerina SDKs by going to **Settings -> Languages and Frameworks -> Ballerina -> SDK settings**.
 
-![alt text](images/Figure-1-2.png)
+1. Tick **Use custom Ballerina SDK** to enable custom selecting SDKs. Otherwise, the plugin will use the default system SDK.
 
-If the Ballerina SDK was not configured previously, you can add a new Ballerina SDK by selecting **Configure**.
 
-![alt text](images/Figure-1-2-2.png)
+![img_1.png](images/sdkPage.png)
 
-3) Select the Ballerina distribution location.
 
-![alt text](images/Figure-1-3.png)
+2. Click the dropdown to select the custom SDK.
 
-4) Now you have successfully added the Ballerina SDK. You can select **Next** and continue with project creation.
+    
+![img_2.png](images/availableSdks.png)
 
-![alt text](images/Figure-1-2.png)
 
-### 2) After Creating a Ballerina Project
+3. Select an available SDK or add a new SDK by clicking the `Add Ballerina SDK` option. You can also select `No SDK` to disable the plugin from using an SDK.
 
-1) Go to **File -> Project Structure** and select **Project** tab. If you have previously added the Ballerina SDK, you can select the SDK from the drop down menu.
 
-![alt text](images/Figure-2-1-1.png)
+4. If you selected `Add Ballerina SDK` option, you will be prompted to select the Ballerina distribution location.
 
-If a Ballerina SDK is not added previously, you can add a new SDK by selecting the **New** button under the **Project SDK** and selecting **Ballerina SDK**.
+    
+![img_4.png](images/sdkFolderSelection.png)
 
-![alt text](images/Figure-2-1-2.png)
+5. Click `Apply` and `OK` to save the changes.
 
-2) Select the Ballerina distribution location.
-
-![alt text](images/Figure-2-2.png)
-
-3) Now you have successfully added the Ballerina SDK to the project.
-
-![alt text](images/Figure-2-3.png)
-
-4) Select **OK** or **Apply** to save changes.
-
-  >**NOTE:** A restart request will pop-up after applying added/changed project SDK and please continue by choosing 
-  `Continue` to restart IDEA and apply the SDK changes.
+    >**NOTE:** A restart request will pop-up after applying added/changed project SDK and please continue by choosing 
+    `Restart` to restart IDEA and apply the SDK changes.
