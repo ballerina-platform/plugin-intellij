@@ -16,6 +16,7 @@ The following features are supported by the plugin, as listed below.
 - [Error diagnostics](#error-diagnostics)
 - [File templates](#file-templates)
 - [Spell checking](#spell-checking)
+- [Code folding](#code-folding)
 
 ## Running ballerina programs
 
@@ -117,4 +118,25 @@ Spell checking is enabled for all identifiers, comments and markdown text. You c
 
 ![alt text](images/spell.gif)
 
+## Code folding
 
+Following code content can be folded.
+
+- Import declarations
+
+  ![alt text](images/importFolding.png)
+
+- Markdown documentation
+
+  ![alt text](images/markdownFolding.png)
+
+- Comments
+
+  ![alt text](images/commentFolding.png)
+- Braced content
+
+  ![alt text](images/braceFolding.png)
+
+- Brace pipe content
+
+  ![alt text](images/bracePipeFolding.png)

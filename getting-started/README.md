@@ -1,5 +1,6 @@
 # Getting started
 
-1. [How to Install.](../README.md#how-to-install)
-2. [Setting up Ballerina SDK.](setting-up-ballerina-sdk)
-3. [Writing Hello World in Ballerina.](writing-hello-world)
+1. [How to install.](plugin-installation/README.md#installing-the-plugin)
+2. [Using the plugin.](using-the-plugin/README.md#using-the-plugin)
+3. [Plugin features](plugin-features/README.md#plugin-features)
+4. [Plugin developer guide](plugin-developer-guide/README.md#plugin-developer-guide)
