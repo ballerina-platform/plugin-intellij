@@ -2,129 +2,139 @@
 
 The following features are supported by the plugin, as listed below.
 
-- [Running Ballerina Programs](#running-ballerina-programs)
-- [Debugging Ballerina Programs](#debugging-ballerina-programs) 
-- [Diagram View](#diagram-view)
-- [Import modules On-the-fly](#import-modules-on-the-fly)
-- [Auto Import Unambiguous Modules](#auto-import-unambiguous-modules)
-- [Find Usage](#find-usage)
-- [Go to Definition](#go-to-definition)
+- [Running Ballerina programs](#running-ballerina-programs)
+- [Running Ballerina tests](#running-ballerina-tests)
+- [Import modules on-the-fly](#import-modules-on-the-fly)
+- [Find usage](#find-usage)
+- [Go to definition](#go-to-definition)
 - [Formatting](#formatting)
-- [Parameter Information](#parameter-information)
-- [Quick Documentation](#quick-documentation)
-- [Object/Record Fields suggestions](#objectrecord-fields-suggestions)
-- [Annotation fields suggestions](#annotation-fields-suggestions)
-- [File Templates](#file-templates)
-- [Live Templates and Code snippets](#live-templates-and-code-snippets)
-- [Spell Checking](#spell-checking)
-- [Semantic Analyzing](#semantic-analyzing) 
+- [Signature help](#signature-help)
+- [Quick documentation](#quick-documentation)
+- [Code completions](#code-completions)
+- [Live templates](#live-templates)
+- [Code actions](#code-actions)
+- [Error diagnostics](#error-diagnostics)
+- [File templates](#file-templates)
+- [Spell checking](#spell-checking)
+- [Code folding](#code-folding)
 
-## Running Ballerina Programs 
+## Running Ballerina programs
 
 You can run Ballerina main/service programs with only few clicks. You don't have to add or change any configurations.
+You can click on the gutter icon, right click menu or the run button
+to execute a ballerina program.
 
-![alt text](images/RunConfig.gif)
+![alt text](images/run.gif)
 
-## Debugging Ballerina Programs 
+You can customize run configurations with custom environment variables, command options and program arguments. The same configuration options
+are available for running ballerina tests as well.
 
-You can debug Ballerina main/service programs with only few clicks as well.
+![alt text](images/runConfig.png)
 
-![alt text](images/DebugSupport.gif)
+## Running Ballerina tests
 
-## Diagram View
+You can also run ballerina tests easily like running ballerina programs with right click actions and gutter icons.
+You can run individual test functions by clicking the gutter icon next to it.
+Package level test can be run by right-clicking on a package test file or
+a package root level ballerina file. Module level test can be run by right-clicking on a module test file or a module root level ballerina file.
 
-The underlying language semantics of Ballerina were designed by modeling how independent parties communicate via structured interactions. 
-Subsequently, every Ballerina program can be displayed as a sequence diagram of its flow with endpoints including synchronous and asynchronous calls.
-To view the sequence diagram of a ballerina file, click the diagram icon  
-( ![design view icon](https://raw.githubusercontent.com/ballerina-platform/ballerina-lang/2fd0bdd4e7d081adf23901ed65eca32623d81889/tool-plugins/vscode/docs/show-diagram-icon.png) ) 
-in the top right corner of the IDE window.
+![alt text](images/test.gif)
 
-![alt text](images/DiagramView.gif)
 
-## Import Modules On-the-fly
+## Import Modules on-the-fly
 
 This feature adds import declarations on the fly. All you need to do is to select the module name from the lookup list and then the module declaration will be added automatically.
 
-![alt text](images/AutoImports.gif)
+![alt text](images/import.gif)
 
-## Auto Import Unambiguous Modules
-
-When you copy and paste some Ballerina code, this feature automatically imports unambiguous imports. Then you can manually import any modules with ambiguity by clicking on the module name and pressing `Alt + Enter` keys.
-
-**Note:** Please note that this feature is disabled by default since this might cause issues if the file contains 
-grammar mistakes. 
-You can enable it by selecting the **Add unambiguous imports on the fly** CheckBox in **Settings -> Languages and Frameworks -> Ballerina -> Auto Imports**.
-
-![alt text](images/AutoImports2.gif)
-
-## Find Usage
+## Find usage
 
 You can find usage of variables, functions, etc.
 
-![alt text](images/FindUsage.gif)
+![alt text](images/usage.gif)
 
-## Go to Definition
+## Go to definition
 
 You can go to definition of variables, function invocations, etc by `Ctrl`+`Click` on the reference.
 
-![alt text](images/GoToDefinition.gif)
+![alt text](images/definition.gif)
 
 ## Formatting
 
 You can reformat the Ballerina codes by pressing `Ctrl`+`Alt`+`L`.
 
-![alt text](images/Formatting.gif)
+![alt text](images/format.gif)
 
-## Parameter Information
+## Signature help
 
-You can view the required parameters of a functions, remote functions, etc. by pressing `Ctrl`+`P`.
+You can view the required parameters of a functions, remote functions, etc. after adding parenthesis or comma while typing
 
-![alt text](images/ParameterInfo.gif)
+![alt text](images/signature.gif)
 
-## Quick Documentation
+## Quick documentation
 
-You can view the documentation of a functions, remote functions, etc by pressing `Ctrl`+`Q` or hovering over the element while pressing `Ctrl`. 
+You can view the documentation of a functions, remote functions, etc by pressing `Ctrl`+`Q` or hovering over the element while pressing `Ctrl`.
 
-![alt text](images/QuickDocumentation.gif)
+![alt text](images/hover.gif)
 
-## Object/Record Fields Suggestions
+## Code completions
 
-Fields are suggested inside the objects/records after initializing braces and the dot operator.
+Completion suggestions are provided for all identifiers, keywords, module imports, etc.
 
-![alt text](images/StructFields.gif)
+![alt text](images/completions.gif)
 
-## Annotation Fields Suggestions
+## Live templates
 
-Annotation field names are suggested inside annotation attachments.
+Live templates contain boilerplate codes and allows you to enter them easily. This will be available in completion suggestions.
 
-![alt text](images/AnnotationFields.gif)
+![alt text](images/snippet.gif)
 
-## File Templates
+## Code actions
+
+Code actions are provided for various purposes such as adding missing imports, fixing code errors, adding missing documentation, etc.
+Click on the light bulb icon or press `Alt`+`Enter` to view the available code actions after placing the cursor on the error or the code.
+
+![alt text](images/codeActions.gif)
+
+## Error diagnostics
+
+Ballerina IDEA plugin provides semantic analyzing and diagnostics capabilities through Ballerina Language Server.  
+These errors and warnings will be highlighted and you can view the error messages by hovering over the highlighted code.
+
+![alt text](images/diagnostics.gif)
+
+## File templates
 
 Three types of Ballerina file templates are available.
 1) Ballerina Main - Contains a sample main program
 2) Ballerina Service - Contains a sample service
 3) Empty File
 
-![alt text](images/FileTemplates.gif)
+![alt text](images/fileTemp.gif)
 
-## Live Templates and Code Snippets
+## Spell checking
 
-Live templates/code snippets contain boilerplate codes and allows you to enter them easily. All available live templates can be viewed/changed at **Settings -> Editor -> Live Templates -> Ballerina**.
+Spell checking is enabled for all identifiers, comments and markdown text. You can get the suggested words by clicking the code action bulb.
 
-![alt text](images/LiveTemplates.gif)
+![alt text](images/spell.gif)
 
-## Spell Checking
+## Code folding
 
-Spell checking is enabled for all identifiers. You can rename all of the definitions and references as well.
+Following code content can be folded.
 
-![alt text](images/SpellChecking.gif)
+- Import declarations
 
-## Semantic Analyzing
+  ![alt text](images/importFolding.png)
 
-Ballerina IDEA plugin provides semantic analyzing and diagnostics capabilities through Ballerina Language Server.  
-**Note:** This feature is disabled by default due to performance related reasons. You can enable this in `Settings ->
- Languages & Frameworks -> Ballerina -> Semantic Analyzer`.
+- Markdown documentation
 
-![alt text](images/SemanticAnalyzer.png)
+  ![alt text](images/markdownFolding.png)
+
+- Comments
+
+  ![alt text](images/commentFolding.png)
+
+- Braced content
+
+  ![alt text](images/braceFolding.png)
 
