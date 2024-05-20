@@ -2,8 +2,8 @@
 
 The following features are supported by the plugin, as listed below.
 
-- [Running ballerina programs](#running-ballerina-programs)
-- [Running ballerina tests](#running-ballerina-tests)
+- [Running Ballerina programs](#running-ballerina-programs)
+- [Running Ballerina tests](#running-ballerina-tests)
 - [Import modules on-the-fly](#import-modules-on-the-fly)
 - [Find usage](#find-usage)
 - [Go to definition](#go-to-definition)
@@ -18,7 +18,7 @@ The following features are supported by the plugin, as listed below.
 - [Spell checking](#spell-checking)
 - [Code folding](#code-folding)
 
-## Running ballerina programs
+## Running Ballerina programs
 
 You can run Ballerina main/service programs with only few clicks. You don't have to add or change any configurations.
 You can click on the gutter icon, right click menu or the run button
@@ -31,7 +31,7 @@ are available for running ballerina tests as well.
 
 ![alt text](images/runConfig.png)
 
-## Running ballerina tests
+## Running Ballerina tests
 
 You can also run ballerina tests easily like running ballerina programs with right click actions and gutter icons.
 You can run individual test functions by clicking the gutter icon next to it.
@@ -133,10 +133,8 @@ Following code content can be folded.
 - Comments
 
   ![alt text](images/commentFolding.png)
+
 - Braced content
 
   ![alt text](images/braceFolding.png)
 
-- Brace pipe content
-
-  ![alt text](images/bracePipeFolding.png)
