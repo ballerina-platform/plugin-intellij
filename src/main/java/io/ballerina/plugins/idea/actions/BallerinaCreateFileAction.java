@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,79 +12,67 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.actions;
 
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.util.NlsContexts;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import icons.BallerinaIcons;
+import io.ballerina.plugins.idea.BallerinaIcons;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
-
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_SRC_DIR_NAME;
 
 /**
- * Handles creating new Ballerina files.
+ * Add option to create a new ballerina files in a right click action.
+ *
+ * @since 2.0.0
  */
-public class BallerinaCreateFileAction extends CreateFileFromTemplateAction implements DumbAware {
+public class BallerinaCreateFileAction extends CreateFileFromTemplateAction {
 
-    private static final String BALLERINA_EMPTY_FILE = "Ballerina File";
-    private static final String BALLERINA_MAIN = "Ballerina Main";
-    private static final String BALLERINA_SERVICE = "Ballerina Service";
-
-    private static final String NEW_BALLERINA_FILE = "Ballerina File";
-    private static final String DEFAULT_BALLERINA_TEMPLATE_PROPERTY = "Empty file";
+    private static final String BALLERINA_FILE_TEMPLATE = "Ballerina_File";
+    private static final String BALLERINA_MAIN_TEMPLATE = "Ballerina_Main";
+    private static final String BALLERINA_SERVICE_TEMPLATE = "Ballerina_Service";
 
     public BallerinaCreateFileAction() {
-        super(NEW_BALLERINA_FILE, "", BallerinaIcons.ICON);
+        super("Ballerina File", "Create a new Ballerina file", BallerinaIcons.BAL_ICON);
     }
 
     @Override
-    protected void buildDialog(Project project, PsiDirectory directory,
+    protected void buildDialog(@NotNull Project project, @NotNull PsiDirectory directory,
                                @NotNull CreateFileFromTemplateDialog.Builder builder) {
+        builder.setTitle("New Ballerina File")
+                .addKind("Ballerina File", BallerinaIcons.BAL_ICON, BALLERINA_FILE_TEMPLATE)
+                .addKind("Ballerina Main", BallerinaIcons.MAIN, BALLERINA_MAIN_TEMPLATE)
+                .addKind("Ballerina Service", BallerinaIcons.SERVICE, BALLERINA_SERVICE_TEMPLATE)
+                .setValidator(new InputValidator() {
+                    @Override
+                    public boolean checkInput(String inputString) {
+                        return !inputString.isEmpty() && !inputString.contains(" ");
+                    }
 
-        if (directory.getName().equals(BALLERINA_SRC_DIR_NAME)) {
-            Messages.showWarningDialog("In a project, ballerina source files can only reside within ballerina " +
-                    "modules.", "Warning");
-        }
-        builder.setTitle(NEW_BALLERINA_FILE).addKind(BALLERINA_MAIN, BallerinaIcons.ICON, BALLERINA_MAIN)
-                .addKind(BALLERINA_SERVICE, BallerinaIcons.ICON, BALLERINA_SERVICE)
-                .addKind(BALLERINA_EMPTY_FILE, BallerinaIcons.ICON, BALLERINA_EMPTY_FILE);
+                    @Override
+                    public boolean canClose(String inputString) {
+                        return checkInput(inputString);
+                    }
+                });
     }
 
-    @Nullable
+    @Override
+    protected String getActionName(@NotNull PsiDirectory directory, @NotNull String newName, String templateName) {
+        return "Create Ballerina File " + newName;
+    }
+
     @Override
     protected String getDefaultTemplateProperty() {
-        return DEFAULT_BALLERINA_TEMPLATE_PROPERTY;
-    }
-
-    @NotNull
-    @Override
-    protected String getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
-        return NEW_BALLERINA_FILE;
-    }
-
-
-    @Override
-    protected void postProcess(PsiFile createdElement, String templateName, Map<String, String> customProperties) {
-
+        return BALLERINA_FILE_TEMPLATE;
     }
 
     @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof BallerinaCreateFileAction;
+    protected @NlsContexts.DialogTitle @NotNull String getErrorTitle() {
+        return "Error Creating Ballerina File";
     }
 }

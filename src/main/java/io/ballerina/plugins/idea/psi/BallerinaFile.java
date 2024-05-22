@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.psi;
@@ -23,13 +24,12 @@ import io.ballerina.plugins.idea.BallerinaFileType;
 import io.ballerina.plugins.idea.BallerinaLanguage;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.Icon;
-
 /**
- * Represents a ballerina file.
+ * Represents a Ballerina file in the PSI tree, serving as the root for Ballerina language constructs.
+ *
+ * @since 2.0.0
  */
 public class BallerinaFile extends PsiFileBase {
-
     public BallerinaFile(@NotNull FileViewProvider viewProvider) {
         super(viewProvider, BallerinaLanguage.INSTANCE);
     }
@@ -43,11 +43,6 @@ public class BallerinaFile extends PsiFileBase {
     @Override
     public String toString() {
         return "Ballerina File";
-    }
-
-    @Override
-    public Icon getIcon(int flags) {
-        return super.getIcon(flags);
     }
 
 }

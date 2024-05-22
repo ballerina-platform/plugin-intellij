@@ -1,50 +1,49 @@
 /*
- *  Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
+
 package io.ballerina.plugins.idea.sdk;
 
-
-import org.jetbrains.annotations.Nullable;
-
 /**
- * Ballerina sdk properties and capabilities.
+ * Represents Ballerina SDK with version and path.
+ *
+ * @since 2.0.0
  */
 public class BallerinaSdk {
+    private String version;
+    private String path;
 
-    @Nullable
-    private String sdkPath;
-    private boolean langServerSupport;
-    private boolean webviewSupport;
-
-    public BallerinaSdk(@Nullable String sdkPath, boolean langServerSupport, boolean webviewSupport) {
-        this.sdkPath = sdkPath;
-        this.langServerSupport = langServerSupport;
-        this.webviewSupport = webviewSupport;
+    public BallerinaSdk(String path, String version) {
+        this.version = version;
+        this.path = path;
     }
 
-    public boolean hasLangServerSupport() {
-        return langServerSupport;
+    public String getVersion() {
+        return version;
     }
 
-    public boolean hasWebviewSupport() {
-        return webviewSupport;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    @Nullable
-    public String getSdkPath() {
-        //If the project does not have a ballerina SDK attached, ballerinaSdkPath will be null.
-        return sdkPath;
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

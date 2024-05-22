@@ -11,6 +11,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+
 /out/
 *.*~
 /Ballerina-Intellij-plugin.zip
@@ -21,3 +22,6 @@ hs_err_pid*
 /Ballerina-Intellij-plugin.iml
 /plugin-intellij.iws
 !/gradle/wrapper/gradle-wrapper.jar
+
+BallerinaParsingTest.log
+todo.txt

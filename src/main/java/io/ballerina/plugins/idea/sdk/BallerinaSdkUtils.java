@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,573 +12,371 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.sdk;
 
-import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
-import io.ballerina.plugins.idea.configuration.BallerinaProjectSettings;
-import io.ballerina.plugins.idea.preloading.BallerinaCmdException;
-import io.ballerina.plugins.idea.preloading.OSUtils;
-import io.ballerina.plugins.idea.project.BallerinaApplicationLibrariesService;
-import io.ballerina.plugins.idea.project.BallerinaLibrariesService;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.util.SlowOperations;
+import io.ballerina.plugins.idea.OSUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
-import static com.intellij.util.containers.ContainerUtil.newLinkedHashSet;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_CMD;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_COMPOSER_LIB_PATH;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_CONFIG_FILE_NAME;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_EXECUTABLE_NAME;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_EXEC_PATH;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_HOME_CMD;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_LS_LAUNCHER_NAME;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_LS_LAUNCHER_PATH;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_NEW_VERSION_FILE_PATH;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_PLUGIN_ID;
-import static io.ballerina.plugins.idea.BallerinaConstants.BALLERINA_VERSION_FILE_PATH;
-import static io.ballerina.plugins.idea.preloading.OSUtils.MAC;
-import static io.ballerina.plugins.idea.preloading.OSUtils.UNIX;
-import static io.ballerina.plugins.idea.preloading.OSUtils.WINDOWS;
+import static io.ballerina.plugins.idea.BallerinaConstants.BAL_LOG_PREFIX;
+import static io.ballerina.plugins.idea.BallerinaConstants.EMPTY_STRING;
 
 /**
  * Contains util classes related to Ballerina SDK.
+ *
+ * @since 2.0.0
  */
 public class BallerinaSdkUtils {
 
     private static final Logger LOG = Logger.getInstance(BallerinaSdkUtils.class);
-    private static final Key<String> VERSION_DATA_KEY = Key.create("BALLERINA_VERSION_KEY");
+    private static final String BAL_VERSION_CMD = "bal -v";
+    private static final String BAL_VERSION = "-v";
+    private static final String BAL_HOME_CMD = "bal home";
+    private static final String BAL_HOME = "home";
+    private static final String BAL_NAME = "Ballerina";
+    private static final String WINDOWS_BAL_EXECUTABLE = "bal.bat";
+    private static final String UNIX_BAL_EXECUTABLE = "bal";
+    private static final String BIN_DIR = "bin";
+    private static final String BAL_DIST_DIR_NAME_START = "ballerina-";
+    private static final String BAL_WINDOWS_ENV_VARIABLE = "BALLERINA_HOME";
+    private static final String WINDOWS_BAL_DIST_DIR_NAME = "Program Files";
+    private static final String UNIX_USR_DIR = "/usr";
+    private static final String UNIX_LIB_DIR = "lib";
+    private static final String BAL_DIST_DIR_NAME = "distributions";
+    private static final String MAC_LIBRARY_DIR = "/Library";
+    private static final String WINDOWS_C_DRIVE = "C:";
 
-    // Sem-var compatible version pattern prior to Swan Lake release.
-    public static final Pattern BALLERINA_OLD_VERSION_PATTERN = Pattern.compile("(\\d+\\.\\d+(\\.\\d+)?(-.+)?)");
-
-    // Swan lake release version constants.
-    public static final Pattern BALLERINA_SWANLAKE_VERSION_PATTERN = Pattern.compile("(swan[-_]?lake)");
-    private static final String BALLERINA_SWAN_LAKE_VERSION_TEXT = "2.0.0-SwanLake";
-
-    private static final String INSTALLER_PATH_UNIX = "/usr/bin/ballerina";
-    private static final String INSTALLER_PATH_MAC = "/etc/paths.d/ballerina";
-    private static final String HOMEBREW_PATH_MAC = "/usr/local/bin/ballerina";
-    // Todo
-    private static final String INSTALLER_PATH_WINDOWS = "C:\\Program Files\\Ballerina\\ballerina";
-
-    private BallerinaSdkUtils() {
-    }
-
-    @Nullable
-    public static VirtualFile suggestSdkDirectory() {
-        if (SystemInfo.isWindows) {
-            return ObjectUtils.chooseNotNull(LocalFileSystem.getInstance().findFileByPath("C:\\ballerina"), null);
-        }
-        if (SystemInfo.isMac || SystemInfo.isLinux) {
-            String fromEnv = suggestSdkDirectoryPathFromEnv();
-            if (fromEnv != null) {
-                return LocalFileSystem.getInstance().findFileByPath(fromEnv);
-            }
-            VirtualFile usrLocal = LocalFileSystem.getInstance().findFileByPath("/usr/local/ballerina");
-            if (usrLocal != null) {
-                return usrLocal;
-            }
-        }
-        if (SystemInfo.isMac) {
-            String macPorts = "/opt/local/lib/ballerina";
-            String homeBrew = "/usr/local/Cellar/ballerina";
-            File file = FileUtil.findFirstThatExist(macPorts, homeBrew);
-            if (file != null) {
-                return LocalFileSystem.getInstance().findFileByIoFile(file);
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private static String suggestSdkDirectoryPathFromEnv() {
-        File fileFromPath = PathEnvironmentVariableUtil.findInPath("ballerina");
-        if (fileFromPath != null) {
-            File canonicalFile;
-            try {
-                canonicalFile = fileFromPath.getCanonicalFile();
-                String path = canonicalFile.getPath();
-                if (path.endsWith(BALLERINA_EXEC_PATH)) {
-                    return StringUtil.trimEnd(path, BALLERINA_EXEC_PATH);
-                }
-            } catch (IOException ignore) {
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static String retrieveBallerinaVersion(@NotNull String sdkPath) {
+    public static Optional<String> getBallerinaVersion() {
         try {
-            // need this hack to avoid an IDEA bug caused by "AssertionError: File accessed outside allowed roots"
-            VfsRootAccess.allowRootAccess(sdkPath);
-
-            VirtualFile sdkRoot = VirtualFileManager.getInstance().findFileByUrl(VfsUtilCore.pathToUrl(sdkPath));
-            if (sdkRoot != null) {
-                String cachedVersion = sdkRoot.getUserData(VERSION_DATA_KEY);
-                if (!stringIsNullOrEmpty(cachedVersion)) {
-                    return cachedVersion;
-                }
-
-                VirtualFile versionFile = sdkRoot.findFileByRelativePath(BALLERINA_VERSION_FILE_PATH);
-                if (versionFile == null) {
-                    VfsRootAccess.allowRootAccess();
-                    versionFile = sdkRoot.findFileByRelativePath(BALLERINA_NEW_VERSION_FILE_PATH);
-                }
-                // Please note that if the above versionFile is null, we can check on other locations as well.
-                if (versionFile != null) {
-                    String text = VfsUtilCore.loadText(versionFile);
-                    String version = parseBallerinaVersion(text);
-                    if (version == null) {
-                        BallerinaSdkService.LOG.debug("Cannot retrieve Ballerina version from version file: " + text);
-                    }
-                    sdkRoot.putUserData(VERSION_DATA_KEY, StringUtil.notNullize(version));
-                    return version;
-                } else {
-                    BallerinaSdkService.LOG.debug("Cannot find Ballerina version file in sdk path: " + sdkPath);
-                }
+            Optional<String> version = runCommand(BAL_VERSION_CMD);
+            if (version.isPresent()) {
+                LOG.info(BAL_LOG_PREFIX + " Ballerina version: " + version.get());
+                return version;
             }
+            Optional<Path> balBinPath = getDefaultInstallationPath();
+            if (balBinPath.isPresent()) {
+                LOG.info(BAL_LOG_PREFIX + " Ballerina bin path: " + balBinPath.get());
+                if (OSUtils.isWindows()) {
+                    return runCommand(balBinPath.get().toString(), BAL_VERSION);
+                }
+                return runCommand(balBinPath.get() + " " + BAL_VERSION);
+            }
+            LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
+            return Optional.empty();
         } catch (Exception e) {
-            BallerinaSdkService.LOG.debug("Cannot retrieve Ballerina version from sdk path: " + sdkPath, e);
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina version: ", e);
+            return Optional.empty();
         }
-        return null;
     }
 
-    @NotNull
-    public static String getMajorVersion(@NotNull String version) {
-        return version.contains(".") ? version.replace('-', '.').split("[.]")[0] : "";
-    }
-
-    @NotNull
-    public static String getMinorVersion(@NotNull String version) {
-        return version.contains(".") ? version.replace('-', '.').split("[.]")[1] : "";
-    }
-
-    @Nullable
-    public static String getBallerinaPluginVersion() {
-        IdeaPluginDescriptor balPluginDescriptor = PluginManager.getPlugin(PluginId.getId(BALLERINA_PLUGIN_ID));
-        if (balPluginDescriptor != null) {
-            return balPluginDescriptor.getVersion();
-        }
-        return null;
-    }
-
-    @NotNull
-    public static String adjustSdkPath(@NotNull String path) {
-        return path;
-    }
-
-    @Nullable
-    public static String parseBallerinaVersion(@NotNull String text) {
-        // Checks for versions prior to Swan Lake release.
-        Matcher matcher = BALLERINA_OLD_VERSION_PATTERN.matcher(text);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        // Checks for swan lake specific version patterns.
-        Matcher swanLakeMatcher = BALLERINA_SWANLAKE_VERSION_PATTERN.matcher(text);
-        if (swanLakeMatcher.find()) {
-            return BALLERINA_SWAN_LAKE_VERSION_TEXT;
-        }
-        return null;
-    }
-
-    @NotNull
-    public static Collection<VirtualFile> getSdkDirectoriesToAttach(@NotNull String sdkPath,
-                                                                    @NotNull String versionString) {
-        return ContainerUtil.createMaybeSingletonList(getSdkSrcDir(sdkPath, versionString));
-    }
-
-    @Nullable
-    private static VirtualFile getSdkSrcDir(@NotNull String sdkPath, @NotNull String sdkVersion) {
-        String srcPath = getSrcLocation(sdkVersion);
-        VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(
-                VfsUtilCore.pathToUrl(FileUtil.join(sdkPath, srcPath)));
-        return file != null && file.isDirectory() ? file : null;
-    }
-
-    @NotNull
-    public static BallerinaSdk getBallerinaSdkFor(Project project, Module module) {
-        String sdkPath = BallerinaSdkService.getInstance(project).getSdkHomePath(module);
-        if (sdkPath == null) {
-            return new BallerinaSdk(null, false, false);
-        }
-        if (!isValidSdk(sdkPath)) {
-            return new BallerinaSdk(null, false, false);
-        }
-        boolean langServerSupport = hasLangServerSupport(sdkPath);
-        boolean webviewSupport = hasWebviewSupport(sdkPath);
-        return new BallerinaSdk(sdkPath, langServerSupport, webviewSupport);
-    }
-
-    @NotNull
-    public static BallerinaSdk getBallerinaSdkFor(Project project) {
-
-        Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
-
-        if (projectSdk == null) {
-            return new BallerinaSdk(null, false, false);
-        }
-        String sdkPath = projectSdk.getHomePath();
-
-        if (!isValidSdk(sdkPath)) {
-            return new BallerinaSdk(null, false, false);
-        }
-        boolean langServerSupport = hasLangServerSupport(sdkPath);
-        boolean webviewSupport = hasWebviewSupport(sdkPath);
-        return new BallerinaSdk(sdkPath, langServerSupport, webviewSupport);
-    }
-
-    /**
-     * @return an empty string if it fails to auto-detect the ballerina home automatically.
-     */
-    public static String autoDetectSdk(Project project) throws BallerinaCmdException {
-
-        // Checks for the user-configured auto detection settings.
-        if (!BallerinaProjectSettings.getStoredSettings(project).isAutodetect()) {
-            return "";
-        }
-
-        String ballerinaPath = "";
+    public static Optional<String> getBallerinaPath() {
         try {
-            ballerinaPath = execBalHomeCmd(String.format("%s %s", BALLERINA_CMD, BALLERINA_HOME_CMD));
-        } catch (BallerinaCmdException ignored) {
-            // We don nothing here as we need to fallback for default installer specific locations, since "ballerina"
-            // commands might not work because of the IntelliJ issue of PATH variable might not being identified by
-            // the IntelliJ java runtime.
-        }
-        if (ballerinaPath.isEmpty()) {
-            // Todo - Verify
-            // Tries for default installer based locations since "ballerina" commands might not work
-            // because of the IntelliJ issue of PATH variable might not being identified by the IntelliJ java
-            // runtime.
-            String routerScriptPath = getByDefaultPath();
             if (OSUtils.isWindows()) {
-                ballerinaPath = execBalHomeCmd(String.format("\"%s\" %s", routerScriptPath, BALLERINA_HOME_CMD));
+                Optional<String> version = runCommand(BAL_VERSION_CMD);
+                if (version.isEmpty()) {
+                    Optional<Path> balBinPath = getDefaultInstallationPath();
+                    if (balBinPath.isPresent()) {
+                        version = runCommand(balBinPath.get().toString(), BAL_VERSION);
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina version: " + version.orElse(EMPTY_STRING));
+                    } else {
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
+                        return Optional.empty();
+                    }
+                }
+                if (version.isEmpty()) {
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found");
+                    return version;
+                }
+                Map<String, String> env = System.getenv();
+                String [] versionParts = version.get().split(" ");
+                if (versionParts.length < 2) {
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found: " + version.get());
+                    return Optional.empty();
+                }
+                for (Map.Entry<String, String> entry : env.entrySet()) {
+                    if (Objects.equals(entry.getKey(), BAL_WINDOWS_ENV_VARIABLE)) {
+                        String path = entry.getValue();
+                        path = Paths.get(path, BAL_DIST_DIR_NAME, BAL_DIST_DIR_NAME_START
+                                                + version.get().split(" ")[1],
+                                        BIN_DIR, WINDOWS_BAL_EXECUTABLE)
+                                .normalize().toString();
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina path: " + path);
+                        return Optional.of(path);
+                    }
+                }
+                LOG.info(BAL_LOG_PREFIX + "Ballerina path is not found");
+                return Optional.empty();
             } else {
-                ballerinaPath = execBalHomeCmd(String.format("%s %s", routerScriptPath, BALLERINA_HOME_CMD));
+                Optional<String> home = runCommand(BAL_HOME_CMD);
+                if (home.isEmpty()) {
+                    Optional<Path> balBinPath = getDefaultInstallationPath();
+                    if (balBinPath.isPresent()) {
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + balBinPath.get());
+                        home = runCommand(balBinPath.get() + " " + BAL_HOME);
+                    } else {
+                        LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found");
+                        return Optional.empty();
+                    }
+                }
+                LOG.info(BAL_LOG_PREFIX + "Ballerina home: " + home.orElse(EMPTY_STRING));
+                return home.map(s -> Paths.get(s, BIN_DIR, UNIX_BAL_EXECUTABLE).normalize().toString());
             }
-        }
-
-        return ballerinaPath;
-    }
-
-    /**
-     * Executes ballerina home command and returns the result.
-     *
-     * @param cmd command to be executed.
-     * @return ballerina distribution location.
-     */
-    public static String execBalHomeCmd(String cmd) throws BallerinaCmdException {
-        java.util.Scanner s;
-        // This may returns a symlink which links to the real path.
-        try {
-            s = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A");
-
-            String path = s.hasNext() ? s.next().trim().replace(System.lineSeparator(), "").trim() : "";
-            LOG.info(String.format("%s command returned: %s", cmd, path));
-
-            // Todo - verify
-            // Since errors might be coming from the input stream when retrieving ballerina distribution path, we need
-            // an additional check.
-            if (!new File(path).exists()) {
-                throw new BallerinaCmdException(String.format("unexpected output received by \"%s\" command. " +
-                        "received output: %s", cmd, path));
-            }
-            return path;
-        } catch (IOException e) {
-            throw new BallerinaCmdException("Unexpected error occurred when executing ballerina command: " + cmd, e);
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 
-    /**
-     * Tries for default installer based locations since "ballerina" commands might not work
-     * because of the IntelliJ issue of PATH variable might not being identified by the IntelliJ java
-     * runtime.
-     */
-    public static String getByDefaultPath() {
+    public static boolean isValidPath(String path) {
         try {
-            String path = getDefaultPath();
+            if (path == null || path.isEmpty()) {
+                LOG.info(BAL_LOG_PREFIX + "Ballerina path is empty: " + path);
+                return false;
+            }
+            path = BallerinaSdkUtils.getNormalizedPath(path);
+            File file = new File(path);
+            if (!file.exists()) {
+                LOG.info(BAL_LOG_PREFIX + "Ballerina path does not exist: " + path);
+                return false;
+            }
+
+            String executableName = file.getName();
+
+            if ((OSUtils.isWindows() && !executableName.equals(WINDOWS_BAL_EXECUTABLE)) ||
+                    (!OSUtils.isWindows() && !executableName.equals(UNIX_BAL_EXECUTABLE))) {
+                LOG.info(BAL_LOG_PREFIX + "Ballerina executable is not found: " + path);
+                return false;
+            }
+
+            return file.canExecute();
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while validating the Ballerina path: " + path, e);
+            return false;
+        }
+    }
+
+    public static boolean isValidVersion(String version) {
+        return version != null && !version.isEmpty() && !isOldVersion(version);
+    }
+
+    public static boolean isOldVersion(String version) {
+        return version.toLowerCase().startsWith("ballerina 1.");
+    }
+
+    public static boolean isValidSdk(String path, String version) {
+        return isValidPath(path) && isValidVersion(version);
+    }
+
+    public static String getVersionFromPath(String path) {
+        try {
+            if (isValidPath(path)) {
+                path = BallerinaSdkUtils.getNormalizedPath(path);
+                String version = Paths.get(path).getParent().getParent().getFileName().toString();
+                version = version.replace('b', 'B').replace('-', ' ');
+                String [] parts = version.split("\\.");
+                if (parts.length < 2) {
+                    LOG.info(BAL_LOG_PREFIX + "Ballerina version is not found for the path: '" + path
+                            + "' Version: " + version);
+                    return EMPTY_STRING;
+                }
+                String update = version.split("\\.")[1];
+                version = version + " (Swan Lake Update " + update + ")";
+                return isValidVersion(version) ? version : EMPTY_STRING;
+            }
+            LOG.info(BAL_LOG_PREFIX + "Ballerina path is not valid: " + path);
+            return EMPTY_STRING;
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina version from the path: "
+                    + path, e);
+            return EMPTY_STRING;
+        }
+    }
+
+    public static List<BallerinaSdk> getBallerinaSdks(String ballerinaPath) {
+        List<BallerinaSdk> sdkList = new ArrayList<>();
+        try {
+            if (isValidPath(ballerinaPath)) {
+                ballerinaPath = BallerinaSdkUtils.getNormalizedPath(ballerinaPath);
+                File sdkDir = new File(ballerinaPath);
+                File distRoot = sdkDir.getParentFile().getParentFile().getParentFile();
+                File[] files = distRoot.listFiles((current, name) -> new File(current, name).isDirectory() &&
+                        name.startsWith(BAL_DIST_DIR_NAME_START));
+                if (files != null) {
+                    for (File file : files) {
+                        String version = file.getName()
+                                .replace('b', 'B').replace('-', ' ');
+                        String update = version.split("\\.")[1];
+                        version = String.format("%s (Swan Lake Update %s)", version, update);
+                        String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
+                        Path sdkPath =
+                                Paths.get(file.getAbsolutePath(), BIN_DIR, executableName).normalize();
+                        if (isValidSdk(sdkPath.toString(), version)) {
+                            sdkList.add(new BallerinaSdk(sdkPath.toString(), version));
+                        }
+                    }
+                }
+            }
+            sdkList.sort((sdk1, sdk2) -> sdk2.getVersion().compareTo(sdk1.getVersion()));
+            return sdkList;
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina SDKs from the path: "
+                    + ballerinaPath, e);
+            return sdkList;
+        }
+    }
+
+    public static String findBalDistFolder(String initialPath) {
+        try {
+            File current = new File(Paths.get(initialPath).normalize().toString());
+
+            while (current != null) {
+                if (current.getName().toLowerCase().contains(BAL_DIST_DIR_NAME_START)) {
+                    return BallerinaSdkUtils.getNormalizedPath(current.getAbsolutePath());
+                }
+                current = current.getParentFile();
+            }
+            LOG.info(BAL_LOG_PREFIX + "Ballerina distribution folder is not found: " + initialPath);
+            return EMPTY_STRING;
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while finding the Ballerina distribution folder: "
+                    + initialPath, e);
+            return EMPTY_STRING;
+        }
+    }
+
+    public static String getBalBatFromDist(String distPath) {
+        try {
+            Path path = Paths.get(distPath).normalize();
+            String lastElement = path.getFileName().toString();
+
+            String executableName = OSUtils.isWindows() ? WINDOWS_BAL_EXECUTABLE : UNIX_BAL_EXECUTABLE;
+
+            if (BIN_DIR.equals(lastElement)) {
+                return path.resolve(executableName).toString();
+            } else {
+                return path.resolve(Paths.get(BIN_DIR, executableName)).toString();
+            }
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bat from the distribution: "
+                    + distPath, e);
+            return EMPTY_STRING;
+        }
+    }
+
+    public static String getNormalizedPath(String path) {
+        try {
             if (path.isEmpty()) {
-                return path;
+                LOG.info(BAL_LOG_PREFIX + " Path is empty: " + path);
+                return EMPTY_STRING;
             }
-            // Resolves actual path using "toRealPath()".
-            return new File(path).toPath().toRealPath().toString();
+            return Paths.get(path).normalize().toString();
         } catch (Exception e) {
-            LOG.warn("Error occurred when resolving symlinks to auto detect ballerina home.");
-            return "";
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while normalizing the path: " + path, e);
+            return EMPTY_STRING;
         }
     }
 
-    private static String getDefaultPath() {
-        String os = OSUtils.getOperatingSystem();
-        switch (os) {
-            case UNIX:
-                return INSTALLER_PATH_UNIX;
-            case MAC:
-                return getMacDefaultPath();
-            case WINDOWS:
-                return getWinDefaultPath();
-            default:
-                return "";
+    private static Optional<String> runCommand(String... cmd) {
+        SlowOperations.assertSlowOperationsAreAllowed();
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        String [] commands = new String[cmd.length + 2];
+        if (OSUtils.isWindows()) {
+            commands[0] = "cmd";
+            commands[1] = "/c";
+        } else {
+            commands[0] = "sh";
+            commands[1] = "-c";
         }
-    }
+        System.arraycopy(cmd, 0, commands, 2, cmd.length);
+        processBuilder.command(commands);
 
-    private static String getWinDefaultPath() {
         try {
-            String pluginVersion = getBallerinaPluginVersion();
-            if (pluginVersion == null) {
-                return "";
+            Process process = processBuilder.start();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = reader.readLine();
+                LOG.info(BAL_LOG_PREFIX + " '" + Arrays.toString(cmd) + "' command output: " + line);
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    LOG.info(BAL_LOG_PREFIX + " '" + Arrays.toString(cmd) + "' Exit code: " + exitCode);
+                    return Optional.empty();
+                }
+                return line == null || line.isEmpty() ? Optional.empty() : Optional.of(line);
             }
-            String routerPath = String.join("-", INSTALLER_PATH_WINDOWS, pluginVersion);
-            return Paths.get(routerPath, "bin", "ballerina.bat").toString();
         } catch (Exception e) {
-            LOG.warn("Error occurred when trying to auto detect using default installation path.", e);
-            return "";
+            LOG.error(BAL_LOG_PREFIX + " '" + Arrays.toString(cmd)
+                    + "' Error occurred while running the command: ", e);
+            return Optional.empty();
         }
     }
 
-    private static String getMacDefaultPath() {
+    private static Optional<Path> getDefaultInstallationPathMac() {
         try {
-            Stream<String> stream = Files.lines(Paths.get(INSTALLER_PATH_MAC), StandardCharsets.UTF_8);
-            StringBuilder contentBuilder = new StringBuilder();
-            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-            String balHomePath = contentBuilder.toString().trim();
-            balHomePath = !stringIsNullOrEmpty(balHomePath) && balHomePath.endsWith("/bin") ?
-                    balHomePath.replace("/bin", "/bin/ballerina") : "";
-
-            // If a ballerina router script does not exist in this directory, falls-back to homebrew specific symlinks.
-            if (balHomePath.isEmpty() || !new File(balHomePath).exists()) {
-                return HOMEBREW_PATH_MAC;
+            Path path = Paths.get(MAC_LIBRARY_DIR, BAL_NAME, BIN_DIR, UNIX_BAL_EXECUTABLE).normalize();
+            if (path.toFile().exists()) {
+                LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
+                return Optional.of(path);
             }
-            return balHomePath;
-        } catch (Exception ignored) {
-            return "";
+            LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
+            return Optional.empty();
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bin path for Mac: ", e);
+            return Optional.empty();
         }
     }
 
-    private static boolean isValidSdk(String sdkPath) {
-
-        if (stringIsNullOrEmpty(sdkPath)) {
-            return false;
-        }
-        // Checks for either shell scripts or batch files, since the shell script recognition error in windows.
-        String balShellScript = Paths.get(sdkPath, "bin", BALLERINA_EXECUTABLE_NAME).toString();
-        String balBatchScript = Paths.get(sdkPath, "bin", BALLERINA_EXECUTABLE_NAME).toString() + ".bat";
-
-        return (new File(balShellScript).exists() || new File(balBatchScript).exists());
-    }
-
-    private static boolean hasLangServerSupport(String sdkPath) {
-
-        if (stringIsNullOrEmpty(sdkPath)) {
-            return false;
-        }
-        // Checks for either shell scripts or batch files, since the shell script recognition error in windows.
-        String launcherShellScript = Paths.get(sdkPath, BALLERINA_LS_LAUNCHER_PATH,
-                BALLERINA_LS_LAUNCHER_NAME).toString() + ".sh";
-        String launcherBatchScript = Paths.get(sdkPath, BALLERINA_LS_LAUNCHER_PATH,
-                BALLERINA_LS_LAUNCHER_NAME).toString() + ".bat";
-
-        return new File(launcherShellScript).exists() || new File(launcherBatchScript).exists();
-    }
-
-    private static boolean hasWebviewSupport(String sdkPath) {
-
-        if (stringIsNullOrEmpty(sdkPath)) {
-            return false;
-        }
-        // Checks for composer library resource directory existence.
-        String composerLib = Paths.get(sdkPath, BALLERINA_COMPOSER_LIB_PATH).toString();
-        return new File(composerLib).exists();
-    }
-
-    public static LinkedHashSet<VirtualFile> getSourcesPathsToLookup(@NotNull Project project, @Nullable Module
-            module) {
-        LinkedHashSet<VirtualFile> sdkAndBallerinaPath = newLinkedHashSet();
-        ContainerUtil.addIfNotNull(sdkAndBallerinaPath, getSdkSrcDir(project, module));
-        // Todo  - add Ballerina Path
-        // ContainerUtil.addAllNotNull(sdkAndBallerinaPath, getBallerinaPathSources(project, module));
-        return sdkAndBallerinaPath;
-    }
-
-    @NotNull
-    private static String getSrcLocation(@NotNull String version) {
-        return "src";
-    }
-
-    public static String getSdkHome(Project project, Module module) {
-        // Get the module SDK.
-        Sdk moduleSdk = ModuleRootManager.getInstance(module).getSdk();
-        // If the SDK is Ballerina SDK, return the home path.
-        if (moduleSdk != null && moduleSdk.getSdkType() == BallerinaSdkType.getInstance()) {
-            return moduleSdk.getHomePath();
-        }
-        // Ge the project SDK.
-        Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
-        // If the SDK is Ballerina SDK, return the home path.
-        if (projectSdk != null && projectSdk.getSdkType() == BallerinaSdkType.getInstance()) {
-            return projectSdk.getHomePath();
-        }
-        return "";
-    }
-
-    @NotNull
-    public static Collection<VirtualFile> getBallerinaPathsRootsFromEnvironment() {
-
-        return BallerinaPathModificationTracker.getBallerinaEnvironmentPathRoots();
-    }
-
-    @NotNull
-    private static List<VirtualFile> getInnerBallerinaPathSources(@NotNull Project project, @Nullable Module module) {
-        return ContainerUtil.mapNotNull(getBallerinaPathRoots(project, module), new
-                RetrieveSubDirectoryOrSelfFunction("src"));
-    }
-
-    @NotNull
-    public static Collection<VirtualFile> getBallerinaPathRoots(@NotNull Project project, @Nullable Module module) {
-        Collection<VirtualFile> roots = ContainerUtil.newArrayList();
-        if (BallerinaApplicationLibrariesService.getInstance().isUseBallerinaPathFromSystemEnvironment()) {
-            roots.addAll(getBallerinaPathsRootsFromEnvironment());
-        }
-        roots.addAll(module != null ? BallerinaLibrariesService.getUserDefinedLibraries(module) :
-                BallerinaLibrariesService.getUserDefinedLibraries(project));
-        return roots;
-    }
-
-    private static class RetrieveSubDirectoryOrSelfFunction implements Function<VirtualFile, VirtualFile> {
-        @NotNull
-        private final String mySubdirName;
-
-        public RetrieveSubDirectoryOrSelfFunction(@NotNull String subdirName) {
-            mySubdirName = subdirName;
-        }
-
-        @Override
-        public VirtualFile fun(VirtualFile file) {
-            return file == null || FileUtil.namesEqual(mySubdirName, file.getName()) ? file : file.findChild
-                    (mySubdirName);
-        }
-    }
-
-    @NotNull
-    public static Collection<Module> getBallerinaModules(@NotNull Project project) {
-        if (project.isDefault()) {
-            return Collections.emptyList();
-        }
-        BallerinaSdkService sdkService = BallerinaSdkService.getInstance(project);
-        return ContainerUtil.filter(ModuleManager.getInstance(project).getModules(), sdkService::isBallerinaModule);
-    }
-
-    @Nullable
-    public static VirtualFile getSdkSrcDir(@NotNull Project project, @Nullable Module module) {
-        if (module != null) {
-            return CachedValuesManager.getManager(project).getCachedValue(module, () -> {
-                BallerinaSdkService sdkService = BallerinaSdkService.getInstance(module.getProject());
-                return CachedValueProvider.Result.create(getInnerSdkSrcDir(sdkService, module), sdkService);
-            });
-        }
-        return CachedValuesManager.getManager(project).getCachedValue(project, () -> {
-            BallerinaSdkService sdkService = BallerinaSdkService.getInstance(project);
-            return CachedValueProvider.Result.create(getInnerSdkSrcDir(sdkService, null), sdkService);
-        });
-    }
-
-    /**
-     * Searches for a ballerina project root using outward recursion starting from the file directory, until the given
-     * root directory is found. Returns and empty string if unable to detect any ballerina project under the current
-     * intellij project source root.
-     */
-    public static String searchForBallerinaProjectRoot(String currentPath, String root) {
-
-        if (currentPath.isEmpty() || root.isEmpty()) {
-            return "";
-        }
-
-        File currentDir = new File(currentPath);
-        File[] files = currentDir.listFiles();
-        if (files != null) {
-            for (File f : files) {
-                // Searches for the ballerina config file (Ballerina.toml).
-                if (f.isFile() && f.getName().equals(BALLERINA_CONFIG_FILE_NAME)) {
-                    return currentDir.getAbsolutePath();
-                }
+    private static Optional<Path> getDefaultInstallationPathWindows() {
+        try {
+            Path path = Paths.get(WINDOWS_C_DRIVE, WINDOWS_BAL_DIST_DIR_NAME, BAL_NAME, BIN_DIR, WINDOWS_BAL_EXECUTABLE)
+                    .normalize();
+            if (path.toFile().exists()) {
+                LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
+                return Optional.of(path);
             }
+            LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
+            return Optional.empty();
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bin path for Windows: ", e);
+            return Optional.empty();
         }
-
-        if (currentPath.equals(root) || currentDir.getParentFile() == null) {
-            return "";
-        }
-        return searchForBallerinaProjectRoot(currentDir.getParentFile().getAbsolutePath(), root);
     }
 
-    @Messages.YesNoResult
-    public static void showRestartDialog(Project project) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            String action = project != null && ProjectManagerEx.getInstanceEx().canClose(project) ?
-                    "Reload Project" : "Restart IDE";
-            String message = "Project/IDE reloading action is required to apply changes. Do you wish to continue?";
-            if (Messages.showYesNoDialog(message, "Apply Changes", action, "Postpone",
-                    Messages.getQuestionIcon()) == Messages.YES) {
-                if (action.equals("Reload Project")) {
-                    ProjectManagerEx.getInstanceEx().reloadProject(project);
-                } else {
-                    ApplicationManagerEx.getApplicationEx().restart(true);
-                }
+    private static Optional<Path> getDefaultInstallationPathUnix() {
+        try {
+            Path path = Paths.get(UNIX_USR_DIR, UNIX_LIB_DIR, BAL_NAME, BIN_DIR, UNIX_BAL_EXECUTABLE).normalize();
+            if (path.toFile().exists()) {
+                LOG.info(BAL_LOG_PREFIX + "Ballerina bin path: " + path);
+                return Optional.of(path);
             }
-        });
+            LOG.info(BAL_LOG_PREFIX + "Ballerina bin path is not found: " + path);
+            return Optional.empty();
+        } catch (Exception e) {
+            LOG.error(BAL_LOG_PREFIX + "Error occurred while getting the Ballerina bin path for Unix: ", e);
+            return Optional.empty();
+        }
     }
 
-    @Nullable
-    private static VirtualFile getInnerSdkSrcDir(@NotNull BallerinaSdkService sdkService, @Nullable Module module) {
-        String sdkHomePath = sdkService.getSdkHomePath(module);
-        String sdkVersionString = sdkService.getSdkVersion(module);
-        return sdkHomePath != null && sdkVersionString != null ? getSdkSrcDir(sdkHomePath, sdkVersionString) : null;
-    }
-
-    public static boolean stringIsNullOrEmpty(@Nullable String string) {
-        return string == null || string.isEmpty();
+    private static Optional<Path> getDefaultInstallationPath() {
+        if (OSUtils.isWindows()) {
+            return getDefaultInstallationPathWindows();
+        } else if (OSUtils.isMac()) {
+            return getDefaultInstallationPathMac();
+        } else if (OSUtils.isUnix()) {
+            return getDefaultInstallationPathUnix();
+        }
+        return Optional.empty();
     }
 }

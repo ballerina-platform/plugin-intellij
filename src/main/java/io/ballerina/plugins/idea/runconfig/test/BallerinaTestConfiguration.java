@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,121 +12,64 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.runconfig.test;
 
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RuntimeConfigurationError;
-import com.intellij.execution.configurations.RuntimeConfigurationException;
+import com.intellij.execution.Executor;
+import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizerUtil;
-import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import io.ballerina.plugins.idea.BallerinaConstants;
-import io.ballerina.plugins.idea.psi.BallerinaFile;
-import io.ballerina.plugins.idea.runconfig.BallerinaModuleBasedConfiguration;
-import io.ballerina.plugins.idea.runconfig.BallerinaRunConfigurationWithMain;
-import io.ballerina.plugins.idea.runconfig.RunConfigurationKind;
-import io.ballerina.plugins.idea.runconfig.ui.BallerinaTestSettingsEditor;
-import org.jdom.Element;
+import io.ballerina.plugins.idea.notification.BallerinaPluginNotifier;
+import io.ballerina.plugins.idea.runconfig.BallerinaExecutionConfiguration;
+import io.ballerina.plugins.idea.sdk.BallerinaSdkService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
- * Represents Ballerina test configuration.
+ * Represents Ballerina test run configuration.
+ *
+ * @since 2.0.0
  */
-public class BallerinaTestConfiguration extends BallerinaRunConfigurationWithMain<BallerinaTestRunningState> {
+public class BallerinaTestConfiguration extends BallerinaExecutionConfiguration {
 
-    private static final String PACKAGE_ATTRIBUTE_NAME = "package";
-    private static final String KIND_ATTRIBUTE_NAME = "kind";
-
-    @NotNull
-    private String myPackage = "";
-
-    public BallerinaTestConfiguration(Project project, String name,
-                                      @NotNull ConfigurationType configurationType) {
-        super(name, new BallerinaModuleBasedConfiguration(project), configurationType.getConfigurationFactories()[0]);
+    protected BallerinaTestConfiguration(Project project, ConfigurationFactory factory, String name) {
+        super(project, factory, name, BallerinaTestConfigurationType.EXEC_TYPE);
     }
 
+    @Nullable
     @Override
-    public void readExternal(@NotNull Element element) throws InvalidDataException {
-        super.readExternal(element);
-        myPackage = StringUtil.notNullize(JDOMExternalizerUtil.getFirstChildValueAttribute(element,
-                PACKAGE_ATTRIBUTE_NAME));
+    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
+        if (Objects.equals(BallerinaSdkService.getInstance().getBallerinaVersion(environment.getProject()), "")) {
+            BallerinaPluginNotifier.notifyBallerinaNotDetected(environment.getProject());
+            return null;
+        }
+
+        String sourcePath = getOptions().getSourcePath();
+
         try {
-            String kindName = JDOMExternalizerUtil.getFirstChildValueAttribute(element, KIND_ATTRIBUTE_NAME);
-            myRunKind = kindName != null ? RunConfigurationKind.valueOf(kindName) : RunConfigurationKind.MAIN;
-        } catch (IllegalArgumentException e) {
-            myRunKind = RunConfigurationKind.MAIN;
-        }
-    }
-
-    @Override
-    public void writeExternal(@NotNull Element element) throws WriteExternalException {
-        super.writeExternal(element);
-        JDOMExternalizerUtil.addElementWithValueAttribute(element, KIND_ATTRIBUTE_NAME, myRunKind.name());
-        if (!myPackage.isEmpty()) {
-            JDOMExternalizerUtil.addElementWithValueAttribute(element, PACKAGE_ATTRIBUTE_NAME, myPackage);
-        }
-    }
-
-    @NotNull
-    @Override
-    protected ModuleBasedConfiguration createInstance() {
-        return new BallerinaTestConfiguration(getProject(), getName(), BallerinaTestRunConfigurationType.getInstance());
-    }
-
-    @NotNull
-    @Override
-    public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        return new BallerinaTestSettingsEditor(getProject());
-    }
-
-    @NotNull
-    @Override
-    protected BallerinaTestRunningState newRunningState(@NotNull ExecutionEnvironment env,
-                                                        @NotNull Module module) {
-        return new BallerinaTestRunningState(env, module, this);
-    }
-
-    @Override
-    public void checkConfiguration() throws RuntimeConfigurationException {
-        super.checkBaseConfiguration();
-
-        VirtualFile file = findFile(getFilePath());
-        if (file == null) {
-            throw new RuntimeConfigurationError("Cannot find the specified main file.");
-        }
-        PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
-        if (!(psiFile instanceof BallerinaFile)) {
-            throw new RuntimeConfigurationError("Selected file is not a valid Ballerina file.");
+            Path path = Paths.get(sourcePath).normalize();
+            if (!Files.exists(path)) {
+                throw new IllegalArgumentException("File does not exist");
+            }
+            sourcePath = path.toString();
+        } catch (Exception e) {
+            BallerinaPluginNotifier.customNotification(environment.getProject(), NotificationType.ERROR,
+                    "Invalid path", "Provided path is not valid or does not exist.");
+            return null;
         }
 
-        if (!file.getName().endsWith(BallerinaConstants.BALLERINA_TEST_FILE_SUFFIX)) {
-            throw new RuntimeConfigurationError("Selected file is not a Ballerina test file. File should end with " +
-                    "'" + BallerinaConstants.BALLERINA_TEST_FILE_SUFFIX + "' suffix.");
-        }
-
-        if (getPackage().isEmpty()) {
-            throw new RuntimeConfigurationError("Test files must be in a package.");
-        }
-    }
-
-    @NotNull
-    public String getPackage() {
-        return myPackage;
-    }
-
-    public void setPackage(@NotNull String aPackage) {
-        myPackage = aPackage;
+        return new BallerinaTestState(environment,
+                BallerinaSdkService.getInstance().getBallerinaPath(environment.getProject()),
+                sourcePath, getOptions().getSource(), getOptions().getAdditionalCommands(),
+                getOptions().getProgramArguments(), getOptions().getEnvVars());
     }
 }

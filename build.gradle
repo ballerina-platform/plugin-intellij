@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,84 +16,98 @@
  */
 
 plugins {
-    id "org.jetbrains.intellij" version "0.4.9"
-    id "de.undercouch.download" version "3.4.3"
-    id "org.sonarqube" version "2.6"
+    id 'org.jetbrains.intellij'
+    id 'java'
+    id 'checkstyle'
+    id 'com.github.spotbugs'
 }
 
-version = ballerinaPluginVersion
-
-repositories {
+ repositories {
+    gradlePluginPortal()
     mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
-// LSP Dependencies
+version = project.ballerinaPluginVersion
+
 dependencies {
-    compile group: 'org.eclipse.lsp4j', name: 'org.eclipse.lsp4j', version: '0.8.1'
-    compile group: 'org.eclipse.lsp4j', name: 'org.eclipse.lsp4j.debug', version: '0.7.1'
-    compile group: 'com.vladsch.flexmark', name: 'flexmark', version: '0.34.58'
-    compile group: 'com.github.ballerina-platform', name: 'lsp4intellij', version: '0.94.2'
-    compile group: 'com.github.jknack', name: 'handlebars', version: '4.1.2'
-    configurations.compile.exclude(group: 'org.slf4j', module: 'slf4j-api')
-    configurations.compile.exclude(group: 'com.google.guava', module: 'guava')
+    implementation group: "com.github.ballerina-platform", name: "lsp4intellij", version: "${lsp4IntellijVersion}"
 }
 
-apply plugin: 'java'
+intellij {
+    version = project.ideaVersion
+    pluginName = project.ballerinaPluginName
+    type = 'IC'
+    plugins = []
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+patchPluginXml {
+    sinceBuild = project.sinceBuild
+    untilBuild = project.untilBuild
+}
+
+signPlugin {
+    certificateChain = System.getenv('CERTIFICATE_CHAIN')
+    privateKey = System.getenv('PRIVATE_KEY')
+    password = System.getenv('PRIVATE_KEY_PASSWORD')
+}
+
+publishPlugin {
+    token = System.getenv('PUBLISH_TOKEN')
+}
+
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java', 'src/main/gen']
+            srcDir 'src/main/gen'
         }
     }
 }
 
-apply plugin: 'org.jetbrains.intellij'
-intellij {
-    // For a full list of IntelliJ IDEA releases, please see https://www.jetbrains.com/intellij-repository/releases.
-
-    version ideaVersion
-    pluginName ballerinaPluginName
-    updateSinceUntilBuild false
-    plugins 'java'
-    // plugins 'coverage' //Bundled plugin dependencies
-    // Uncomment this line to test the plugin using small IDEs. Add -Dorg.gradle.project.localIdePath="IDE_HOME_PATH"
-    // VM option in run config.
-    // alternativeIdePath localIdePath
+spotbugsMain {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "low"
+    reportsDir = file("$project.buildDir/reports/spotbugs")
+    def excludeFile = file("${rootDir}/build-config/spotbugs-exclude.xml")
+    if (excludeFile.exists()) {
+        it.excludeFilter = excludeFile
+    }
+    reports {
+        text.enabled = true
+    }
 }
 
-task downloadPsiViewerPlugin(type: Download) {
-    src 'https://plugins.jetbrains.com/plugin/download?updateId=31087'
-    dest new File("${buildDir}/tmp/plugins/", 'PsiViewer.jar')
-    onlyIfNewer true
+spotbugsTest {
+    enabled = false
 }
 
-apply plugin: "jacoco"
-jacoco {
-    toolVersion = "0.8.2"
-    reportsDir = file("$buildDir/customJacocoReportDir")
+tasks.withType(Checkstyle) {
+    exclude '**/module-info.java'
 }
 
-task copyPsiViewerPluginToSandBox(type: Copy) {
-    from "${buildDir}/tmp/plugins/PsiViewer.jar"
-    into "${buildDir}/idea-sandbox/plugins/"
-}
-
-copyPsiViewerPluginToSandBox.dependsOn downloadPsiViewerPlugin
-copyPsiViewerPluginToSandBox.mustRunAfter prepareSandbox
-runIde.dependsOn copyPsiViewerPluginToSandBox
-
-apply plugin: 'checkstyle'
 checkstyle {
-    configFile rootProject.file("src/main/resources/checkstyle/checkstyle.xml")
-    checkstyleMain {
-        source = fileTree("src/main/java")
-        include '**/*.java'
-    }
-    checkstyleTest {
-        source = fileTree("src/test/java")
-    }
+    toolVersion = project.checkStyleVersion
+    configFile file("${rootDir}/build-config/checkstyle/build/checkstyle.xml")
+    configProperties = ["suppressionFile": file("${rootDir}/build-config/checkstyle/build/suppressions.xml")]
 }
 
+checkstyleMain {
+    source = fileTree("src/main/java")
+    classpath = sourceSets.main.compileClasspath
+    include '**/*.java'
+}
+
+checkstyleTest {
+    source = fileTree("src/test/java")
+    classpath = sourceSets.test.compileClasspath
+}
+
+build.dependsOn check
 runIde.dependsOn check
 buildPlugin.dependsOn check

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import icons.BallerinaIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.Icon;
 
 /**
- * Represents a Ballerina file.
+ * Defines the Ballerina file type within IntelliJ-based IDEs. This class associates
+ * Ballerina files with the '.bal' extension to the Ballerina language support.
+ *
+ * @since 2.0.0
  */
-public class BallerinaFileType extends LanguageFileType {
+
+public final class BallerinaFileType extends LanguageFileType {
 
     public static final BallerinaFileType INSTANCE = new BallerinaFileType();
 
@@ -37,7 +41,7 @@ public class BallerinaFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "Ballerina file";
+        return "Ballerina File";
     }
 
     @NotNull
@@ -55,6 +59,6 @@ public class BallerinaFileType extends LanguageFileType {
     @Nullable
     @Override
     public Icon getIcon() {
-        return BallerinaIcons.FILE;
+        return BallerinaIcons.BAL_ICON;
     }
 }

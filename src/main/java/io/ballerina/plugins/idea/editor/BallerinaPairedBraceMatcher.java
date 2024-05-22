@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.editor;
@@ -21,10 +22,15 @@ import com.intellij.lang.BracePair;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.fileTypes.FileType;
 import io.ballerina.plugins.idea.BallerinaLanguage;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Responsible for matching brace highlighting once an brace character is selected in editor.
+ * Implements brace matching for Ballerina language constructs within the IntelliJ IDE, facilitating navigation
+ * and editing of paired constructs.
+ *
+ * @since 2.0.0
  */
+
 public class BallerinaPairedBraceMatcher extends PairedBraceMatcherAdapter {
 
     public BallerinaPairedBraceMatcher() {
@@ -32,12 +38,14 @@ public class BallerinaPairedBraceMatcher extends PairedBraceMatcherAdapter {
     }
 
     @Override
-    public boolean isLBraceToken(HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
+    public boolean isLBraceToken(@NotNull HighlighterIterator iterator, @NotNull CharSequence fileText,
+                                 @NotNull FileType fileType) {
         return isBrace(iterator, fileText, fileType, true);
     }
 
     @Override
-    public boolean isRBraceToken(HighlighterIterator iterator, CharSequence fileText, FileType fileType) {
+    public boolean isRBraceToken(@NotNull HighlighterIterator iterator, @NotNull CharSequence fileText,
+                                 @NotNull FileType fileType) {
         return isBrace(iterator, fileText, fileType, false);
     }
 

@@ -1,0 +1,23 @@
+Ballerina File(0,28)
+  BallerinaModulePartImpl(MODULE_PART)(0,28)
+    BallerinaOtherDeclImpl(OTHER_DECL)(0,28)
+      BallerinaFunctionDefnImpl(FUNCTION_DEFN)(0,28)
+        BallerinaMetadataImpl(METADATA)(0,0)
+          <empty list>
+        BallerinaFunctionQualsImpl(FUNCTION_QUALS)(0,8)
+          BallerinaIsolatedQualImpl(ISOLATED_QUAL)(0,8)
+            PsiElement(BallerinaTokenType.ISOLATED_KEYWORD)('isolated')(0,8)
+        PsiElement(BallerinaTokenType.FUNCTION_KEYWORD)('function')(9,17)
+        PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('foo1')(18,22)
+        BallerinaFunctionSignatureImpl(FUNCTION_SIGNATURE)(22,25)
+          PsiElement(BallerinaTokenType.OPEN_PAREN_TOKEN)('(')(22,23)
+          BallerinaParamListImpl(PARAM_LIST)(23,23)
+            <empty list>
+          PsiElement(BallerinaTokenType.CLOSE_PAREN_TOKEN)(')')(23,24)
+          BallerinaReturnTypeDescriptorImpl(RETURN_TYPE_DESCRIPTOR)(25,25)
+            <empty list>
+        BallerinaFunctionDefnBodyImpl(FUNCTION_DEFN_BODY)(25,28)
+          PsiElement(BallerinaTokenType.OPEN_BRACE_TOKEN)('{')(25,26)
+          BallerinaTokensImpl(TOKENS)(27,27)
+            <empty list>
+          PsiElement(BallerinaTokenType.CLOSE_BRACE_TOKEN)('}')(27,28)

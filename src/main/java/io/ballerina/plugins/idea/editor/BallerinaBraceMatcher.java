@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,40 +12,44 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.ballerina.plugins.idea.editor;
 
-import com.intellij.codeInsight.hint.DeclarationRangeUtil;
 import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiBlockStatement;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassInitializer;
-import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiStatement;
 import com.intellij.psi.tree.IElementType;
 import io.ballerina.plugins.idea.psi.BallerinaTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Responsible for inserting matching closing brace character once an brace character is typed.
+ * Provides matching for brace pairs in Ballerina language files, supporting code folding, structure highlighting,
+ * and navigation within the IntelliJ IDE.
+ *
+ * @since 2.0.0
  */
 public class BallerinaBraceMatcher implements PairedBraceMatcher {
 
     private static final BracePair[] pairs = new BracePair[]{
-            new BracePair(BallerinaTypes.LEFT_PARENTHESIS, BallerinaTypes.RIGHT_PARENTHESIS, false),
-            new BracePair(BallerinaTypes.LEFT_BRACE, BallerinaTypes.RIGHT_BRACE, true),
-            new BracePair(BallerinaTypes.LEFT_BRACKET, BallerinaTypes.RIGHT_BRACKET, false)
+            new BracePair(BallerinaTypes.OPEN_PAREN_TOKEN, BallerinaTypes.CLOSE_PAREN_TOKEN, true),
+            new BracePair(BallerinaTypes.OPEN_BRACE_PIPE_TOKEN, BallerinaTypes.CLOSE_BRACE_PIPE_TOKEN, true),
+            new BracePair(BallerinaTypes.OPEN_NESTED_BRACE_PIPE_TOKEN, BallerinaTypes.CLOSE_NESTED_BRACE_PIPE_TOKEN,
+                    false),
+            new BracePair(BallerinaTypes.IGNORED_OPEN_BRACE_PIPE_TOKEN, BallerinaTypes.IGNORED_CLOSE_BRACE_PIPE_TOKEN,
+                    false),
+            new BracePair(BallerinaTypes.OPEN_BRACE_TOKEN, BallerinaTypes.CLOSE_BRACE_TOKEN, true),
+            new BracePair(BallerinaTypes.OPEN_BRACKET_TOKEN, BallerinaTypes.CLOSE_BRACKET_TOKEN, true),
+            new BracePair(BallerinaTypes.OPEN_NESTED_BRACE_TOKEN, BallerinaTypes.CLOSE_NESTED_BRACE_TOKEN, false),
+            new BracePair(BallerinaTypes.IGNORED_OPEN_BRACE_TOKEN, BallerinaTypes.IGNORED_CLOSE_BRACE_TOKEN, false),
+            new BracePair(BallerinaTypes.INTERPOLATION_START_TOKEN, BallerinaTypes.INTERPOLATION_END_TOKEN, false),
     };
 
     @Override
-    public BracePair[] getPairs() {
+    public BracePair @NotNull [] getPairs() {
         return pairs;
     }
 
@@ -62,21 +66,18 @@ public class BallerinaBraceMatcher implements PairedBraceMatcher {
             return openingBraceOffset;
         }
         PsiElement parent = element.getParent();
-        if (parent instanceof PsiCodeBlock) {
+
+        // Navigate the PSI tree to find the start of the code construct
+        while (parent != null && !(parent instanceof PsiFile)) {
+
             parent = parent.getParent();
-            if (parent instanceof PsiMethod || parent instanceof PsiClassInitializer) {
-                TextRange range = DeclarationRangeUtil.getDeclarationRange(parent);
-                return range.getStartOffset();
-            } else if (parent instanceof PsiStatement) {
-                if (parent instanceof PsiBlockStatement && parent.getParent() instanceof PsiStatement) {
-                    parent = parent.getParent();
-                }
-                return parent.getTextRange().getStartOffset();
-            }
-        } else if (parent instanceof PsiClass) {
-            TextRange range = DeclarationRangeUtil.getDeclarationRange(parent);
-            return range.getStartOffset();
         }
+
+        // Once the desired parent is found, return its start offset
+        if (parent != null) {
+            return parent.getTextRange().getStartOffset();
+        }
+
         return openingBraceOffset;
     }
 }

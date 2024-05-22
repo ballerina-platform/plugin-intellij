@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>io.ballerina</id>
-    <name>Ballerina</name>
-    <version>2.0.0-SwanLake-Preview1</version>
+    <name>Ballerina Swan Lake</name>
+    <version>2.0.0-SNAPSHOT</version>
     <vendor email="ballerinalang@wso2.com" url="https://ballerina.io/">BallerinaLang</vendor>
 
     <description><![CDATA[
-      The Ballerina IntelliJ plugin provides the <a href="https://ballerina.io/">Ballerina</a> development capabilities
+      The Ballerina Swan Lake IntelliJ plugin provides the <a href="https://ballerina.io/">Ballerina Swan Lake</a> development capabilities
       in IntelliJ IDEA.
       <br><br>For instructions on how to download, install, and use the features of the plugin, refer the
       <a href="https://v1-0.ballerina.io/learn/tools-ides/intellij-plugin/">Ballerina IntelliJ plugin Guide</a>.
@@ -13,254 +13,151 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li> Added plugin support for new swan lake syntax. </li>
-        <li> Introduced new simplified plugin settings view. </li>
-        <li> Added ballerina debugger UI improvements. </li>
+        <li> Introduced syntax highlighting support for Ballerina Swan Lake. </li>
       </ul>
     ]]>
     </change-notes>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="192"/>
+    <idea-version since-build="222"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
-    <depends optional="true" config-file="java-deps.xml">com.intellij.modules.java</depends>
-
-    <!--    Todo - Enable after restoring ballerina diagram view-->
-    <!--    <extensionPoints>-->
-    <!--        <extensionPoint-->
-    <!--                interface="io.ballerina.plugins.idea.webview.diagram.preview.HtmlPanelProvider"-->
-    <!--                name="html.panel.provider"/>-->
-    <!--    </extensionPoints>-->
-
-    <module-components>
-        <component>
-            <implementation-class>
-                io.ballerina.plugins.idea.project.BallerinaModuleLibrariesInitializer
-            </implementation-class>
-        </component>
-    </module-components>
 
     <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="Ballerina File"
+                implementationClass="io.ballerina.plugins.idea.BallerinaFileType"
+                fieldName="INSTANCE"
+                language="Ballerina"
+                extensions="bal"/>
 
-        <!--Language Server Based extensions-->
-        <completion.contributor implementationClass="org.wso2.lsp4intellij.contributors.LSPCompletionContributor"
-                                id="LSPCompletionContributor" language="Ballerina"/>
+        <lang.parserDefinition
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.BallerinaParserDefinition"/>
 
-        <externalAnnotator implementationClass="org.wso2.lsp4intellij.contributors.annotator.LSPAnnotator"
-                           id="BallerinaLSPAnnotator" language="Ballerina"/>
+        <lang.syntaxHighlighterFactory
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.highlighting.BallerinaSyntaxHighlighterFactory"/>
 
-        <!--Todo - Enable after restoring the renaming support-->
-        <!---->
-        <!-- <renameHandler implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameHandler"-->
-        <!--                       id="LSPRenameHandler" order="first"/>-->
-        <!-- <renamePsiElementProcessor implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameProcessor"-->
-        <!--           id="LSPRenameProcessor" order="first"/>-->
-
-        <typedHandler implementation="org.wso2.lsp4intellij.listeners.LSPTypedHandler"
-                      id="BallerinaLspTypedHandler"/>
-
-        <!--Ballerina plugin extensions-->
-        <fileTypeFactory implementation="io.ballerina.plugins.idea.BallerinaFileTypeFactory"/>
-
-        <lang.parserDefinition language="Ballerina"
-                               implementationClass="io.ballerina.plugins.idea.BallerinaParserDefinition"/>
-
-        <lang.ast.factory language="Ballerina"
-                          implementationClass="io.ballerina.plugins.idea.BallerinaASTFactory"/>
-
-        <lang.commenter language="Ballerina" implementationClass="io.ballerina.plugins.idea.BallerinaCommenter"/>
-
-        <lang.syntaxHighlighterFactory language="Ballerina"
-                                       implementationClass="io.ballerina.plugins.idea.highlighting.syntax.BallerinaSyntaxHighlighterFactory"/>
-
-        <!--    Todo - Enable after restoring ballerina diagram view-->
-        <!--        <fileEditorProvider-->
-        <!--                implementation="io.ballerina.plugins.idea.webview.diagram.preview.BallerinaSplitEditorProvider"/>-->
-
-        <indexPatternBuilder implementation="io.ballerina.plugins.idea.BallerinaIndexPatternBuilder"/>
-
-        <codeInsight.lineMarkerProvider language="Ballerina"
-                                        implementationClass="io.ballerina.plugins.idea.marker.BallerinaTypeFunctionMarker"/>
-
-        <lang.elementManipulator forClass="io.ballerina.plugins.idea.psi.BallerinaCompletePackageName"
-                                 implementationClass="io.ballerina.plugins.idea.psi.manipulator.BallerinaPackageManipulator"/>
-
-        <spellchecker.support language="Ballerina"
-                              implementationClass="io.ballerina.plugins.idea.spellchecker.BallerinaSpellcheckingStrategy"/>
-
-        <annotator language="Ballerina"
-                   implementationClass="io.ballerina.plugins.idea.highlighting.semantic.BallerinaAnnotator"/>
-
-        <highlightErrorFilter implementation="io.ballerina.plugins.idea.BallerinaHighlightErrorFilter"
-                              id="BallerinaHighlightErrorFilter"/>
-
-        <!-- file templates -->
-        <internalFileTemplate name="Ballerina File"/>
-        <internalFileTemplate name="Ballerina Main"/>
+        <annotator
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.highlighting.BallerinaAnnotator"/>
 
         <lang.braceMatcher language="Ballerina"
                            implementationClass="io.ballerina.plugins.idea.editor.BallerinaPairedBraceMatcher"/>
 
-        <!--folding builder-->
+        <lang.commenter
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.editor.BallerinaCommenter"/>
+
+        <typedHandler implementation="io.ballerina.plugins.idea.editor.BallerinaTypedHandler"/>
+
+        <highlightErrorFilter implementation="io.ballerina.plugins.idea.editor.BallerinaHighlightErrorFilter"
+                              id="BallerinaHighlightErrorFilter"/>
+
+        <editorFactoryListener implementation="io.ballerina.plugins.idea.preloading.BallerinaEditorFactoryListener"/>
+
+        <statusBarWidgetFactory
+                implementation="io.ballerina.plugins.idea.widget.BallerinaDetectionWidgetFactory"
+                id="BallerinaStatusBarWidget"/>
+
+        <statusBarWidgetFactory implementation="io.ballerina.plugins.idea.widget.BallerinaIconWidgetFactory"
+                                id="BallerinaIconWidget"/>
+
+        <notificationGroup id="Ballerina Plugin Notifications"
+                           displayType="BALLOON"
+                           toolWindowId=""
+                           isLogByDefault="true"/>
+
+        <applicationService serviceImplementation="io.ballerina.plugins.idea.sdk.BallerinaSdkSettings"/>
+
+        <applicationService serviceImplementation="io.ballerina.plugins.idea.preloading.BallerinaLSConfigSettings"/>
+
+        <projectConfigurable groupId="language"
+                             instance="io.ballerina.plugins.idea.configuration.BallerinaLanguageSettingsConfigurable"
+                             displayName="Ballerina"/>
+        <configurationType
+                implementation="io.ballerina.plugins.idea.runconfig.application.BallerinaApplicationRunConfigType"/>
+
+        <configurationType
+                implementation="io.ballerina.plugins.idea.runconfig.test.BallerinaTestConfigurationType"/>
+
+        <codeInsight.lineMarkerProvider
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.runconfig.application.BallerinaRunLineMarkerProvider"/>
+
+        <codeInsight.lineMarkerProvider
+                language="Ballerina"
+                implementationClass="io.ballerina.plugins.idea.runconfig.test.BallerinaTestLineMarkerProvider"/>
+
+        <applicationService serviceImplementation="org.wso2.lsp4intellij.IntellijLanguageClient"/>
+
+        <editorFactoryListener implementation="org.wso2.lsp4intellij.listeners.LSPEditorListener"/>
+
+        <fileDocumentManagerListener implementation="org.wso2.lsp4intellij.listeners.LSPFileDocumentManagerListener"/>
+
+        <notificationGroup id="lsp" displayType="STICKY_BALLOON"/>
+
+        <completion.contributor implementationClass="org.wso2.lsp4intellij.contributors.LSPCompletionContributor"
+                                id="org.wso2.lsp4intellij.contributors.LSPCompletionContributor" language="Ballerina"/>
+
+        <typedHandler implementation="org.wso2.lsp4intellij.listeners.LSPTypedHandler"
+                      id="LSPTypedHandler"/>
+
+        <externalAnnotator id="LSPAnnotator" language="Ballerina"
+                           implementationClass="org.wso2.lsp4intellij.contributors.annotator.LSPAnnotator"/>
+
+        <gotoSymbolContributor implementation="org.wso2.lsp4intellij.contributors.symbol.LSPSymbolContributor"
+                               id="LSPSymbolContributor"/>
+
+        <notificationGroup id="LSPProgressNotification"
+                           displayType="NONE"/>
+
+        <editorFactoryMouseMotionListener implementation="io.ballerina.plugins.idea.highlighting.BallerinaIdentifierUnderline"/>
+
         <lang.foldingBuilder language="Ballerina"
                              implementationClass="io.ballerina.plugins.idea.editor.BallerinaFoldingBuilder"/>
 
-        <codeStyleSettingsProvider
-                implementation="io.ballerina.plugins.idea.formatter.settings.BallerinaCodeStyleSettingsProvider"/>
+        <spellchecker.support language="Ballerina"
+                              implementationClass="io.ballerina.plugins.idea.spellchecker.BallerinaSpellcheckingStrategy"/>
 
-        <langCodeStyleSettingsProvider
-                implementation="io.ballerina.plugins.idea.formatter.settings.BallerinaLanguageCodeStyleSettingsProvider"/>
-
-        <!--Quotes Matching Handler-->
-        <typedHandler
-                implementation="io.ballerina.plugins.idea.editor.inserthandlers.BallerinaQuotesInsertHandler"/>
-
-        <!-- Enter Handlers-->
-        <enterHandlerDelegate
-                implementation="io.ballerina.plugins.idea.editor.inserthandlers.BallerinaEnterBetweenBracesHandler"/>
-        <enterHandlerDelegate
-                implementation="io.ballerina.plugins.idea.editor.inserthandlers.BallerinaEnterInDocumentationHandler"/>
-        <enterHandlerDelegate
-                implementation="io.ballerina.plugins.idea.editor.inserthandlers.BallerinaEnterInStringHandler"/>
-
-        <!-- Backspace Handlers-->
-        <backspaceHandlerDelegate id="BallerinaBackspaceHandler" order="first"
-                                  implementation="io.ballerina.plugins.idea.editor.inserthandlers.BallerinaIndentingBackspaceHandler"/>
-
-        <!-- sdk -->
-        <sdkType implementation="io.ballerina.plugins.idea.sdk.BallerinaSdkType"/>
-
-        <library.presentationProvider
-                implementation="io.ballerina.plugins.idea.sdk.BallerinaSdkLibraryPresentationProvider"/>
-        <applicationService serviceImplementation="io.ballerina.plugins.idea.sdk.BallerinaPathModificationTracker"/>
-
-        <projectService serviceInterface="io.ballerina.plugins.idea.sdk.BallerinaSdkService"
-                        serviceImplementation="io.ballerina.plugins.idea.sdk.BallerinaSmallIDEsSdkService"
-                        overrides="false"/>
-
-        <editorNotificationProvider
-                implementation="io.ballerina.plugins.idea.inspections.WrongSdkConfigurationNotificationProvider"/>
-
-        <editorNotificationProvider
-                implementation="io.ballerina.plugins.idea.inspections.VersionMismatchNotificationProvider"/>
-
-        <!-- module -->
-        <moduleType id="BALLERINA_MODULE" implementationClass="io.ballerina.plugins.idea.BallerinaModuleType"/>
-        <moduleConfigurationEditorProvider
-                implementation="io.ballerina.plugins.idea.configuration.BallerinaModuleEditorsProvider"
-                order="first"/>
-
-        <!-- run application -->
-        <programRunner id="ballerinaRunner" implementation="io.ballerina.plugins.idea.runconfig.BallerinaRunner"/>
-        <configurationType
-                implementation="io.ballerina.plugins.idea.runconfig.application.BallerinaApplicationRunConfigurationType"/>
-        <runConfigurationProducer
-                implementation="io.ballerina.plugins.idea.runconfig.application.BallerinaApplicationRunConfigurationProducer"/>
-        <runLineMarkerContributor language="Ballerina"
-                                  implementationClass="io.ballerina.plugins.idea.runconfig.BallerinaRunLineMarkerProvider"/>
-        <!--Todo - Enable after adding support-->
-        <!--<runLineMarkerContributor language="Ballerina"-->
-        <!--implementationClass="org.ballerinalang.plugins.idea.runconfig.BallerinaTestLineMarkerProvider"/>-->
-        <console.folding implementation="io.ballerina.plugins.idea.runconfig.BallerinaConsoleFolding"/>
-
-        <!--remote-->
-        <configurationType
-                implementation="io.ballerina.plugins.idea.runconfig.remote.BallerinaRemoteRunConfigurationType"/>
-        <runConfigurationProducer
-                implementation="io.ballerina.plugins.idea.runconfig.remote.BallerinaRemoteRunConfigurationProducer"/>
-
-        <!-- debugger -->
-        <programRunner id="ballerinaDebugger"
-                       implementation="io.ballerina.plugins.idea.runconfig.BallerinaDebugger"/>
-        <xdebugger.breakpointType
-                implementation="io.ballerina.plugins.idea.debugger.breakpoint.BallerinaBreakPointType"/>
-
-        <!--project-->
-        <applicationService
-                serviceImplementation="io.ballerina.plugins.idea.project.BallerinaApplicationLibrariesService"/>
-        <!--Todo - Enable after restoring the renaming support-->
-        <!--        <applicationService-->
-        <!--                serviceImplementation="io.ballerina.plugins.idea.webview.diagram.settings.DiagramApplicationSettings"/>-->
-        <projectService
-                serviceImplementation="io.ballerina.plugins.idea.project.BallerinaProjectLibrariesService"/>
-
-        <projectConfigurable id="ballerina" groupId="language"
-                             provider="io.ballerina.plugins.idea.configuration.BallerinaConfigurableProvider"
-                             dynamic="true"/>
-
-        <projectConfigurable id="ballerina.libraries" groupId="ballerina"
-                             provider="io.ballerina.plugins.idea.configuration.BallerinaLibrariesConfigurableProvider"
-                             dynamic="true"/>
-
-        <projectExtension implementation="io.ballerina.plugins.idea.project.BallerinaProjectExtension"/>
-        <projectStructureDetector
-                implementation="io.ballerina.plugins.idea.project.BallerinaProjectStructureDetector"/>
-        <directoryProjectGenerator
-                implementation="io.ballerina.plugins.idea.BallerinaProjectGenerator"/>
-
-        <projectService
-                serviceImplementation="io.ballerina.plugins.idea.configuration.BallerinaProjectSettingsComponent"/>
-        <preloadingActivity
-                implementation="io.ballerina.plugins.idea.preloading.BallerinaPreloadingActivity"
-                id="io.ballerina.plugins.idea.preloading.BallerinaPreloadingActivity"/>
+        <!--        Todo: Enable after restoring the renaming support-->
+        <!--        <renameHandler implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameHandler" id="LSPRenameHandler" order="first"/>-->
+        <!--        <renamePsiElementProcessor implementation="org.wso2.lsp4intellij.contributors.rename.LSPRenameProcessor" id="LSPRenameProcessor" order="first"/>-->
     </extensions>
-    <!--Todo - Enable after restoring the renaming support-->
-    <!--    <extensions defaultExtensionNs="io.ballerina">-->
-    <!--        <html.panel.provider-->
-    <!--                implementation="io.ballerina.plugins.idea.webview.diagram.preview.javafx.JavaFxHtmlPanelProvider"/>-->
-    <!--    </extensions>-->
-
     <actions>
-        <!--Todo - Enable after restoring the renaming support-->
-        <!--Ballerina Diagram Support -->
-        <!--        <group id="Diagram.Toolbar.Right" class="com.intellij.openapi.actionSystem.DefaultActionGroup"-->
-        <!--               text="Ballerina Editor Layout Actions">-->
-        <!--            <action class="io.ballerina.plugins.idea.webview.diagram.actions.EditorOnlyLayoutChangeAction"-->
-        <!--                    id="io.ballerina.plugins.idea.webview.diagram.actions.EditorOnlyLayoutChangeAction"-->
-        <!--                    text="Show Editor Only"-->
-        <!--                    description="Sets ballerina editor layout to show editor only"-->
-        <!--                    icon="BallerinaIcons.Layout.EDITOR_ONLY">-->
-        <!--            </action>-->
-        <!--            <action class="io.ballerina.plugins.idea.webview.diagram.actions.EditorAndPreviewLayoutChangeAction"-->
-        <!--                    id="io.ballerina.plugins.idea.webview.diagram.actions.EditorAndPreviewLayoutChangeAction"-->
-        <!--                    text="Show Editor and Preview"-->
-        <!--                    description="Sets ballerina editor layout to show editor and preview in split"-->
-        <!--                    icon="BallerinaIcons.Layout.EDITOR_PREVIEW">-->
-        <!--            </action>-->
-        <!--            <action class="io.ballerina.plugins.idea.webview.diagram.actions.PreviewOnlyLayoutChangeAction"-->
-        <!--                    id="io.ballerina.plugins.idea.webview.diagram.actions.PreviewOnlyLayoutChangeAction"-->
-        <!--                    text="Show Preview Only"-->
-        <!--                    description="Sets ballerina editor layout to show preview only"-->
-        <!--                    icon="BallerinaIcons.Layout.PREVIEW_ONLY">-->
-        <!--            </action>-->
-        <!--        </group>-->
-        <action id="NewBallerinaFile" class="io.ballerina.plugins.idea.actions.BallerinaCreateFileAction"
-                text="Ballerina File" description="Create new Ballerina file">
-            <add-to-group group-id="NewGroup" anchor="first"/>
+        <action id="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction"
+                class="io.ballerina.plugins.idea.runconfig.application.BallerinaRunFileAction" text="Run Ballerina File">
+            <add-to-group group-id="EditorPopupMenu.Run" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
-        <action id="NewBallerinaModule" class="io.ballerina.plugins.idea.actions.BallerinaCreateModuleAction"
-                text="Ballerina Module" description="Create new Ballerina module">
-            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewBallerinaFile"/>
+        <action id="io.ballerina.plugins.idea.runconfig.test.BallerinaTestAction"
+                class="io.ballerina.plugins.idea.runconfig.test.BallerinaTestAction" text="Test Ballerina File">
+            <add-to-group group-id="EditorPopupMenu.Run" anchor="last"/>
+        </action>
+        <action id="org.intellij.sdk.action.QuickDocAction" class="org.wso2.lsp4intellij.actions.LSPQuickDocAction">
+        </action>
+        <action class="org.wso2.lsp4intellij.actions.LSPReferencesAction" id="LSPFindUsages">
+            <keyboard-shortcut first-keystroke="shift alt F7" keymap="$default"/>
         </action>
         <action class="org.wso2.lsp4intellij.actions.LSPReformatAction" id="ReformatCode"
                 use-shortcut-of="ReformatCode"
                 overrides="true" text="Reformat Code"/>
         <action class="org.wso2.lsp4intellij.actions.LSPShowReformatDialogAction" id="ShowReformatFileDialog"
                 use-shortcut-of="ShowReformatFileDialog" overrides="true" text="Show Reformat File Dialog"/>
-
-        <!--Todo - Enable after adding goto ref support-->
-        <!---->
-        <!-- <action class="org.wso2.lsp4intellij.actions.LSPReferencesAction"-->
-        <!--                id="LSPFindUsages">-->
-        <!-- <keyboard-shortcut first-keystroke="shift alt F7" keymap="$default"/>-->
-        <!--        </action>-->
+        <action id="CreateBallerinaFile"
+                class="io.ballerina.plugins.idea.actions.BallerinaCreateFileAction"
+                text="Create Ballerina File"
+                description="Creates a new Ballerina file">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
     </actions>
-
-    <application-components>
-        <component>
-            <implementation-class>org.wso2.lsp4intellij.IntellijLanguageClient</implementation-class>
-        </component>
-    </application-components>
+    <applicationListeners>
+        <listener class="org.wso2.lsp4intellij.listeners.VFSListener"
+                  topic="com.intellij.openapi.vfs.VirtualFileListener"/>
+        <listener class="org.wso2.lsp4intellij.listeners.LSPProjectManagerListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </applicationListeners>
 </idea-plugin>

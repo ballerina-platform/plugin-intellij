@@ -1,0 +1,16 @@
+Ballerina File(0,20)
+  BallerinaModulePartImpl(MODULE_PART)(0,20)
+    BallerinaOtherDeclImpl(OTHER_DECL)(0,20)
+      BallerinaModuleTypeDefnImpl(MODULE_TYPE_DEFN)(0,20)
+        BallerinaMetadataImpl(METADATA)(0,0)
+          <empty list>
+        PsiElement(BallerinaTokenType.TYPE_KEYWORD)('type')(0,4)
+        PsiElement(BallerinaTokenType.IDENTIFIER_TOKEN)('Foo')(5,8)
+        BallerinaBehavioralTypeDescriptorImpl(BEHAVIORAL_TYPE_DESCRIPTOR)(9,19)
+          BallerinaObjectTypeDescriptorImpl(OBJECT_TYPE_DESCRIPTOR)(9,19)
+            BallerinaObjectTypeQualsImpl(OBJECT_TYPE_QUALS)(9,9)
+              <empty list>
+            PsiElement(BallerinaTokenType.OBJECT_KEYWORD)('object')(9,15)
+            PsiElement(BallerinaTokenType.OPEN_BRACE_TOKEN)('{')(16,17)
+            PsiElement(BallerinaTokenType.CLOSE_BRACE_TOKEN)('}')(18,19)
+        PsiElement(BallerinaTokenType.SEMICOLON_TOKEN)(';')(19,20)
