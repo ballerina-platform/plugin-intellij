@@ -49,8 +49,8 @@ public class BallerinaIdentifierUnderline implements EditorMouseMotionListener {
     @Override
     public void mouseMoved(EditorMouseEvent e) {
         Editor editor = e.getEditor();
-        if ((e.getMouseEvent().getModifiersEx() & InputEvent.CTRL_DOWN_MASK) !=
-                InputEvent.CTRL_DOWN_MASK) {
+        if (((e.getMouseEvent().getModifiersEx()) !=  InputEvent.CTRL_DOWN_MASK)
+            && (e.getMouseEvent().getModifiersEx()) !=  InputEvent.META_DOWN_MASK) {
             removeHighlighter();
             return;
         }
