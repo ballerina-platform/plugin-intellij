@@ -1,0 +1,30 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - master
+      - 2.[0-9]+.x
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.event.pull_request.head.ref }}-pr-check
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'temurin'
+
+      - name: Run Build
+        run: ./gradlew build -x test
+
+      - name: Run Tests
+        run: ./gradlew build test
