@@ -108,6 +108,18 @@ checkstyleTest {
     classpath = sourceSets.test.compileClasspath
 }
 
+release {
+    buildTasks = ['build']
+    failOnSnapshotDependencies = true
+    versionPropertyFile = 'gradle.properties'
+    versionProperties = ['version']
+    tagTemplate = '${version}'
+    git {
+        requireBranch = "release-${moduleVersion}"
+        pushToRemote = 'origin'
+    }
+}
+
 build.dependsOn check
 runIde.dependsOn check
 buildPlugin.dependsOn check
