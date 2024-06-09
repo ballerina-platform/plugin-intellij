@@ -1,12 +1,8 @@
-name: Build
+name: Daily Build
 
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs every day at midnight UTC
-  push:
-    branches:
-      - master
-      - 2.[0-9]+.x
 
 jobs:
   build-and-test:
@@ -25,5 +21,14 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - name: Build
+      - name: Run Build
         run: ./gradlew build
+
+      - name: Create Plugin Zip
+        run: ./gradlew buildPlugin
+
+      - name: Archive Plugin Zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-distribution
+          path: build/distributions/*.zip

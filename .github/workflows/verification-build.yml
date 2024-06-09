@@ -1,12 +1,14 @@
-name: Plugin Verification
+name: Plugin Verification Build
 description: |
   This workflow is used to verify the plugin against different versions of IntelliJ IDEA.
   It reads the minimum and maximum supported versions from the `gradle.properties` file
   and runs the plugin against each version in the range.
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Runs every day at midnight UTC
+  push:
+    branches:
+      - master
+      - 2.[0-9]+.x
   workflow_dispatch:
 
 jobs:
