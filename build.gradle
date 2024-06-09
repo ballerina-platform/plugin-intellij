@@ -20,6 +20,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'com.github.spotbugs'
+    id 'net.researchgate.release'
 }
 
  repositories {
@@ -115,7 +116,7 @@ release {
     versionProperties = ['version']
     tagTemplate = '${version}'
     git {
-        requireBranch = "release-${moduleVersion}"
+        requireBranch = 'release-${moduleVersion}'
         pushToRemote = 'origin'
     }
 }
