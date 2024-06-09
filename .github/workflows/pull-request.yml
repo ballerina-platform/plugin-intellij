@@ -23,8 +23,5 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - name: Run Build
-        run: ./gradlew build -x test
-
       - name: Run Tests
         run: ./gradlew build test
