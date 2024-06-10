@@ -20,6 +20,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'com.github.spotbugs'
+    id 'net.researchgate.release'
 }
 
  repositories {
@@ -106,6 +107,18 @@ checkstyleMain {
 checkstyleTest {
     source = fileTree("src/test/java")
     classpath = sourceSets.test.compileClasspath
+}
+
+release {
+    buildTasks = ['build']
+    failOnSnapshotDependencies = true
+    versionPropertyFile = 'gradle.properties'
+    versionProperties = ['version']
+    tagTemplate = '${version}'
+    git {
+        requireBranch = 'release-${moduleVersion}'
+        pushToRemote = 'origin'
+    }
 }
 
 build.dependsOn check

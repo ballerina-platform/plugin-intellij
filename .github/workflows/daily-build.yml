@@ -1,0 +1,34 @@
+name: Daily Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight UTC
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.head_ref }}-ubuntu-build
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Run Build
+        run: ./gradlew build
+
+      - name: Create Plugin Zip
+        run: ./gradlew buildPlugin
+
+      - name: Archive Plugin Zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-distribution
+          path: build/distributions/*.zip
