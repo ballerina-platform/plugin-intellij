@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        idea-version: [ ${ { needs.read-versions.outputs.min-idea-version } }, ${ { needs.read-versions.outputs.max-idea-version } } ]
+        idea-version: [${{ needs.read-versions.outputs.min-idea-version }}, ${{ needs.read-versions.outputs.max-idea-version }}]
 
     concurrency:
       group: ${{ github.head_ref }}-ubuntu-verify
