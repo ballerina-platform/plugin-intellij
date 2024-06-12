@@ -29,7 +29,7 @@ plugins {
     maven { url 'https://jitpack.io' }
 }
 
-version = project.ballerinaPluginVersion
+version = project.version
 
 dependencies {
     implementation group: "com.github.ballerina-platform", name: "lsp4intellij", version: "${lsp4IntellijVersion}"
@@ -37,7 +37,7 @@ dependencies {
 
 intellij {
     version = project.ideaVersion
-    pluginName = project.ballerinaPluginName
+    pluginName = project.name
     type = 'IC'
     plugins = []
 }
