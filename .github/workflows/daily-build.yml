@@ -29,13 +29,13 @@ jobs:
 
       - name: Get version and timestamp
         run: |
-          VERSION=$((grep -w 'pluginVersion' | cut -d= -f2) < gradle.properties | rev | cut -d- -f2 | rev)
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          NAME=$((grep -w 'name') < gradle.properties | cut -d= -f2)
+          VERSION=$((grep -w 'version') < gradle.properties | cut -d= -f2)
+          echo "NAME=$NAME" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
       - name: Archive Plugin Zip
         uses: actions/upload-artifact@v3
         with:
-          name: ballerina-swanlake-intellij-plugin-${{ env.VERSION }}-${{ env.TIMESTAMP }}
+          name: ${{ env.NAME }}-${{ env.VERSION }}.zip
           path: build/distributions/*.zip
