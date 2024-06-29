@@ -1,8 +1,4 @@
 name: Plugin Verification Build
-description: |
-  This workflow is used to verify the plugin against different versions of IntelliJ IDEA.
-  It reads the minimum and maximum supported versions from the `gradle.properties` file
-  and runs the plugin against each version in the range.
 
 on:
   push:
@@ -12,32 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  read-versions:
-    runs-on: ubuntu-latest
-    outputs:
-      min-idea-version: ${{ steps.set-env.outputs.min-idea-version }}
-      max-idea-version: ${{ steps.set-env.outputs.max-idea-version }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Read IntelliJ IDEA versions
-        id: set-env
-        run: |
-          sinceBuild=$(grep "^sinceBuild" gradle.properties | cut -d'=' -f2)
-          untilBuild=$(grep "^untilBuild" gradle.properties | cut -d'=' -f2)
-          echo "min-idea-version=${sinceBuild}" >> $GITHUB_ENV
-          echo "max-idea-version=${untilBuild}" >> $GITHUB_ENV
-          echo "::set-output name=min-idea-version::${sinceBuild}"
-          echo "::set-output name=max-idea-version::${untilBuild}"
-
   verify-plugin:
-    needs: read-versions
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        idea-version: [${{ needs.read-versions.outputs.min-idea-version }}, ${{ needs.read-versions.outputs.max-idea-version }}]
-
     concurrency:
       group: ${{ github.head_ref }}-ubuntu-verify
       cancel-in-progress: true
@@ -52,5 +24,15 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - name: Verify against IDEA ${{ matrix.idea-version }}
-        run: ./gradlew runIde -PideaVersion=${{ matrix.idea-version }}
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Run Plugin Verifier
+        run: ./gradlew runPluginVerifier
