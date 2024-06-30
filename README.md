@@ -6,7 +6,22 @@
 
 ---
 
-The IntelliJ Ballerina plugin provides the Ballerina development capabilities in IntelliJ IDEA. Click the links below for instructions on how to download, install, and use the features of the IntelliJ plugin.
+## Overview
+The Ballerina IntelliJ plugin provides the [Ballerina programming language](https://ballerina.io/) development capabilities in IntelliJ IDEA. While it offers a subset of features compared to the official Ballerina VSCode extension, it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
+
+> **Note:** This plugin is developed as an experimental, community-driven project. The plugin is fully open-source, and we love contributions! 
+
+## Target Audience
+
+This plugin is mainly targeted for Ballerina library developers, who seek
+- robust interoperability between Ballerina and Java
+- a native development experience within IntelliJ IDEs
+
+Therefore, we recommend using the official [Ballerina VSCode extension] for a more feature-rich experience, if you do not fall under above categories.
+
+## Plugin Guide
+
+Click the links below for instructions on how to download, install, and use the features of the IntelliJ plugin.
 
 - [**Installing the plugin**](getting-started/plugin-installation/README.md#installing-the-plugin)
     - [Installing using the ZIP file](getting-started/plugin-installation/README.md#installing-using-the-zip-file)
@@ -35,14 +50,14 @@ The IntelliJ Ballerina plugin provides the Ballerina development capabilities in
 
 Below you can see the plugin versions that correspond to the versions of the IntelliJ Platform.
 
-**Plugin Version**|**Platform Version Compatibility**
-:-----:|:-----:
-0.8.0 - 0.8.2 | IntelliJ IDEA 2016.3 - 2016.4
-0.8.3 - 0.981.0 | IntelliJ IDEA 2016.3 - 2017.2
-0.982.0 - 0.991.0 | IntelliJ IDEA 2017.3 - 2018.2
-0.991.1 - 1.2.1 | IntelliJ IDEA 2018.3 - 2019.3
-1.2.2 - 1.2.x | IntelliJ IDEA 2018.3 - 2020.2
-2.0.0 | IntelliJ IDEA 2022.0 - 2024.1
+| **Plugin Version** | **Platform Version Compatibility** |
+|:------------------:|:----------------------------------:|
+|   0.8.0 - 0.8.2    |   IntelliJ IDEA 2016.3 - 2016.4    |
+|  0.8.3 - 0.981.0   |   IntelliJ IDEA 2016.3 - 2017.2    |
+| 0.982.0 - 0.991.0  |   IntelliJ IDEA 2017.3 - 2018.2    |
+|  0.991.1 - 1.2.1   |   IntelliJ IDEA 2018.3 - 2019.3    |
+|   1.2.2 - 1.2.x    |   IntelliJ IDEA 2018.3 - 2020.2    |
+|       2.0.0        |   IntelliJ IDEA 2022.0 - 2024.1    |
 
 ## Useful links
 * Use the ballerina-dev@googlegroups.com mailing list to discuss code changes to the Ballerina project.
