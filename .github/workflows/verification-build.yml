@@ -25,14 +25,14 @@ jobs:
           distribution: 'temurin'
 
       - name: Cache Gradle dependencies
-        uses: actions/cache@v3
+        id: cache-gradle-dependencies
+        uses: actions/cache@v4.0.2
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Run Plugin Verifier
         run: ./gradlew runPluginVerifier
