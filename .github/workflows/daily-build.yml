@@ -37,5 +37,5 @@ jobs:
       - name: Archive Plugin Zip
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}.zip
+          name: ${{ env.NAME }}-${{ env.VERSION }}
           path: build/distributions/*.zip
