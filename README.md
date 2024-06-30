@@ -7,17 +7,17 @@
 ---
 
 ## Overview
-The Ballerina IntelliJ plugin provides the [Ballerina programming language](https://ballerina.io/) development capabilities in IntelliJ IDEA. While it offers a subset of features compared to the official Ballerina VSCode extension, it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
+The Ballerina IntelliJ plugin provides the [Ballerina programming language](https://ballerina.io/) development capabilities within IntelliJ IDEA. While it offers a subset of features compared to the official Ballerina VSCode extension, it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
 
-> **Note:** This plugin is developed as an experimental, community-driven project. The plugin is fully open-source, and we love contributions! 
+> **Note:** This plugin is being developed as an experimental and community-driven project. The plugin is fully open-source, and we welcome contributions!
 
 ## Target Audience
 
-This plugin is mainly targeted for Ballerina library developers, who seek
-- robust interoperability between Ballerina and Java
-- a native development experience within IntelliJ IDEs
+This plugin is mainly targeted at **Ballerina library developers** who seek:
+- Robust interoperability between Ballerina and Java
+- A native development experience within IntelliJ IDEs
 
-Therefore, we recommend using the official [Ballerina VSCode extension] for a more feature-rich experience, if you do not fall under above categories.
+If you do not fall into the above categories, we recommend using the official [Ballerina VSCode extension](https://ballerina.io/vscode) for a more feature-rich experience.
 
 ## Plugin Guide
 
