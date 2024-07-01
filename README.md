@@ -7,7 +7,7 @@
 ---
 
 ## Overview
-The Ballerina IntelliJ plugin provides the [Ballerina programming language](https://ballerina.io/) development capabilities within IntelliJ IDEA. While it offers a subset of features compared to the [Ballerina VSCode extension](https://marketplace.visualstudio.com/items?itemName=WSO2.ballerina), it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
+The Ballerina IntelliJ plugin provides [Ballerina Swan Lake](https://ballerina.io/) language development capabilities within IntelliJ IDEA. While it offers a subset of features compared to the [Ballerina VSCode extension](https://marketplace.visualstudio.com/items?itemName=WSO2.ballerina), it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
 
 > **Note:** This plugin is being developed as an experimental and community-driven project. The plugin is fully open-source, and we welcome contributions!
 
@@ -60,5 +60,7 @@ Below you can see the plugin versions that correspond to the versions of the Int
 |       2.0.0        |   IntelliJ IDEA 2022.0 - 2024.1    |
 
 ## Useful links
-* Use the ballerina-dev@googlegroups.com mailing list to discuss code changes to the Ballerina project.
-* Chat live with us on our [Discord server](https://discord.gg/ballerinalang).
+
+* Chat live with us on our [Discord community](https://discord.com/invite/wAJYFbMrG2).
+* Post technical questions on the Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
+* For more details on how to engage with the community, see [Community](https://ballerina.io/community/).
