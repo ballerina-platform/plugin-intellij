@@ -7,7 +7,7 @@
 ---
 
 ## Overview
-The Ballerina IntelliJ plugin provides [Ballerina Swan Lake](https://ballerina.io/) language development capabilities within IntelliJ IDEA. While it offers a subset of features compared to the [Ballerina VSCode extension](https://marketplace.visualstudio.com/items?itemName=WSO2.ballerina), it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
+The Ballerina IntelliJ plugin provides [Ballerina Swan Lake](https://ballerina.io/) language development capabilities within IntelliJ IDEA. While it offers a [subset of features](getting-started/plugin-features/README.md#plugin-features) compared to the [Ballerina VSCode extension](https://marketplace.visualstudio.com/items?itemName=WSO2.ballerina), it is designed to meet the specific needs of those working within the IntelliJ ecosystem.
 
 > **Note:** This plugin is being developed as an experimental and community-driven project. The plugin is fully open-source, and we welcome contributions!
 
