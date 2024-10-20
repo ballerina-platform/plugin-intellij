@@ -3,6 +3,7 @@ name: Daily Build
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs every day at midnight UTC
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -38,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.NAME }}-${{ env.VERSION }}
-          path: build/distributions/*.zip
+          path: build/distributions/${{ env.NAME }}-${{ env.VERSION }}.zip
