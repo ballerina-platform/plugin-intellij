@@ -36,6 +36,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Unzip plugin into a temp directory
+        description: Workaround for the 'upload-artifact' action archiving already zipped files
         run: |
           mkdir -p temp_dir
           unzip build/distributions/${{ env.NAME }}-${{ env.VERSION }}.zip -d temp_dir
