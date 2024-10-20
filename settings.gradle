@@ -30,7 +30,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'ballerina-intellij-idea-plugin'
+rootProject.name = 'ballerina-intellij-plugin'
 
 include ":checkstyle"
 project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
