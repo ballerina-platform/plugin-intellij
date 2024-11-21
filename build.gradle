@@ -49,7 +49,6 @@ tasks.withType(JavaCompile) {
 
 patchPluginXml {
     sinceBuild = project.sinceBuild
-    untilBuild = project.untilBuild
 }
 
 signPlugin {
