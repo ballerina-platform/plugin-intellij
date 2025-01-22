@@ -50,7 +50,7 @@ tasks.withType(JavaCompile) {
 
 patchPluginXml {
     sinceBuild = project.sinceBuild
-    sinceBuild = provider { null }
+    untilBuild = provider { null }
 }
 
 signPlugin {
