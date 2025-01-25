@@ -34,6 +34,7 @@ version = project.version
 dependencies {
     implementation group: "com.github.ballerina-platform", name: "lsp4intellij", version: "${lsp4IntellijVersion}"
     testImplementation group: "org.opentest4j", name: "opentest4j", version: "${opentest4jVersion}"
+    testImplementation group: "junit", name: "junit", version: "${junitVersion}"
 }
 
 intellij {
